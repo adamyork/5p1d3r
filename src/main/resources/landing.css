@@ -1,0 +1,6 @@
+#landing {
+    -fx-background-image: url("image/jcr8fx.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 400 832;
+    -fx-background-position: center center;
+}
