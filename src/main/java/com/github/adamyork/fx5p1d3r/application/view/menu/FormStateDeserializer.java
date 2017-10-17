@@ -29,22 +29,25 @@ public class FormStateDeserializer extends StdDeserializer<ApplicationFormState>
         final JsonNode node = parser.getCodec().readTree(parser);
         final URLMethod urlMethod = URLMethod.valueOf(node.get("urlMethod").asText());
         final String startingURL = node.get("startingURL").asText();
+        applicationFormState.setThrottling(node.get("throttling").asBoolean());
+        applicationFormState.setMultithreading(node.get("multithreading").asBoolean());
+        applicationFormState.setFollowLinks(node.get("followLinks").asBoolean());
         final MultiThreadMax multiThreadMax = MultiThreadMax.valueOf(node.get("multiThreadMax").asText());
         final ThrottleMs throttleMs = ThrottleMs.valueOf(node.get("throttleMs").asText());
         final FollowLinksDepth followLinksDepth = FollowLinksDepth.valueOf(node.get("followLinksDepth").asText());
         final String linkFollowPattern = node.get("linkFollowPattern").asText();
         final JsonNode queryNodes = node.get("domQueryObservableList");
         if (queryNodes.size() > 0) {
-            applicationFormState.getDomQueryObservableList().removeAll();
+            applicationFormState.getDomQueryObservableList().clear();
             for (int i = 0; i < queryNodes.size(); i++) {
                 final JsonNode queryNode = queryNodes.get(i);
-                final DOMQuery query = new DOMQuery.Builder().id(i).query(queryNode.asText()).build();
+                final DOMQuery query = new DOMQuery.Builder().id(i).query(queryNode.get("query").asText()).build();
                 applicationFormState.getDomQueryObservableList().add(query);
             }
         }
         final JsonNode transFormNodes = node.get("resultTransformObservableList");
         if (transFormNodes.size() > 0) {
-            applicationFormState.getResultTransformObservableList().removeAll();
+            applicationFormState.getResultTransformObservableList().clear();
             for (int i = 0; i < transFormNodes.size(); i++) {
                 final JsonNode transFormNode = transFormNodes.get(i);
                 final File file = new File(transFormNode.asText());

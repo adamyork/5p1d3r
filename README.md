@@ -2,7 +2,8 @@
 web page parser with a javafx gui
 
 #TODO
-- complete load current form state
+- Alert/Error strategy
 - Test Regex filtering for link following
+- iconography
 -------------------------
 - Localization

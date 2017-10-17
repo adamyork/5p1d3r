@@ -1,5 +1,6 @@
 package com.github.adamyork.fx5p1d3r.common.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.adamyork.fx5p1d3r.Main;
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQuery;
 import javafx.collections.ObservableList;
@@ -20,8 +21,11 @@ public class ApplicationFormState extends Observable {
 
     private URLMethod urlMethod;
     private String startingURL;
+    @JsonProperty("followLinks")
     private boolean followLinks;
+    @JsonProperty("multithreading")
     private boolean multithreading;
+    @JsonProperty("throttling")
     private boolean throttling;
     private MultiThreadMax multiThreadMax;
     private ThrottleMs throttleMs;

@@ -207,23 +207,37 @@ public class MethodController implements Initializable, Observer {
     }
 
     @Override
-    public void update(final java.util.Observable observable, final Object arg) {
+    public void update(final java.util.Observable observable, final Object observed) {
         final FilteredList<URLMethodChoice> filteredMethodChoices = urlMethodChoiceBox.getItems()
                 .filtered(urlMethodChoice -> urlMethodChoice.getUrlMethod().equals(applicationFormState.getUrlMethod()));
-        urlMethodChoiceBox.setValue(filteredMethodChoices.get(0));
-        startingURLTextfield.setText(globalDefaults.getDefaultForKey(GlobalDefault.STARTING_URL));
-        urlListSelectionButton.setDisable(true);
-        requestThrottlingToggleSwitch.setSelected(true);
-        requestThrottlingChoiceBox.setDisable(false);
+        final URLMethodChoice methodChoice = filteredMethodChoices.get(0);
+        urlMethodChoiceBox.setValue(methodChoice);
+        urlListSelectionButton.setDisable(methodChoice.getUrlMethod().equals(URLMethod.URL));
+        startingURLTextfield.setText(applicationFormState.getStartingURL());
+
         final FilteredList<ThrottleChoice> filteredThrottlingChoices = requestThrottlingChoiceBox.getItems()
                 .filtered(throttleChoice -> throttleChoice.getThrottleMs().equals(applicationFormState.getThrottleMs()));
-        requestThrottlingChoiceBox.setValue(filteredThrottlingChoices.get(0));
-        multiThreadingChoiceBox.setDisable(true);
-        multiThreadingChoiceBox.setValue(multiThreadingChoiceBox.getItems().get(0));
-        followLinksChoiceBox.setDisable(true);
-        followLinksChoiceBox.setValue(followLinksChoiceBox.getItems().get(0));
-        linkURLPatternTextfield.setText(globalDefaults.getDefaultForKey(GlobalDefault.LINK_PATTERN));
-        linkURLPatternTextfield.setDisable(true);
+        final ThrottleChoice throttleChoice = filteredThrottlingChoices.get(0);
+        requestThrottlingToggleSwitch.setSelected(applicationFormState.throttling());
+        requestThrottlingChoiceBox.setDisable(!applicationFormState.throttling());
+        requestThrottlingChoiceBox.setValue(throttleChoice);
 
+        final FilteredList<MultiThreadingChoice> filteredMultiThreadingChoices = multiThreadingChoiceBox.getItems()
+                .filtered(multiThreadingChoice -> multiThreadingChoice.getMultiThreadMax().equals(applicationFormState.getMultiThreadMax()));
+        final MultiThreadingChoice multiThreadingChoice = filteredMultiThreadingChoices.get(0);
+        multiThreadingToggleSwitch.setSelected(applicationFormState.multithreading());
+        multiThreadingChoiceBox.setDisable(!applicationFormState.multithreading());
+        multiThreadingChoiceBox.setValue(multiThreadingChoice);
+
+        final FilteredList<FollowLinksChoice> filteredFollowLinksChoices = followLinksChoiceBox.getItems()
+                .filtered(followLinksChoice -> followLinksChoice.getFollowLinksDepth().equals(applicationFormState.getFollowLinksDepth()));
+        final FollowLinksChoice followLinksChoice = filteredFollowLinksChoices.get(0);
+        followLinksToggleSwitch.setSelected(applicationFormState.followLinks());
+        followLinksChoiceBox.setDisable(!applicationFormState.followLinks());
+        followLinksChoiceBox.setValue(followLinksChoice);
+
+        linkURLPatternTextfield.setText(applicationFormState.getLinkFollowPattern());
+        linkURLPatternTextfield.setDisable(!applicationFormState.followLinks());
+        applicationFormState.clearNotify();
     }
 }
