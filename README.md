@@ -4,6 +4,5 @@ web page parser with a javafx gui
 #TODO
 - Alert/Error strategy
 - Test Regex filtering for link following
-- iconography
 -------------------------
 - Localization
