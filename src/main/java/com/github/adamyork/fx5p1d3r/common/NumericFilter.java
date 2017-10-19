@@ -27,6 +27,7 @@ public class NumericFilter {
         @Override
         public TextFormatter.Change apply(final TextFormatter.Change change) {
             final String input = change.getText();
+            //TODO COMMAND
             if (input.matches("[0-9]*")) {
                 return change;
             }

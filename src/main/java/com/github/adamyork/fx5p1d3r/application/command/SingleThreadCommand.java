@@ -89,6 +89,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
     void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         final List<Document> documents = (List<Document>) workerStateEvent.getSource().getValue();
         final ObservableList<DOMQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
+        //TODO COMMAND
         if (documents.size() == 0) {
             alertService.warn("No Documents.", "No parsable documents found. Output may be empty");
         }
@@ -106,6 +107,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
 
     @Override
     public void update(final Observable observable, final Object arg) {
+        //TODO COMMAND
         if (executorService != null) {
             executorService.shutdown();
             abortService.clear();

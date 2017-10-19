@@ -14,7 +14,9 @@ public class DOMQueryListCell extends ListCell<DOMQuery> {
     @Override
     protected void updateItem(final DOMQuery item, final boolean empty) {
         super.updateItem(item, empty);
+        //TODO COMMAND
         if (!empty) {
+            //TODO COMMAND
             if (item != null) {
                 final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("dom-query-list-cell.fxml"));
                 final Parent parent = (Parent) Unchecked.function(o -> fxmlLoader.load()).apply(null);

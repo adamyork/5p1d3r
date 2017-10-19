@@ -57,6 +57,7 @@ public class ConcurrentURLService extends Task<List<Document>> {
     void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         total++;
         documents.add((Document) workerStateEvent.getSource().getValue());
+        //TODO COMMAND
         if (total == urls.size()) {
             total = 0;
             multiThreadCommand.onDocumentsRetrieved(documents);

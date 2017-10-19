@@ -2,7 +2,6 @@
 web page parser with a javafx gui
 
 #TODO
-- Alert/Error strategy
-- Test Regex filtering for link following
--------------------------
+- Test Regex filtering
 - Localization
+- 28 command items

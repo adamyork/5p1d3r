@@ -76,6 +76,7 @@ public class UrlValidatorCommand implements ValidatorCommand {
         final boolean isValid = validityMap.stream().allMatch(stringBooleanMap -> stringBooleanMap.values()
                 .stream()
                 .allMatch(Boolean::booleanValue));
+        //TODO COMMAND
         if (!isValid) {
             alertService.error("Invalid URL", "One or more URL's is invalid.");
             return new AllValidURLS(false, urls);

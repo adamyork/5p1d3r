@@ -66,6 +66,7 @@ public class ApplicationMenuController {
                 new FileChooser.ExtensionFilter("json", "*.json")
         );
         final File file = fileChooser.showSaveDialog(stage);
+        //TODO COMMAND
         if (file == null) {
             return;
         }
@@ -81,6 +82,7 @@ public class ApplicationMenuController {
                 new FileChooser.ExtensionFilter("json", "*.json")
         );
         final File file = fileChooser.showOpenDialog(stage);
+        //TODO COMMAND
         if (file == null) {
             return;
         }

@@ -37,6 +37,7 @@ public class FormStateDeserializer extends StdDeserializer<ApplicationFormState>
         final FollowLinksDepth followLinksDepth = FollowLinksDepth.valueOf(node.get("followLinksDepth").asText());
         final String linkFollowPattern = node.get("linkFollowPattern").asText();
         final JsonNode queryNodes = node.get("domQueryObservableList");
+        //TODO COMMAND
         if (queryNodes.size() > 0) {
             applicationFormState.getDomQueryObservableList().clear();
             for (int i = 0; i < queryNodes.size(); i++) {
@@ -46,6 +47,7 @@ public class FormStateDeserializer extends StdDeserializer<ApplicationFormState>
             }
         }
         final JsonNode transFormNodes = node.get("resultTransformObservableList");
+        //TODO COMMAND
         if (transFormNodes.size() > 0) {
             applicationFormState.getResultTransformObservableList().clear();
             for (int i = 0; i < transFormNodes.size(); i++) {
@@ -57,6 +59,7 @@ public class FormStateDeserializer extends StdDeserializer<ApplicationFormState>
         applicationFormState.setOutputFile(node.get("outputFile").asText());
         final OutputFileType outputFileType = OutputFileType.valueOf(node.get("outputFileType").asText());
         final String urlFileListString = node.get("urlListFile").asText();
+        //TODO COMMAND
         if (urlFileListString != null) {
             applicationFormState.setUrlListFile(new File(urlFileListString));
         }

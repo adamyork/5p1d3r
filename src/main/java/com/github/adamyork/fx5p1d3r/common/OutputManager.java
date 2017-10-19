@@ -49,6 +49,7 @@ public class OutputManager {
         progressService.updateProgress(ProgressType.OUTPUT);
         final String outputFile = applicationFormState.getOutputFile();
         final File destFile = new File(outputFile);
+        //TODO COMMAND
         if (!destFile.exists()) {
             Unchecked.function(file -> ((File) file).createNewFile()).apply(destFile);
         }
@@ -70,6 +71,7 @@ public class OutputManager {
         progressService.updateProgress(ProgressType.OUTPUT);
         final String outputFile = applicationFormState.getOutputFile();
         final File destFile = new File(outputFile);
+        //TODO COMMAND
         if (!destFile.exists()) {
             Unchecked.function(file -> ((File) file).createNewFile()).apply(destFile);
         }
@@ -93,6 +95,7 @@ public class OutputManager {
         return elements.stream()
                 .map(element -> {
                     final String href = element.attr("href");
+                    //TODO COMMAND
                     if (!href.contains("http") && !href.contains("https")) {
                         final String baseUri = element.baseUri();
                         final URI uri = Unchecked.function(t -> new URI(baseUri)).apply(null);

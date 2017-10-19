@@ -27,6 +27,7 @@ public class NullSafe<T> {
 
     @SuppressWarnings("unchecked")
     public T getNullSafe(final T value) {
+        //TODO COMMAND
         if (value == null) {
             return (T) instantiationMap.get(type).apply(null);
         } else if (value instanceof String && ((String) value).isEmpty()) {

@@ -94,21 +94,20 @@ public class LinksFollowCommand implements ApplicationCommand {
         final List<Document> documents = (List<Document>) workerStateEvent.getSource().getValue();
         final ObservableList<DOMQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         final List<List<URL>> allLinks = new ArrayList<>();
+        //TODO COMMAND
         if (documents.size() == 0) {
             alertService.warn("No Documents.", "No documents found at link depth " + currentDepth + ". Output maybe empty.");
         }
         documents.forEach(document -> {
-            final List<Elements> elementsList = new ArrayList<>();
             domQueryObservableList.forEach(domQuery -> {
                 final String domQueryString = domQuery.getQuery();
-                final Elements parsedElements = parserCommandMap.getCommand(applicationFormState.getOutputFileType())
-                        .execute(document, domQueryString);
-                elementsList.add(parsedElements);
+                parserCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(document, domQueryString);
             });
             final Elements linksElementsList = document.select("a");
             final List<URL> linksList = outputManager.getURLListFromElements(linksElementsList);
             allLinks.add(linksList);
         });
+        //TODO COMMAND
         if (currentDepth < maxDepth) {
             final List<URL> flattened = allLinks.stream().flatMap(List::stream).collect(Collectors.toList());
             execute(flattened, executorService);

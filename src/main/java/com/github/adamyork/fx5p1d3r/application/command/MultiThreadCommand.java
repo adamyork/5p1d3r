@@ -81,6 +81,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer {
     @SuppressWarnings({"unchecked", "Duplicates"})
     public void onDocumentsRetrieved(final List<Document> documents) {
         final ObservableList<DOMQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
+        //TODO COMMAND
         if (documents.size() == 0) {
             alertService.warn("No Documents.", "No parsable documents found. Output may be empty");
         }
@@ -98,6 +99,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer {
 
     @Override
     public void update(final Observable observable, final Object arg) {
+        //TODO COMMAND
         if (executorService != null) {
             executorService.shutdown();
             abortService.clear();

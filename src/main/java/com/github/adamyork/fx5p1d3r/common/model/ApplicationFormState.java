@@ -152,6 +152,7 @@ public class ApplicationFormState extends Observable {
     }
 
     public File getDefaultJSONTransform() {
+        //TODO COMMAND
         if (defaultJSONTransform == null) {
             final InputStream stream = Main.class.getClassLoader().getResourceAsStream("basicJSONTransform.groovy");
             final File basicJsonTransform = new File("basicJSONTransform");
@@ -167,6 +168,7 @@ public class ApplicationFormState extends Observable {
     }
 
     public File getDefaultCSVTransform() {
+        //TODO COMMAND
         if (defaultCSVTransform == null) {
             final InputStream stream = Main.class.getClassLoader().getResourceAsStream(("basicCSVTransform.groovy"));
             final File basicCsvTransform = new File("basicCSVTransform");

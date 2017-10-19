@@ -55,6 +55,7 @@ public class DocumentParserCsvCommand implements ParserCommand {
         final ObservableList<File> resultTransformObservableList = applicationFormState.getResultTransformObservableList();
         final List<String[]> objectList = new ArrayList<>();
         progressService.updateProgress(ProgressType.TRANSFORM);
+        //TODO COMMAND
         if (elements.size() == 0) {
             alertService.warn("No Elements.", "One or more queries returned no elements. Output may be empty");
         }

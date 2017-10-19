@@ -43,6 +43,7 @@ public class UrlListCommand implements ApplicationCommand {
     @Override
     public void execute() {
         final File urlListFile = applicationFormState.getUrlListFile();
+        //TODO COMMAND
         if (urlListFile == null) {
             alertService.error("No URL list selected.", "No URL list selected. Please select a URL list.");
             return;

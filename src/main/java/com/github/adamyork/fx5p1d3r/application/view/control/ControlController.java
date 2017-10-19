@@ -81,8 +81,10 @@ public class ControlController implements Initializable, Observer {
         final File nullSafeFile = nullSafe.getNullSafe(file);
         final String nullSafeFileString = nullSafeFile.toString();
         final int extensionIndex = nullSafeFileString.indexOf(".");
+        //TODO COMMAND
         if (extensionIndex != -1) {
             final String fileTypeString = nullSafeFileString.substring(extensionIndex);
+            //TODO COMMAND
             if (fileTypeString.equals(OutputFileType.JSON.toString())) {
                 applicationFormState.setOutputFileType(OutputFileType.JSON);
             } else {
