@@ -5,9 +5,9 @@ import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.ValidatorCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +31,19 @@ public class UrlValidatorCommand implements ValidatorCommand {
     private final Validator validator;
     private final ApplicationFormState applicationFormState;
     private final ProgressService progressService;
+    private final AlertService alertService;
     private final Map<Boolean, CommandMap<Boolean, ApplicationCommand>> isValidMap = new HashMap<>();
 
     @Autowired
     public UrlValidatorCommand(@Qualifier("ThreadRequestsCommandMap") final CommandMap<Boolean, ApplicationCommand> threadRequestsCommandMap,
                                final Validator validator,
                                final ApplicationFormState applicationFormState,
-                               final ProgressService progressService) {
+                               final ProgressService progressService,
+                               final AlertService alertService) {
         this.validator = validator;
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;
+        this.alertService = alertService;
 
         final CommandMap<Boolean, ApplicationCommand> noopCommandMap = new CommandMap<>();
         noopCommandMap.add(true, new NoopCommand());
@@ -74,12 +77,7 @@ public class UrlValidatorCommand implements ValidatorCommand {
                 .stream()
                 .allMatch(Boolean::booleanValue));
         if (!isValid) {
-            progressService.updateProgress(ProgressType.ABORT);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Invalid URL");
-            alert.setContentText("URL List contains an invalid URL.");
-            alert.showAndWait();
+            alertService.error("Invalid URL", "One or more URL's is invalid.");
             return new AllValidURLS(false, urls);
         }
         return new AllValidURLS(true, urls);

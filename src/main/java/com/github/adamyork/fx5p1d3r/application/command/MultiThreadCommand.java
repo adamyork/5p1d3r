@@ -8,10 +8,9 @@ import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.service.AbortService;
+import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.ConcurrentURLService;
 import com.github.adamyork.fx5p1d3r.common.service.URLServiceFactory;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.collections.ObservableList;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -35,9 +34,9 @@ public class MultiThreadCommand implements ApplicationCommand, Observer {
 
     private final ApplicationFormState applicationFormState;
     private final OutputManager outputManager;
-    private final ProgressService progressService;
     private final AbortService abortService;
     private final URLServiceFactory urlServiceFactory;
+    private final AlertService alertService;
     private final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap;
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
 
@@ -47,15 +46,15 @@ public class MultiThreadCommand implements ApplicationCommand, Observer {
     public MultiThreadCommand(final URLServiceFactory urlServiceFactory,
                               final ApplicationFormState applicationFormState,
                               final OutputManager outputManager,
-                              final ProgressService progressService,
                               final AbortService abortService,
+                              final AlertService alertService,
                               @Qualifier("FollowLinksCommandMap") final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap,
                               @Qualifier("ParserCommandMap") final CommandMap<OutputFileType, ParserCommand> parserCommandMap) {
         this.urlServiceFactory = urlServiceFactory;
         this.applicationFormState = applicationFormState;
         this.outputManager = outputManager;
-        this.progressService = progressService;
         this.abortService = abortService;
+        this.alertService = alertService;
         this.followLinksCommandMap = followLinksCommandMap;
         this.parserCommandMap = parserCommandMap;
     }
@@ -83,8 +82,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer {
     public void onDocumentsRetrieved(final List<Document> documents) {
         final ObservableList<DOMQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         if (documents.size() == 0) {
-            //TODO throw alert no documents retrieved
-            progressService.updateProgress(ProgressType.COMPLETE);
+            alertService.warn("No Documents.", "No parsable documents found. Output may be empty");
         }
         documents.forEach(document -> {
             domQueryObservableList.forEach(domQuery -> {

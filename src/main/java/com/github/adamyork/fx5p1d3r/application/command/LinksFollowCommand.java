@@ -7,6 +7,7 @@ import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
+import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.ConcurrentURLService;
 import com.github.adamyork.fx5p1d3r.common.service.URLServiceFactory;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
@@ -41,6 +42,7 @@ public class LinksFollowCommand implements ApplicationCommand {
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
     private final OutputManager outputManager;
     private final ProgressService progressService;
+    private final AlertService alertService;
 
     private int currentDepth;
     private ExecutorService executorService;
@@ -52,12 +54,14 @@ public class LinksFollowCommand implements ApplicationCommand {
                               final URLServiceFactory urlServiceFactory,
                               @Qualifier("ParserCommandMap") final CommandMap<OutputFileType, ParserCommand> parserCommandMap,
                               final OutputManager outputManager,
-                              final ProgressService progressService) {
+                              final ProgressService progressService,
+                              final AlertService alertService) {
         this.applicationFormState = applicationFormState;
         this.urlServiceFactory = urlServiceFactory;
         this.parserCommandMap = parserCommandMap;
         this.outputManager = outputManager;
         this.progressService = progressService;
+        this.alertService = alertService;
     }
 
     @Override
@@ -90,6 +94,9 @@ public class LinksFollowCommand implements ApplicationCommand {
         final List<Document> documents = (List<Document>) workerStateEvent.getSource().getValue();
         final ObservableList<DOMQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         final List<List<URL>> allLinks = new ArrayList<>();
+        if (documents.size() == 0) {
+            alertService.warn("No Documents.", "No documents found at link depth " + currentDepth + ". Output maybe empty.");
+        }
         documents.forEach(document -> {
             final List<Elements> elementsList = new ArrayList<>();
             domQueryObservableList.forEach(domQuery -> {
@@ -120,7 +127,7 @@ public class LinksFollowCommand implements ApplicationCommand {
                 return matcher.matches();
             }).collect(Collectors.toList());
         } catch (final PatternSyntaxException exception) {
-            //TODO dialog here , regex invalid
+            alertService.warn("Invalid Regex.", "Link follow regex is invalid.");
             exception.printStackTrace();
             return new ArrayList<>();
         }

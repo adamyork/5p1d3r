@@ -58,7 +58,6 @@ public class LandingController implements Initializable, ApplicationContextAware
         final URL nullSafeURL = nullSafe.getNullSafe(url);
         basicScene.getStylesheets().addAll(nullSafeURL.toExternalForm());
         globalStage.getStage().setScene(basicScene);
-
     }
 
 }

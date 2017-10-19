@@ -6,6 +6,7 @@ import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.model.OutputJSONObject;
+import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import groovy.lang.Binding;
@@ -32,15 +33,18 @@ public class DocumentParserJsonCommand implements ParserCommand {
 
     private final ApplicationFormState applicationFormState;
     private final ProgressService progressService;
+    private final AlertService alertService;
     private final CommandMap<OutputFileType, OutputCommand> outputCommandMap;
 
     @Autowired
     public DocumentParserJsonCommand(final ApplicationFormState applicationFormState,
                                      final ProgressService progressService,
+                                     final AlertService alertService,
                                      @Qualifier("OutputCommandMap") final CommandMap<OutputFileType, OutputCommand> outputCommandMap) {
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;
         this.outputCommandMap = outputCommandMap;
+        this.alertService = alertService;
     }
 
     @Override
@@ -50,15 +54,16 @@ public class DocumentParserJsonCommand implements ParserCommand {
         final ObservableList<File> resultTransformObservableList = applicationFormState.getResultTransformObservableList();
         final List<Object> objectList = new ArrayList<>();
         progressService.updateProgress(ProgressType.TRANSFORM);
-        //TODO if elements size == 0 and dont follow links then throw alert
+        if (elements.size() == 0) {
+            alertService.warn("No Elements.", "One or more queries returned no elements. Output may be empty");
+        }
         elements.forEach(element -> resultTransformObservableList.forEach(file -> {
             final Binding binding = new Binding();
             final String script = Unchecked.function(o -> FileUtils.readFileToString(file)).apply(null);
             final GroovyShell shell = new GroovyShell(binding);
             binding.setProperty("document", document);
             binding.setProperty("element", element);
-            Object obj = shell.evaluate(script);
-            //outputManager.outputToApplication(obj.toString());
+            final Object obj = shell.evaluate(script);
             objectList.add(obj);
         }));
         final OutputJSONObject outputJSONObject = new OutputJSONObject.Builder().objectList(objectList).build();
