@@ -1,6 +1,6 @@
 package com.github.adamyork.fx5p1d3r.common.service;
 
-import com.github.adamyork.fx5p1d3r.application.command.MultiThreadCommand;
+import com.github.adamyork.fx5p1d3r.common.command.DocumentRetrieveHandler;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -23,7 +23,7 @@ public class ConcurrentURLService extends Task<List<Document>> {
 
     private final List<URL> urls;
     private final ProgressService progressService;
-    private MultiThreadCommand multiThreadCommand;
+    private DocumentRetrieveHandler handler;
     private int threadPoolSize;
     private int total = 0;
     private List<Document> documents;
@@ -41,7 +41,7 @@ public class ConcurrentURLService extends Task<List<Document>> {
         documents = new ArrayList<>();
         final List<UrlServiceCallable> tasks = urls.stream().map(url -> {
             final UrlServiceCallable task = new UrlServiceCallable(url, progressService);
-            task.setOnSucceeded(this::onDocumentsRetrieved);
+            task.setOnSucceeded(this::onMultiDocumentsRetrieved);
             return task;
         }).collect(Collectors.toList());
         final ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
@@ -50,17 +50,17 @@ public class ConcurrentURLService extends Task<List<Document>> {
         return documents;
     }
 
-    public void setCallbackObject(final MultiThreadCommand multiThreadCommand) {
-        this.multiThreadCommand = multiThreadCommand;
+    public void setCallbackObject(final DocumentRetrieveHandler handler) {
+        this.handler = handler;
     }
 
-    void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
+    void onMultiDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         total++;
         documents.add((Document) workerStateEvent.getSource().getValue());
         //TODO COMMAND
         if (total == urls.size()) {
             total = 0;
-            multiThreadCommand.onDocumentsRetrieved(documents);
+            handler.onDocumentsRetrieved(documents);
         }
     }
 

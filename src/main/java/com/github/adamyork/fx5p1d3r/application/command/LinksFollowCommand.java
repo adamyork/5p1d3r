@@ -4,6 +4,7 @@ import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.DocumentRetrieveHandler;
 import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
@@ -13,7 +14,6 @@ import com.github.adamyork.fx5p1d3r.common.service.URLServiceFactory;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.collections.ObservableList;
-import javafx.concurrent.WorkerStateEvent;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * Copyright 2017
  */
 @Component
-public class LinksFollowCommand implements ApplicationCommand {
+public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveHandler {
 
     private final ApplicationFormState applicationFormState;
     private final URLServiceFactory urlServiceFactory;
@@ -84,21 +84,22 @@ public class LinksFollowCommand implements ApplicationCommand {
         currentDepth++;
         maxDepth = applicationFormState.getFollowLinksDepth().getValue();
         final List<URL> filtered = filterByRegex(urls);
+        threadPoolSize = Integer.parseInt(applicationFormState.getMultiThreadMax().toString());
         final ConcurrentURLService concurrentURLService = urlServiceFactory.getConcurrentServiceForURLs(filtered, threadPoolSize);
+        concurrentURLService.setCallbackObject(this);
         executorService.submit(concurrentURLService);
-        concurrentURLService.setOnSucceeded(this::onDocumentsRetrieved);
     }
 
     @SuppressWarnings("unchecked")
-    private void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
-        final List<Document> documents = (List<Document>) workerStateEvent.getSource().getValue();
+    public void onDocumentsRetrieved(final List<Document> documents) {
         final ObservableList<DOMQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         final List<List<URL>> allLinks = new ArrayList<>();
         //TODO COMMAND
         if (documents.size() == 0) {
             alertService.warn("No Documents.", "No documents found at link depth " + currentDepth + ". Output maybe empty.");
         }
-        documents.forEach(document -> {
+        documents.forEach(doc -> {
+            final Document document = doc;
             domQueryObservableList.forEach(domQuery -> {
                 final String domQueryString = domQuery.getQuery();
                 parserCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(document, domQueryString);

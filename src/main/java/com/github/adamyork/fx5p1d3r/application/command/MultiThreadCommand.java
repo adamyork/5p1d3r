@@ -4,6 +4,7 @@ import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.DocumentRetrieveHandler;
 import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
@@ -30,7 +31,7 @@ import java.util.concurrent.Executors;
  * Copyright 2017
  */
 @Component
-public class MultiThreadCommand implements ApplicationCommand, Observer {
+public class MultiThreadCommand implements ApplicationCommand, Observer, DocumentRetrieveHandler {
 
     private final ApplicationFormState applicationFormState;
     private final OutputManager outputManager;

@@ -4,6 +4,7 @@ import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class AlertService {
 
     private final ProgressService progressService;
+    private boolean warningShown = false;
 
     @Autowired
     public AlertService(final ProgressService progressService) {
@@ -34,10 +36,19 @@ public class AlertService {
     }
 
     public void warn(final String header, final String content) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Error");
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.show();
+        //TODO command
+        if (!warningShown) {
+            warningShown = true;
+            final Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+            alert.show();
+            alert.setOnHidden(this::handleOnHidden);
+        }
+    }
+
+    private void handleOnHidden(final DialogEvent dialogEvent) {
+        warningShown = false;
     }
 }
