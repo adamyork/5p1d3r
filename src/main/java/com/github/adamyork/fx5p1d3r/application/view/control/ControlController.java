@@ -18,10 +18,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -33,6 +35,13 @@ import java.util.ResourceBundle;
 @Component
 public class ControlController implements Initializable, Observer {
 
+    private final MessageSource messageSource;
+    private final ApplicationFormState applicationFormState;
+    private final GlobalStage globalStage;
+    private final CommandMap<URLMethod, ApplicationCommand> urlMethodCommandMap;
+    private final ProgressService progressService;
+    private final AbortService abortService;
+
     @FXML
     private Button startButton;
     @FXML
@@ -42,28 +51,26 @@ public class ControlController implements Initializable, Observer {
     @FXML
     private ProgressBar progressBar;
 
-    private ApplicationFormState applicationFormState;
-    private GlobalStage globalStage;
-    private CommandMap<URLMethod, ApplicationCommand> urlMethodCommandMap;
-    private ProgressService progressService;
-    private AbortService abortService;
-
     @Autowired
     public ControlController(final ApplicationFormState applicationFormState,
                              final GlobalStage globalStage,
                              final CommandMap<URLMethod, ApplicationCommand> urlMethodCommandMap,
                              final ProgressService progressService,
-                             final AbortService abortService) {
+                             final AbortService abortService,
+                             final MessageSource messageSource) {
         this.applicationFormState = applicationFormState;
         this.globalStage = globalStage;
         this.urlMethodCommandMap = urlMethodCommandMap;
         this.progressService = progressService;
         this.abortService = abortService;
+        this.messageSource = messageSource;
     }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        startButton.setText(messageSource.getMessage("start.label", null, Locale.getDefault()));
         startButton.setOnAction(this::handleStart);
+        stopButton.setText(messageSource.getMessage("abort.label", null, Locale.getDefault()));
         stopButton.setOnAction(this::handleStop);
         progressService.addObserver(this);
     }
@@ -71,7 +78,7 @@ public class ControlController implements Initializable, Observer {
     @SuppressWarnings("unused")
     private void handleStart(final ActionEvent actionEvent) {
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save output as...");
+        fileChooser.setTitle(messageSource.getMessage("save.output.as.label", null, Locale.getDefault()));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("json", "*.json"),
                 new FileChooser.ExtensionFilter("csv", "*.csv")

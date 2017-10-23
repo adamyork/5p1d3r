@@ -15,9 +15,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -28,18 +30,28 @@ import java.util.ResourceBundle;
 public class LandingController implements Initializable, ApplicationContextAware {
 
     private final GlobalStage globalStage;
+    private final MessageSource messageSource;
     @FXML
-    private Button basicButton;
+    private Button startButton;
+    @FXML
+    private Button aboutButton;
+    @FXML
+    private Button helpButton;
     private ApplicationContext applicationContext;
 
     @Autowired
-    public LandingController(final GlobalStage globalStage) {
+    public LandingController(final GlobalStage globalStage,
+                             final MessageSource messageSource) {
         this.globalStage = globalStage;
+        this.messageSource = messageSource;
     }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        basicButton.setOnAction(this::handleBasicSelection);
+        startButton.setOnAction(this::handleBasicSelection);
+        startButton.setText(messageSource.getMessage("start.label", null, Locale.getDefault()));
+        aboutButton.setText(messageSource.getMessage("about.label", null, Locale.getDefault()));
+        helpButton.setText(messageSource.getMessage("help.label", null, Locale.getDefault()));
     }
 
     @Override

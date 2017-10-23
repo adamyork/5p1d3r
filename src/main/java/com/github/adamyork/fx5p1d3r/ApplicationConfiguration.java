@@ -6,8 +6,10 @@ import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.model.URLMethod;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 /**
  * Created by Adam York on 2/26/2017.
@@ -99,6 +101,14 @@ public class ApplicationConfiguration {
     public UrlValidator providesURLValidator() {
         final String[] supportedURLSchemes = {"http", "https"};
         return new UrlValidator(supportedURLSchemes, UrlValidator.ALLOW_LOCAL_URLS);
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasenames("messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
     }
 
 }

@@ -27,11 +27,13 @@ import javafx.stage.FileChooser;
 import org.controlsfx.control.ToggleSwitch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
@@ -64,21 +66,28 @@ public class MethodController implements Initializable, Observer {
     private TextField linkURLPatternTextfield;
     @FXML
     private Label urlLabel;
+    @FXML
+    private Label urlMethodLabel;
+    @FXML
+    private Label linkUrlPatternLabel;
 
     private ApplicationFormState applicationFormState;
     private GlobalStage globalStage;
     private GlobalDefaults globalDefaults;
+    private MessageSource messageSource;
     private CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap;
 
     @Autowired
     public MethodController(final ApplicationFormState applicationFormState,
                             final GlobalStage globalStage,
                             final GlobalDefaults globalDefaults,
+                            final MessageSource messageSource,
                             final @Qualifier("LoadUrlListCommandMap") CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap) {
         this.applicationFormState = applicationFormState;
         this.globalStage = globalStage;
         this.globalDefaults = globalDefaults;
         this.loadUrlListCommandMap = loadUrlListCommandMap;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -95,6 +104,7 @@ public class MethodController implements Initializable, Observer {
         urlListSelectionButton.setOnAction(this::handleAddUrlList);
         urlListSelectionButton.setDisable(true);
 
+        requestThrottlingToggleSwitch.setText(messageSource.getMessage("throttling.label", null, Locale.getDefault()));
         requestThrottlingToggleSwitch.selectedProperty().addListener(this::handleThrottlingChanged);
         requestThrottlingToggleSwitch.setSelected(true);
         requestThrottlingChoiceBox.setDisable(false);
@@ -103,6 +113,7 @@ public class MethodController implements Initializable, Observer {
         requestThrottlingChoiceBox.setValue(requestThrottlingChoiceBox.getItems().get(3));
         applicationFormState.setThrottleMs(requestThrottlingChoiceBox.getItems().get(3).getThrottleMs());
 
+        multiThreadingToggleSwitch.setText(messageSource.getMessage("threading.label", null, Locale.getDefault()));
         multiThreadingToggleSwitch.selectedProperty().addListener(this::handleMultiThreadingChanged);
         multiThreadingChoiceBox.setDisable(true);
         multiThreadingChoiceBox.setItems(MultiThreadingChoice.getMultiThreadingChoices());
@@ -110,6 +121,7 @@ public class MethodController implements Initializable, Observer {
         multiThreadingChoiceBox.setValue(multiThreadingChoiceBox.getItems().get(0));
         applicationFormState.setMultiThreadMax(multiThreadingChoiceBox.getItems().get(0).getMultiThreadMax());
 
+        followLinksToggleSwitch.setText(messageSource.getMessage("follow.links.label", null, Locale.getDefault()));
         followLinksToggleSwitch.selectedProperty().addListener(this::handleFollowLinksChanged);
         followLinksChoiceBox.setDisable(true);
         followLinksChoiceBox.setItems(FollowLinksChoice.getFollowLinksChoices());
@@ -124,6 +136,11 @@ public class MethodController implements Initializable, Observer {
 
         applicationFormState.setOutputFileType(OutputFileType.JSON);
         applicationFormState.addObserver(this);
+
+        urlLabel.setText(messageSource.getMessage("url.label", null, Locale.getDefault()));
+        urlMethodLabel.setText(messageSource.getMessage("url.method.label", null, Locale.getDefault()));
+        linkUrlPatternLabel.setText(messageSource.getMessage("link.pattern.label", null, Locale.getDefault()));
+
         Platform.runLater(() -> startingURLTextfield.requestFocus());
     }
 
@@ -134,7 +151,9 @@ public class MethodController implements Initializable, Observer {
         final URLMethod urlMethod = methodChoice.getUrlMethod();
         startingURLTextfield.setDisable(urlMethod.equals(URLMethod.URL_LIST));
         applicationFormState.setUrlMethod(urlMethod);
-        urlLabel.setText(urlMethod.equals(URLMethod.URL) ? "URL" : "URL LIST");
+        final String urlString = messageSource.getMessage("url.label", null, Locale.getDefault());
+        final String urlListString = messageSource.getMessage("url.list.label", null, Locale.getDefault());
+        urlLabel.setText(urlMethod.equals(URLMethod.URL) ? urlString : urlListString);
         urlListSelectionButton.setDisable(urlMethod.equals(URLMethod.URL));
     }
 
@@ -197,7 +216,7 @@ public class MethodController implements Initializable, Observer {
 
     private void handleAddUrlList(@SuppressWarnings("unused") final ActionEvent actionEvent) {
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select URL List");
+        fileChooser.setTitle(messageSource.getMessage("select.url.list.label", null, Locale.getDefault()));
         final String[] validExtensions = {"*.txt"};
         final FileChooser.ExtensionFilter txtFileFilter = new FileChooser.ExtensionFilter("txt files", validExtensions);
         fileChooser.getExtensionFilters().add(txtFileFilter);

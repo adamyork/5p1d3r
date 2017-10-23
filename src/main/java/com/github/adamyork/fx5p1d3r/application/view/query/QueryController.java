@@ -16,9 +16,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -36,18 +38,23 @@ public class QueryController implements Initializable {
     private Button removeDOMQuery;
     @FXML
     private Label queryCount;
+    @FXML
+    private Label domQueriesLabel;
 
     private ApplicationFormState applicationFormState;
     private CommandMap<Boolean, NullSafeCommand> domQueryListViewCommandMap;
     private GlobalDefaults globalDefaults;
+    private MessageSource messageSource;
 
     @Autowired
     public QueryController(final ApplicationFormState applicationFormState,
                            final GlobalDefaults globalDefaults,
+                           final MessageSource messageSource,
                            @Qualifier("DomQueryListViewCommandMap") final CommandMap<Boolean, NullSafeCommand> domQueryListViewCommandMap) {
         this.applicationFormState = applicationFormState;
         this.domQueryListViewCommandMap = domQueryListViewCommandMap;
         this.globalDefaults = globalDefaults;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -59,6 +66,7 @@ public class QueryController implements Initializable {
                 domQueryListView.getItems().size()).build();
         domQueryListView.getItems().add(defaultQuery);
         applicationFormState.setDomQueryObservableList(domQueryListView.getItems());
+        domQueriesLabel.setText(messageSource.getMessage("dom.queries.label", null, Locale.getDefault()));
     }
 
     @SuppressWarnings("unused")

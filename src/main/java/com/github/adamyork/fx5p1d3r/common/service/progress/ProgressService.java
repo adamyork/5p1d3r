@@ -4,10 +4,13 @@ import com.github.adamyork.fx5p1d3r.common.command.StepAddCommand;
 import com.github.adamyork.fx5p1d3r.common.command.StepAssignCommand;
 import com.github.adamyork.fx5p1d3r.common.command.StepCommand;
 import javafx.application.Platform;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Observable;
 
@@ -18,35 +21,30 @@ import java.util.Observable;
 @Component
 public class ProgressService extends Observable {
 
-    private static final String APPLICATION_START = "starting";
-    private static final String VALIDATING_URL = "validating urls";
-    private static final String FETCHING_RESOURCE = "fetching resource";
-    private static final String RESOURCE_RETRIEVED = "resource retrieved";
-    private static final String RUNNING_SELECTORS = "running selectors";
-    private static final String RUNNING_TRANSFORMS = "running transforms";
-    private static final String WRITING_OUTPUT = "writing output";
-    private static final String FOLLOW_LINKS = "following links";
-    private static final String APPLICATION_COMPLETE = "complete";
-    private static final String APPLICATION_ABORTED = "aborted process due to error";
-
+    private final MessageSource messageSource;
     private Map<ProgressType, String> messageMap;
     private ProgressState progressState;
     private ProgressState previousState;
     private Map<ProgressType, StepCommand> stepCommandMap;
 
+    @Autowired
+    public ProgressService(final MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
     @PostConstruct
     public void initialize() {
         messageMap = new HashMap<>();
-        messageMap.put(ProgressType.START, APPLICATION_START);
-        messageMap.put(ProgressType.VALIDATE, VALIDATING_URL);
-        messageMap.put(ProgressType.FETCH, FETCHING_RESOURCE);
-        messageMap.put(ProgressType.RETRIEVED, RESOURCE_RETRIEVED);
-        messageMap.put(ProgressType.SELECTOR, RUNNING_SELECTORS);
-        messageMap.put(ProgressType.TRANSFORM, RUNNING_TRANSFORMS);
-        messageMap.put(ProgressType.OUTPUT, WRITING_OUTPUT);
-        messageMap.put(ProgressType.LINKS, FOLLOW_LINKS);
-        messageMap.put(ProgressType.COMPLETE, APPLICATION_COMPLETE);
-        messageMap.put(ProgressType.ABORT, APPLICATION_ABORTED);
+        messageMap.put(ProgressType.START, messageSource.getMessage("starting.label", null, Locale.getDefault()));
+        messageMap.put(ProgressType.VALIDATE, messageSource.getMessage("validating.urls.label", null, Locale.getDefault()));
+        messageMap.put(ProgressType.FETCH, messageSource.getMessage("fetching.resource", null, Locale.getDefault()));
+        messageMap.put(ProgressType.RETRIEVED, messageSource.getMessage("resource.retrieved", null, Locale.getDefault()));
+        messageMap.put(ProgressType.SELECTOR, messageSource.getMessage("running.selectors", null, Locale.getDefault()));
+        messageMap.put(ProgressType.TRANSFORM, messageSource.getMessage("running.transforms", null, Locale.getDefault()));
+        messageMap.put(ProgressType.OUTPUT, messageSource.getMessage("writing.output.label", null, Locale.getDefault()));
+        messageMap.put(ProgressType.LINKS, messageSource.getMessage("following.links", null, Locale.getDefault()));
+        messageMap.put(ProgressType.COMPLETE, messageSource.getMessage("complete.label", null, Locale.getDefault()));
+        messageMap.put(ProgressType.ABORT, messageSource.getMessage("aborted.process.due.to.error", null, Locale.getDefault()));
     }
 
     public void updateSteps(final int size) {

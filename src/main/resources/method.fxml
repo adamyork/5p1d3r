@@ -10,7 +10,7 @@
     <children>
         <VBox spacing="5.0">
             <children>
-                <Label alignment="CENTER_RIGHT" text="Url Method"/>
+                <Label fx:id="urlMethodLabel" alignment="CENTER_RIGHT" text="Url Method"/>
                 <ChoiceBox fx:id="urlMethodChoiceBox" nodeOrientation="LEFT_TO_RIGHT" prefWidth="100.0"
                            styleClass="split-menu-btn-default"/>
             </children>
@@ -71,7 +71,7 @@
             <children>
                 <VBox spacing="5.0">
                     <children>
-                        <Label text="Link Pattern"/>
+                        <Label fx:id="linkUrlPatternLabel" text="Link Pattern"/>
                         <TextField fx:id="linkURLPatternTextfield" alignment="TOP_LEFT" nodeOrientation="LEFT_TO_RIGHT"
                                    prefWidth="250.0" promptText="Link URL Pattern"/>
                     </children>

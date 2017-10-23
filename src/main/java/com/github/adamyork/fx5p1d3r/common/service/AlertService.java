@@ -6,8 +6,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -18,18 +20,21 @@ import java.util.Optional;
 public class AlertService {
 
     private final ProgressService progressService;
+    private final MessageSource messageSource;
     private boolean warningShown = false;
 
     @Autowired
-    public AlertService(final ProgressService progressService) {
+    public AlertService(final ProgressService progressService,
+                        final MessageSource messageSource) {
         this.progressService = progressService;
+        this.messageSource = messageSource;
     }
 
     public Optional<ButtonType> error(final String header, final String content) {
         progressService.updateSteps(0);
         progressService.updateProgress(ProgressType.ABORT);
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
+        alert.setTitle(messageSource.getMessage("alert.service.error.label", null, Locale.getDefault()));
         alert.setHeaderText(header);
         alert.setContentText(content);
         return alert.showAndWait();
@@ -40,7 +45,7 @@ public class AlertService {
         if (!warningShown) {
             warningShown = true;
             final Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Error");
+            alert.setTitle(messageSource.getMessage("alert.service.warning.label", null, Locale.getDefault()));
             alert.setHeaderText(header);
             alert.setContentText(content);
             alert.show();

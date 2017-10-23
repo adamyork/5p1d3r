@@ -13,10 +13,12 @@ import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -38,34 +40,42 @@ public class TransformController implements Initializable {
     private Button addDefaultCsvTransformer;
     @FXML
     private Label transformCount;
+    @FXML
+    private Label transformsLabel;
 
     private ApplicationFormState applicationFormState;
     private CommandMap<Boolean, NullSafeCommand> resultTransformCommandMap;
     private GlobalStage globalStage;
+    private MessageSource messageSource;
 
     @Autowired
     public TransformController(final ApplicationFormState applicationFormState,
                                final GlobalStage globalStage,
+                               final MessageSource messageSource,
                                @Qualifier("ResultTransformListViewCommandMap") final CommandMap<Boolean, NullSafeCommand> resultTransformCommandMap) {
         this.applicationFormState = applicationFormState;
         this.resultTransformCommandMap = resultTransformCommandMap;
         this.globalStage = globalStage;
+        this.messageSource = messageSource;
     }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         addResultTransform.setOnAction(this::handleAddResultTransform);
         removeResultTransform.setOnAction(this::handleRemoveResultTransform);
+        addDefaultJsonTransformer.setText(messageSource.getMessage("basic.json.transform.label", null, Locale.getDefault()));
         addDefaultJsonTransformer.setOnAction(this::addJsonTransformer);
+        addDefaultCsvTransformer.setText(messageSource.getMessage("basic.json.transform.label", null, Locale.getDefault()));
         addDefaultCsvTransformer.setOnAction(this::addCsvTransformer);
         resultTransformListView.getItems().add(applicationFormState.getDefaultJSONTransform());
         applicationFormState.setResultTransformObservableList(resultTransformListView.getItems());
+        transformsLabel.setText(messageSource.getMessage("transforms.label", null, Locale.getDefault()));
     }
 
     @SuppressWarnings({"unchecked", "unused"})
     private void handleAddResultTransform(final ActionEvent actionEvent) {
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Groovy Result Transform");
+        fileChooser.setTitle(messageSource.getMessage("select.groovy.result.transform.label", null, Locale.getDefault()));
         final String[] validExtensions = {"*.groovy", "*.gvy", "*.gy", "*.gsh"};
         final FileChooser.ExtensionFilter groovyFileFilter = new FileChooser.ExtensionFilter("groovy files", validExtensions);
         fileChooser.getExtensionFilters().add(groovyFileFilter);
