@@ -6,7 +6,7 @@ import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
-import com.github.adamyork.fx5p1d3r.common.model.URLMethod;
+import com.github.adamyork.fx5p1d3r.common.model.UrlMethod;
 import com.github.adamyork.fx5p1d3r.common.service.AbortService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressState;
@@ -38,7 +38,7 @@ public class ControlController implements Initializable, Observer {
     private final MessageSource messageSource;
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
-    private final CommandMap<URLMethod, ApplicationCommand> urlMethodCommandMap;
+    private final CommandMap<UrlMethod, ApplicationCommand> urlMethodCommandMap;
     private final ProgressService progressService;
     private final AbortService abortService;
 
@@ -54,7 +54,7 @@ public class ControlController implements Initializable, Observer {
     @Autowired
     public ControlController(final ApplicationFormState applicationFormState,
                              final GlobalStage globalStage,
-                             final CommandMap<URLMethod, ApplicationCommand> urlMethodCommandMap,
+                             final CommandMap<UrlMethod, ApplicationCommand> urlMethodCommandMap,
                              final ProgressService progressService,
                              final AbortService abortService,
                              final MessageSource messageSource) {

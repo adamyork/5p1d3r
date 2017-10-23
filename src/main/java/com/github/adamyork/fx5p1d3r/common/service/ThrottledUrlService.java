@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Adam York on 4/4/2017.
  * Copyright 2017
  */
-public class ThrottledURLService extends Task<List<Document>> {
+public class ThrottledUrlService extends Task<List<Document>> {
 
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36";
 
@@ -25,7 +25,7 @@ public class ThrottledURLService extends Task<List<Document>> {
     private final ApplicationFormState applicationFormState;
     private final ProgressService progressService;
 
-    public ThrottledURLService(final List<URL> urls,
+    public ThrottledUrlService(final List<URL> urls,
                                final ApplicationFormState applicationFormState,
                                final ProgressService progressService) {
         this.urls = urls;

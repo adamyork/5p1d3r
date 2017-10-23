@@ -4,17 +4,17 @@ package com.github.adamyork.fx5p1d3r.application.view.query.cell;
  * Created by Adam York on 2/24/2017.
  * Copyright 2017
  */
-public class DOMQuery {
+public class DomQuery {
 
     private String query;
     private int id;
 
-    private DOMQuery(final Builder builder) {
+    private DomQuery(final Builder builder) {
         query = builder.query;
         id = builder.id;
     }
 
-    public DOMQuery() {}
+    public DomQuery() {}
 
     public String getQuery() {
         return query;
@@ -50,8 +50,8 @@ public class DOMQuery {
             return this;
         }
 
-        public DOMQuery build() {
-            return new DOMQuery(this);
+        public DomQuery build() {
+            return new DomQuery(this);
         }
 
     }

@@ -28,7 +28,7 @@ public class UrlServiceCallable extends Task<Document> {
     public Document call() throws Exception {
         progressService.updateProgress(ProgressType.FETCH);
         final Document document = Unchecked.function(urlToCall -> Jsoup.connect(urlToCall.toString())
-                .userAgent(ThrottledURLService.USER_AGENT)
+                .userAgent(ThrottledUrlService.USER_AGENT)
                 .timeout(30000)
                 .get()).apply(url);
         progressService.updateProgress(ProgressType.RETRIEVED);

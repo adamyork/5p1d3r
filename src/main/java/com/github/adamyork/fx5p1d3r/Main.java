@@ -41,9 +41,9 @@ public class Main extends Application {
         final Parent landingRoot = (Parent) Unchecked.function(o -> fxmlLoader.load()).apply(null);
         final Scene landingScene = new Scene(landingRoot, 400, 832);
         final URL url = getClass().getClassLoader().getResource("landing.css");
-        final URL nullSafeURL = new NullSafe<>(URL.class).getNullSafe(url);
+        final URL nullSafeUrl = new NullSafe<>(URL.class).getNullSafe(url);
 
-        landingScene.getStylesheets().addAll(nullSafeURL.toExternalForm());
+        landingScene.getStylesheets().addAll(nullSafeUrl.toExternalForm());
         stage.setScene(landingScene);
         stage.setResizable(false);
         stage.show();

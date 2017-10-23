@@ -4,7 +4,7 @@ import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.FollowLinksChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.MultiThreadingChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.ThrottleChoice;
-import com.github.adamyork.fx5p1d3r.application.view.method.choice.URLMethodChoice;
+import com.github.adamyork.fx5p1d3r.application.view.method.choice.UrlMethodChoice;
 import com.github.adamyork.fx5p1d3r.common.GlobalDefaults;
 import com.github.adamyork.fx5p1d3r.common.NullSafe;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
@@ -45,9 +45,9 @@ import java.util.ResourceBundle;
 public class MethodController implements Initializable, Observer {
 
     @FXML
-    private ChoiceBox<URLMethodChoice> urlMethodChoiceBox;
+    private ChoiceBox<UrlMethodChoice> urlMethodChoiceBox;
     @FXML
-    private TextField startingURLTextfield;
+    private TextField startingUrlTextfield;
     @FXML
     private Button urlListSelectionButton;
     @FXML
@@ -63,7 +63,7 @@ public class MethodController implements Initializable, Observer {
     @FXML
     private ChoiceBox<FollowLinksChoice> followLinksChoiceBox;
     @FXML
-    private TextField linkURLPatternTextfield;
+    private TextField linkUrlPatternTextfield;
     @FXML
     private Label urlLabel;
     @FXML
@@ -92,14 +92,14 @@ public class MethodController implements Initializable, Observer {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        urlMethodChoiceBox.setItems(URLMethodChoice.getURLMethodChoices());
-        urlMethodChoiceBox.getSelectionModel().selectedItemProperty().addListener(this::handleURLMethodChange);
+        urlMethodChoiceBox.setItems(UrlMethodChoice.getUrlMethodChoices());
+        urlMethodChoiceBox.getSelectionModel().selectedItemProperty().addListener(this::handleUrlMethodChange);
         urlMethodChoiceBox.setValue(urlMethodChoiceBox.getItems().get(0));
         applicationFormState.setUrlMethod(urlMethodChoiceBox.getSelectionModel().getSelectedItem().getUrlMethod());
 
-        startingURLTextfield.textProperty().addListener(this::handleStartingURLChanged);
-        startingURLTextfield.setText(globalDefaults.getDefaultForKey(GlobalDefault.STARTING_URL));
-        applicationFormState.setStartingURL(startingURLTextfield.getText());
+        startingUrlTextfield.textProperty().addListener(this::handleStartingUrlChanged);
+        startingUrlTextfield.setText(globalDefaults.getDefaultForKey(GlobalDefault.STARTING_URL));
+        applicationFormState.setStartingUrl(startingUrlTextfield.getText());
 
         urlListSelectionButton.setOnAction(this::handleAddUrlList);
         urlListSelectionButton.setDisable(true);
@@ -129,10 +129,10 @@ public class MethodController implements Initializable, Observer {
         followLinksChoiceBox.setValue(followLinksChoiceBox.getItems().get(0));
         applicationFormState.setFollowLinks(followLinksToggleSwitch.isSelected());
 
-        linkURLPatternTextfield.setOnKeyTyped(this::handleLinkFollowPatternChanged);
-        linkURLPatternTextfield.setText(globalDefaults.getDefaultForKey(GlobalDefault.LINK_PATTERN));
-        linkURLPatternTextfield.setDisable(true);
-        applicationFormState.setLinkFollowPattern(linkURLPatternTextfield.getText());
+        linkUrlPatternTextfield.setOnKeyTyped(this::handleLinkFollowPatternChanged);
+        linkUrlPatternTextfield.setText(globalDefaults.getDefaultForKey(GlobalDefault.LINK_PATTERN));
+        linkUrlPatternTextfield.setDisable(true);
+        applicationFormState.setLinkFollowPattern(linkUrlPatternTextfield.getText());
 
         applicationFormState.setOutputFileType(OutputFileType.JSON);
         applicationFormState.addObserver(this);
@@ -141,26 +141,26 @@ public class MethodController implements Initializable, Observer {
         urlMethodLabel.setText(messageSource.getMessage("url.method.label", null, Locale.getDefault()));
         linkUrlPatternLabel.setText(messageSource.getMessage("link.pattern.label", null, Locale.getDefault()));
 
-        Platform.runLater(() -> startingURLTextfield.requestFocus());
+        Platform.runLater(() -> startingUrlTextfield.requestFocus());
     }
 
     @SuppressWarnings("unused")
-    private void handleURLMethodChange(final ObservableValue<? extends URLMethodChoice> observableValue,
+    private void handleUrlMethodChange(final ObservableValue<? extends UrlMethodChoice> observableValue,
                                        final Choice oldChoice, final Choice newChoice) {
-        final URLMethodChoice methodChoice = (URLMethodChoice) newChoice;
-        final URLMethod urlMethod = methodChoice.getUrlMethod();
-        startingURLTextfield.setDisable(urlMethod.equals(URLMethod.URL_LIST));
+        final UrlMethodChoice methodChoice = (UrlMethodChoice) newChoice;
+        final UrlMethod urlMethod = methodChoice.getUrlMethod();
+        startingUrlTextfield.setDisable(urlMethod.equals(UrlMethod.URL_LIST));
         applicationFormState.setUrlMethod(urlMethod);
         final String urlString = messageSource.getMessage("url.label", null, Locale.getDefault());
         final String urlListString = messageSource.getMessage("url.list.label", null, Locale.getDefault());
-        urlLabel.setText(urlMethod.equals(URLMethod.URL) ? urlString : urlListString);
-        urlListSelectionButton.setDisable(urlMethod.equals(URLMethod.URL));
+        urlLabel.setText(urlMethod.equals(UrlMethod.URL) ? urlString : urlListString);
+        urlListSelectionButton.setDisable(urlMethod.equals(UrlMethod.URL));
     }
 
-    private void handleStartingURLChanged(@SuppressWarnings("unused") final Observable observable,
+    private void handleStartingUrlChanged(@SuppressWarnings("unused") final Observable observable,
                                           @SuppressWarnings("unused") final String oldValue,
                                           final String newValue) {
-        applicationFormState.setStartingURL(NullSafe.getSafeString(newValue));
+        applicationFormState.setStartingUrl(NullSafe.getSafeString(newValue));
     }
 
     private void handleThrottlingChanged(@SuppressWarnings("unused") final Observable observable) {
@@ -199,7 +199,7 @@ public class MethodController implements Initializable, Observer {
     private void handleFollowLinksChanged(@SuppressWarnings("unused") final Observable observable) {
         final boolean selected = ((BooleanProperty) observable).get();
         followLinksChoiceBox.setDisable(!selected);
-        linkURLPatternTextfield.setDisable(!selected);
+        linkUrlPatternTextfield.setDisable(!selected);
         applicationFormState.setFollowLinks(selected);
     }
 
@@ -211,7 +211,7 @@ public class MethodController implements Initializable, Observer {
     }
 
     private void handleLinkFollowPatternChanged(@SuppressWarnings("unused") final KeyEvent keyEvent) {
-        applicationFormState.setLinkFollowPattern(NullSafe.getSafeString(linkURLPatternTextfield.getText()));
+        applicationFormState.setLinkFollowPattern(NullSafe.getSafeString(linkUrlPatternTextfield.getText()));
     }
 
     private void handleAddUrlList(@SuppressWarnings("unused") final ActionEvent actionEvent) {
@@ -222,17 +222,17 @@ public class MethodController implements Initializable, Observer {
         fileChooser.getExtensionFilters().add(txtFileFilter);
         final File file = fileChooser.showOpenDialog(globalStage.getStage());
         final boolean fileSelected = !(file == null && applicationFormState.getUrlListFile() != null);
-        loadUrlListCommandMap.getCommand(fileSelected).execute(file, startingURLTextfield);
+        loadUrlListCommandMap.getCommand(fileSelected).execute(file, startingUrlTextfield);
     }
 
     @Override
     public void update(final java.util.Observable observable, final Object observed) {
-        final FilteredList<URLMethodChoice> filteredMethodChoices = urlMethodChoiceBox.getItems()
+        final FilteredList<UrlMethodChoice> filteredMethodChoices = urlMethodChoiceBox.getItems()
                 .filtered(urlMethodChoice -> urlMethodChoice.getUrlMethod().equals(applicationFormState.getUrlMethod()));
-        final URLMethodChoice methodChoice = filteredMethodChoices.get(0);
+        final UrlMethodChoice methodChoice = filteredMethodChoices.get(0);
         urlMethodChoiceBox.setValue(methodChoice);
-        urlListSelectionButton.setDisable(methodChoice.getUrlMethod().equals(URLMethod.URL));
-        startingURLTextfield.setText(applicationFormState.getStartingURL());
+        urlListSelectionButton.setDisable(methodChoice.getUrlMethod().equals(UrlMethod.URL));
+        startingUrlTextfield.setText(applicationFormState.getStartingUrl());
 
         final FilteredList<ThrottleChoice> filteredThrottlingChoices = requestThrottlingChoiceBox.getItems()
                 .filtered(throttleChoice -> throttleChoice.getThrottleMs().equals(applicationFormState.getThrottleMs()));
@@ -255,8 +255,8 @@ public class MethodController implements Initializable, Observer {
         followLinksChoiceBox.setDisable(!applicationFormState.followLinks());
         followLinksChoiceBox.setValue(followLinksChoice);
 
-        linkURLPatternTextfield.setText(applicationFormState.getLinkFollowPattern());
-        linkURLPatternTextfield.setDisable(!applicationFormState.followLinks());
+        linkUrlPatternTextfield.setText(applicationFormState.getLinkFollowPattern());
+        linkUrlPatternTextfield.setDisable(!applicationFormState.followLinks());
         applicationFormState.clearNotify();
     }
 }

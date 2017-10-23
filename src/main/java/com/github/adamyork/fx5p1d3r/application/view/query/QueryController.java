@@ -1,7 +1,7 @@
 package com.github.adamyork.fx5p1d3r.application.view.query;
 
-import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQuery;
-import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQueryListCell;
+import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
+import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQueryListCell;
 import com.github.adamyork.fx5p1d3r.common.GlobalDefaults;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.NullSafeCommand;
@@ -31,11 +31,11 @@ import java.util.ResourceBundle;
 public class QueryController implements Initializable {
 
     @FXML
-    private ListView<DOMQuery> domQueryListView;
+    private ListView<DomQuery> domQueryListView;
     @FXML
-    private Button addDOMQuery;
+    private Button addDomQuery;
     @FXML
-    private Button removeDOMQuery;
+    private Button removeDomQuery;
     @FXML
     private Label queryCount;
     @FXML
@@ -59,10 +59,10 @@ public class QueryController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        domQueryListView.setCellFactory(listView -> new DOMQueryListCell());
-        addDOMQuery.setOnAction(this::handleAddDOMQuery);
-        removeDOMQuery.setOnAction(this::handleRemoveDOMQuery);
-        final DOMQuery defaultQuery = new DOMQuery.Builder(globalDefaults.getDefaultForKey(GlobalDefault.DOM_QUERY),
+        domQueryListView.setCellFactory(listView -> new DomQueryListCell());
+        addDomQuery.setOnAction(this::handleAddDomQuery);
+        removeDomQuery.setOnAction(this::handleRemoveDomQuery);
+        final DomQuery defaultQuery = new DomQuery.Builder(globalDefaults.getDefaultForKey(GlobalDefault.DOM_QUERY),
                 domQueryListView.getItems().size()).build();
         domQueryListView.getItems().add(defaultQuery);
         applicationFormState.setDomQueryObservableList(domQueryListView.getItems());
@@ -70,15 +70,15 @@ public class QueryController implements Initializable {
     }
 
     @SuppressWarnings("unused")
-    private void handleAddDOMQuery(final ActionEvent actionEvent) {
-        final ObservableList<DOMQuery> domQueries = domQueryListView.getItems();
-        domQueryListView.getItems().add(new DOMQuery.Builder().id(domQueries.size()).build());
+    private void handleAddDomQuery(final ActionEvent actionEvent) {
+        final ObservableList<DomQuery> domQueries = domQueryListView.getItems();
+        domQueryListView.getItems().add(new DomQuery.Builder().id(domQueries.size()).build());
         applicationFormState.setDomQueryObservableList(domQueries);
         queryCount.setText(Integer.toString(domQueryListView.getItems().size()));
     }
 
     @SuppressWarnings({"unchecked", "unused"})
-    private void handleRemoveDOMQuery(final ActionEvent actionEvent) {
+    private void handleRemoveDomQuery(final ActionEvent actionEvent) {
         final int selectedIndex = domQueryListView.getSelectionModel().getSelectedIndex();
         domQueryListViewCommandMap.getCommand(selectedIndex != -1).execute(domQueryListView, selectedIndex);
         applicationFormState.setDomQueryObservableList(domQueryListView.getItems());

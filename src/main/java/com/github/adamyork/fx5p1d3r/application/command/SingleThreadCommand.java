@@ -1,6 +1,6 @@
 package com.github.adamyork.fx5p1d3r.application.command;
 
-import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQuery;
+import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
@@ -9,8 +9,8 @@ import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.service.AbortService;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
-import com.github.adamyork.fx5p1d3r.common.service.ThrottledURLService;
-import com.github.adamyork.fx5p1d3r.common.service.URLServiceFactory;
+import com.github.adamyork.fx5p1d3r.common.service.ThrottledUrlService;
+import com.github.adamyork.fx5p1d3r.common.service.UrlServiceFactory;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -38,7 +38,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
     private final OutputManager outputManager;
     private final ProgressService progressService;
     private final AbortService abortService;
-    private final URLServiceFactory urlServiceFactory;
+    private final UrlServiceFactory urlServiceFactory;
     private final AlertService alertService;
     private final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap;
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
@@ -46,7 +46,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
     private ExecutorService executorService;
 
     @Autowired
-    public SingleThreadCommand(final URLServiceFactory urlServiceFactory,
+    public SingleThreadCommand(final UrlServiceFactory urlServiceFactory,
                                final ApplicationFormState applicationFormState,
                                final OutputManager outputManager,
                                final ProgressService progressService,
@@ -74,9 +74,9 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
     public void execute(final List<URL> urls) {
         executorService = Executors.newFixedThreadPool(1);
         abortService.addObserver(this);
-        final ThrottledURLService throttledURLService = urlServiceFactory.getThrottledServiceForURLs(urls);
-        throttledURLService.setOnSucceeded(this::onDocumentsRetrieved);
-        executorService.submit(throttledURLService);
+        final ThrottledUrlService throttledUrlService = urlServiceFactory.getThrottledServiceForUrls(urls);
+        throttledUrlService.setOnSucceeded(this::onDocumentsRetrieved);
+        executorService.submit(throttledUrlService);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
     @SuppressWarnings({"unchecked", "Duplicates"})
     void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         final List<Document> documents = (List<Document>) workerStateEvent.getSource().getValue();
-        final ObservableList<DOMQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
+        final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         //TODO COMMAND
         if (documents.size() == 0) {
             alertService.warn("No Documents.", "No parsable documents found. Output may be empty");
@@ -99,7 +99,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
                 parserCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(document, domQueryString);
             });
             final Elements linksElementsList = document.select("a");
-            final List<URL> linksList = outputManager.getURLListFromElements(linksElementsList);
+            final List<URL> linksList = outputManager.getUrlListFromElements(linksElementsList);
             followLinksCommandMap.getCommand(applicationFormState.followLinks()).execute(linksList, executorService);
         });
         abortService.deleteObserver(this);

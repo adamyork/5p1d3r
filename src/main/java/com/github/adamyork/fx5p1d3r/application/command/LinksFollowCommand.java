@@ -1,6 +1,6 @@
 package com.github.adamyork.fx5p1d3r.application.command;
 
-import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQuery;
+import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
@@ -9,8 +9,8 @@ import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
-import com.github.adamyork.fx5p1d3r.common.service.ConcurrentURLService;
-import com.github.adamyork.fx5p1d3r.common.service.URLServiceFactory;
+import com.github.adamyork.fx5p1d3r.common.service.ConcurrentUrlService;
+import com.github.adamyork.fx5p1d3r.common.service.UrlServiceFactory;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.collections.ObservableList;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveHandler {
 
     private final ApplicationFormState applicationFormState;
-    private final URLServiceFactory urlServiceFactory;
+    private final UrlServiceFactory urlServiceFactory;
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
     private final OutputManager outputManager;
     private final ProgressService progressService;
@@ -51,7 +51,7 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
 
     @Autowired
     public LinksFollowCommand(final ApplicationFormState applicationFormState,
-                              final URLServiceFactory urlServiceFactory,
+                              final UrlServiceFactory urlServiceFactory,
                               @Qualifier("ParserCommandMap") final CommandMap<OutputFileType, ParserCommand> parserCommandMap,
                               final OutputManager outputManager,
                               final ProgressService progressService,
@@ -85,14 +85,14 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
         maxDepth = applicationFormState.getFollowLinksDepth().getValue();
         final List<URL> filtered = filterByRegex(urls);
         threadPoolSize = Integer.parseInt(applicationFormState.getMultiThreadMax().toString());
-        final ConcurrentURLService concurrentURLService = urlServiceFactory.getConcurrentServiceForURLs(filtered, threadPoolSize);
-        concurrentURLService.setCallbackObject(this);
-        executorService.submit(concurrentURLService);
+        final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(filtered, threadPoolSize);
+        concurrentUrlService.setCallbackObject(this);
+        executorService.submit(concurrentUrlService);
     }
 
     @SuppressWarnings("unchecked")
     public void onDocumentsRetrieved(final List<Document> documents) {
-        final ObservableList<DOMQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
+        final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         final List<List<URL>> allLinks = new ArrayList<>();
         //TODO COMMAND
         if (documents.size() == 0) {
@@ -105,7 +105,7 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
                 parserCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(document, domQueryString);
             });
             final Elements linksElementsList = document.select("a");
-            final List<URL> linksList = outputManager.getURLListFromElements(linksElementsList);
+            final List<URL> linksList = outputManager.getUrlListFromElements(linksElementsList);
             allLinks.add(linksList);
         });
         //TODO COMMAND

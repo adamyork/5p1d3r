@@ -6,13 +6,13 @@ import java.util.List;
  * Created by Adam York on 3/2/2017.
  * Copyright 2017
  */
-public class OutputJSONObject {
+public class OutputJsonObject {
 
     private List<Object> objectList;
 
-    public OutputJSONObject() {}
+    public OutputJsonObject() {}
 
-    private OutputJSONObject(final Builder builder) {
+    private OutputJsonObject(final Builder builder) {
         this.objectList = builder.objectList;
     }
 
@@ -36,8 +36,8 @@ public class OutputJSONObject {
             return this;
         }
 
-        public OutputJSONObject build() {
-            return new OutputJSONObject(this);
+        public OutputJsonObject build() {
+            return new OutputJsonObject(this);
         }
 
     }

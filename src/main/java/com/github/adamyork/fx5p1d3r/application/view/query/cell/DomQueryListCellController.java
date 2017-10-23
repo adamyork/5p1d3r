@@ -12,14 +12,14 @@ import java.util.ResourceBundle;
  * Created by Adam York on 2/25/2017.
  * Copyright 2017
  */
-public class DOMQueryListCellController implements Initializable {
+public class DomQueryListCellController implements Initializable {
 
     @FXML
     private TextField domQueryListCellTextField;
 
-    private DOMQuery domQuery;
+    private DomQuery domQuery;
 
-    void setDOMQuery(final DOMQuery domQuery) {
+    void setDomQuery(final DomQuery domQuery) {
         this.domQuery = domQuery;
         domQueryListCellTextField.setText(domQuery.getQuery());
     }

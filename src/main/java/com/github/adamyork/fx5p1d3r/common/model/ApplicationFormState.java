@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.adamyork.fx5p1d3r.Main;
-import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQuery;
+import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import javafx.collections.ObservableList;
 import org.apache.commons.io.FileUtils;
 import org.jooq.lambda.Unchecked;
@@ -19,8 +19,8 @@ import java.util.Observable;
 @Component
 public class ApplicationFormState extends Observable {
 
-    private URLMethod urlMethod;
-    private String startingURL;
+    private UrlMethod urlMethod;
+    private String startingUrl;
     @JsonProperty("followLinks")
     private boolean followLinks;
     @JsonProperty("multithreading")
@@ -31,28 +31,28 @@ public class ApplicationFormState extends Observable {
     private ThrottleMs throttleMs;
     private FollowLinksDepth followLinksDepth;
     private String linkFollowPattern;
-    private ObservableList<DOMQuery> domQueryObservableList;
+    private ObservableList<DomQuery> domQueryObservableList;
     private ObservableList<File> resultTransformObservableList;
     private String outputFile;
     private OutputFileType outputFileType;
     private File urlListFile;
-    private File defaultJSONTransform;
-    private File defaultCSVTransform;
+    private File defaultJsonTransform;
+    private File defaultCsvTransform;
 
-    public URLMethod getUrlMethod() {
+    public UrlMethod getUrlMethod() {
         return urlMethod;
     }
 
-    public void setUrlMethod(final URLMethod urlMethod) {
+    public void setUrlMethod(final UrlMethod urlMethod) {
         this.urlMethod = urlMethod;
     }
 
-    public String getStartingURL() {
-        return startingURL;
+    public String getStartingUrl() {
+        return startingUrl;
     }
 
-    public void setStartingURL(final String startingURL) {
-        this.startingURL = startingURL;
+    public void setStartingUrl(final String startingUrl) {
+        this.startingUrl = startingUrl;
     }
 
     public boolean followLinks() {
@@ -111,11 +111,11 @@ public class ApplicationFormState extends Observable {
         this.linkFollowPattern = linkFollowPattern;
     }
 
-    public ObservableList<DOMQuery> getDomQueryObservableList() {
+    public ObservableList<DomQuery> getDomQueryObservableList() {
         return domQueryObservableList;
     }
 
-    public void setDomQueryObservableList(final ObservableList<DOMQuery> domQueryObservableList) {
+    public void setDomQueryObservableList(final ObservableList<DomQuery> domQueryObservableList) {
         this.domQueryObservableList = domQueryObservableList;
     }
 
@@ -151,36 +151,36 @@ public class ApplicationFormState extends Observable {
         this.urlListFile = urlListFile;
     }
 
-    public File getDefaultJSONTransform() {
+    public File getDefaultJsonTransform() {
         //TODO COMMAND
-        if (defaultJSONTransform == null) {
-            final InputStream stream = Main.class.getClassLoader().getResourceAsStream("basicJSONTransform.groovy");
-            final File basicJsonTransform = new File("basicJSONTransform");
+        if (defaultJsonTransform == null) {
+            final InputStream stream = Main.class.getClassLoader().getResourceAsStream("basicJsonTransform.groovy");
+            final File basicJsonTransform = new File("basicJsonTransform");
             basicJsonTransform.deleteOnExit();
             Unchecked.consumer(consumer -> FileUtils.copyInputStreamToFile(stream, basicJsonTransform)).accept(null);
-            defaultJSONTransform = basicJsonTransform;
+            defaultJsonTransform = basicJsonTransform;
         }
-        return defaultJSONTransform;
+        return defaultJsonTransform;
     }
 
-    public void setDefaultJSONTransform(final File defaultJSONTransform) {
-        this.defaultJSONTransform = defaultJSONTransform;
+    public void setDefaultJsonTransform(final File defaultJsonTransform) {
+        this.defaultJsonTransform = defaultJsonTransform;
     }
 
-    public File getDefaultCSVTransform() {
+    public File getDefaultCsvTransform() {
         //TODO COMMAND
-        if (defaultCSVTransform == null) {
-            final InputStream stream = Main.class.getClassLoader().getResourceAsStream(("basicCSVTransform.groovy"));
-            final File basicCsvTransform = new File("basicCSVTransform");
+        if (defaultCsvTransform == null) {
+            final InputStream stream = Main.class.getClassLoader().getResourceAsStream(("basicCsvTransform.groovy"));
+            final File basicCsvTransform = new File("basicCsvTransform");
             basicCsvTransform.deleteOnExit();
             Unchecked.consumer(consumer -> FileUtils.copyInputStreamToFile(stream, basicCsvTransform)).accept(null);
-            defaultCSVTransform = basicCsvTransform;
+            defaultCsvTransform = basicCsvTransform;
         }
-        return defaultCSVTransform;
+        return defaultCsvTransform;
     }
 
-    public void setDefaultCSVTransform(final File defaultCSVTransform) {
-        this.defaultCSVTransform = defaultCSVTransform;
+    public void setDefaultCsvTransform(final File defaultCsvTransform) {
+        this.defaultCsvTransform = defaultCsvTransform;
     }
 
     public void notifyChanged() {

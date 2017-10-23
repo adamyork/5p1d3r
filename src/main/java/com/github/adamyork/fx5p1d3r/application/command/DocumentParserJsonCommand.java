@@ -5,7 +5,7 @@ import com.github.adamyork.fx5p1d3r.common.command.OutputCommand;
 import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
-import com.github.adamyork.fx5p1d3r.common.model.OutputJSONObject;
+import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
@@ -67,8 +67,8 @@ public class DocumentParserJsonCommand implements ParserCommand {
             final Object obj = shell.evaluate(script);
             objectList.add(obj);
         }));
-        final OutputJSONObject outputJSONObject = new OutputJSONObject.Builder().objectList(objectList).build();
-        outputCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(outputJSONObject);
+        final OutputJsonObject outputJsonObject = new OutputJsonObject.Builder().objectList(objectList).build();
+        outputCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(outputJsonObject);
         return elements;
     }
 }

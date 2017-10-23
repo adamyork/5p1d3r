@@ -45,7 +45,8 @@ public class UrlListCommand implements ApplicationCommand {
         final File urlListFile = applicationFormState.getUrlListFile();
         //TODO COMMAND
         if (urlListFile == null) {
-            alertService.error("No URL list selected.", "No URL list selected. Please select a URL list.");
+            //TODO externalize this
+            alertService.error("No Url list selected.", "No Url list selected. Please select a Url list.");
             return;
         }
         final List<String> urlStrings = Unchecked.function(o -> FileUtils.readLines(urlListFile)).apply(null);

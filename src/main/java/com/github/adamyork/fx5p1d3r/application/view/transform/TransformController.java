@@ -67,7 +67,7 @@ public class TransformController implements Initializable {
         addDefaultJsonTransformer.setOnAction(this::addJsonTransformer);
         addDefaultCsvTransformer.setText(messageSource.getMessage("basic.json.transform.label", null, Locale.getDefault()));
         addDefaultCsvTransformer.setOnAction(this::addCsvTransformer);
-        resultTransformListView.getItems().add(applicationFormState.getDefaultJSONTransform());
+        resultTransformListView.getItems().add(applicationFormState.getDefaultJsonTransform());
         applicationFormState.setResultTransformObservableList(resultTransformListView.getItems());
         transformsLabel.setText(messageSource.getMessage("transforms.label", null, Locale.getDefault()));
     }
@@ -95,14 +95,14 @@ public class TransformController implements Initializable {
 
     @SuppressWarnings("unused")
     private void addJsonTransformer(final ActionEvent actionEvent) {
-        resultTransformListView.getItems().add(applicationFormState.getDefaultJSONTransform());
+        resultTransformListView.getItems().add(applicationFormState.getDefaultJsonTransform());
         applicationFormState.setResultTransformObservableList(resultTransformListView.getItems());
         transformCount.setText(Integer.toString(resultTransformListView.getItems().size()));
     }
 
     @SuppressWarnings("unused")
     private void addCsvTransformer(final ActionEvent actionEvent) {
-        resultTransformListView.getItems().add(applicationFormState.getDefaultCSVTransform());
+        resultTransformListView.getItems().add(applicationFormState.getDefaultCsvTransform());
         applicationFormState.setResultTransformObservableList(resultTransformListView.getItems());
         transformCount.setText(Integer.toString(resultTransformListView.getItems().size()));
     }

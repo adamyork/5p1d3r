@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * Created by Adam York on 2/24/2017.
  * Copyright 2017
  */
-public class ConcurrentURLService extends Task<List<Document>> {
+public class ConcurrentUrlService extends Task<List<Document>> {
 
     private final List<URL> urls;
     private final ProgressService progressService;
@@ -28,7 +28,7 @@ public class ConcurrentURLService extends Task<List<Document>> {
     private int total = 0;
     private List<Document> documents;
 
-    public ConcurrentURLService(final List<URL> urls,
+    public ConcurrentUrlService(final List<URL> urls,
                                 final int threadPoolSize,
                                 final ProgressService progressService) {
         this.urls = urls;

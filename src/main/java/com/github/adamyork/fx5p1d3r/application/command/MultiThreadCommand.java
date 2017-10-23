@@ -1,6 +1,6 @@
 package com.github.adamyork.fx5p1d3r.application.command;
 
-import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQuery;
+import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
@@ -10,8 +10,8 @@ import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.service.AbortService;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
-import com.github.adamyork.fx5p1d3r.common.service.ConcurrentURLService;
-import com.github.adamyork.fx5p1d3r.common.service.URLServiceFactory;
+import com.github.adamyork.fx5p1d3r.common.service.ConcurrentUrlService;
+import com.github.adamyork.fx5p1d3r.common.service.UrlServiceFactory;
 import javafx.collections.ObservableList;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -36,7 +36,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
     private final ApplicationFormState applicationFormState;
     private final OutputManager outputManager;
     private final AbortService abortService;
-    private final URLServiceFactory urlServiceFactory;
+    private final UrlServiceFactory urlServiceFactory;
     private final AlertService alertService;
     private final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap;
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
@@ -44,7 +44,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
     protected ExecutorService executorService;
 
     @Autowired
-    public MultiThreadCommand(final URLServiceFactory urlServiceFactory,
+    public MultiThreadCommand(final UrlServiceFactory urlServiceFactory,
                               final ApplicationFormState applicationFormState,
                               final OutputManager outputManager,
                               final AbortService abortService,
@@ -69,9 +69,9 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
     public void execute(final List<URL> urls) {
         final int threadPoolSize = Integer.parseInt(applicationFormState.getMultiThreadMax().toString());
         executorService = Executors.newFixedThreadPool(1);
-        final ConcurrentURLService concurrentURLService = urlServiceFactory.getConcurrentServiceForURLs(urls, threadPoolSize - 1);
-        concurrentURLService.setCallbackObject(this);
-        executorService.submit(concurrentURLService);
+        final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(urls, threadPoolSize - 1);
+        concurrentUrlService.setCallbackObject(this);
+        executorService.submit(concurrentUrlService);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
 
     @SuppressWarnings({"unchecked", "Duplicates"})
     public void onDocumentsRetrieved(final List<Document> documents) {
-        final ObservableList<DOMQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
+        final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         //TODO COMMAND
         if (documents.size() == 0) {
             alertService.warn("No Documents.", "No parsable documents found. Output may be empty");
@@ -92,7 +92,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
                 parserCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(document, domQueryString);
             });
             final Elements linksElementsList = document.select("a");
-            final List<URL> linksList = outputManager.getURLListFromElements(linksElementsList);
+            final List<URL> linksList = outputManager.getUrlListFromElements(linksElementsList);
             followLinksCommandMap.getCommand(applicationFormState.followLinks()).execute(linksList, executorService);
         });
         abortService.deleteObserver(this);

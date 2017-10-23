@@ -20,7 +20,7 @@ public class NullSafe<T> {
     public NullSafe(final Class<T> type) {
         this.type = type;
         instantiationMap = new HashMap<>();
-        instantiationMap.put(URL.class, getNewURLFunction());
+        instantiationMap.put(URL.class, getNewUrlFunction());
         instantiationMap.put(String.class, getNewString());
         instantiationMap.put(File.class, getNewFile());
     }
@@ -37,7 +37,7 @@ public class NullSafe<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private Function<T, T> getNewURLFunction() {
+    private Function<T, T> getNewUrlFunction() {
         return t -> (T) Unchecked.function(o -> new URL("http://www.123456789010101.com")).apply(null);
     }
 

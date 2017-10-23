@@ -17,14 +17,14 @@ import java.util.concurrent.ExecutorService;
  * Copyright 2017
  */
 @Component
-public class SingleURLCommand implements ApplicationCommand {
+public class SingleUrlCommand implements ApplicationCommand {
 
     private final ApplicationFormState applicationFormState;
     private final UrlValidatorCommand urlValidatorCommand;
     private final ProgressService progressService;
 
     @Autowired
-    public SingleURLCommand(final ApplicationFormState applicationFormState,
+    public SingleUrlCommand(final ApplicationFormState applicationFormState,
                             final UrlValidatorCommand urlValidatorCommand,
                             final ProgressService progressService) {
         this.applicationFormState = applicationFormState;
@@ -35,7 +35,7 @@ public class SingleURLCommand implements ApplicationCommand {
     @Override
     public void execute() {
         final List<String> urlStrings = new ArrayList<>();
-        urlStrings.add(applicationFormState.getStartingURL());
+        urlStrings.add(applicationFormState.getStartingUrl());
         progressService.updateSteps(urlStrings.size());
         progressService.updateProgress(ProgressType.START);
         urlValidatorCommand.execute(urlStrings);

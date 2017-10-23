@@ -13,22 +13,22 @@ import java.util.List;
  * Copyright 2017
  */
 @Component
-public class URLServiceFactory {
+public class UrlServiceFactory {
 
     private ApplicationFormState applicationFormState;
     private ProgressService progressService;
 
     @Autowired
-    public URLServiceFactory(final ApplicationFormState applicationFormState, final ProgressService progressService) {
+    public UrlServiceFactory(final ApplicationFormState applicationFormState, final ProgressService progressService) {
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;
     }
 
-    public ConcurrentURLService getConcurrentServiceForURLs(final List<URL> urls, final int threadPoolSize) {
-        return new ConcurrentURLService(urls, threadPoolSize, progressService);
+    public ConcurrentUrlService getConcurrentServiceForUrls(final List<URL> urls, final int threadPoolSize) {
+        return new ConcurrentUrlService(urls, threadPoolSize, progressService);
     }
 
-    public ThrottledURLService getThrottledServiceForURLs(final List<URL> urls) {
-        return new ThrottledURLService(urls, applicationFormState, progressService);
+    public ThrottledUrlService getThrottledServiceForUrls(final List<URL> urls) {
+        return new ThrottledUrlService(urls, applicationFormState, progressService);
     }
 }

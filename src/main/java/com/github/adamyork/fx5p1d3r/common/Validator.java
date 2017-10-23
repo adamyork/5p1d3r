@@ -18,11 +18,11 @@ public class Validator {
         this.urlValidator = urlValidator;
     }
 
-    public boolean validateURLString(final String urlString) {
+    public boolean validateUrlString(final String urlString) {
         //TODO COMMAND
         if (urlValidator == null) {
-            final String[] supportedURLSchemes = {"http", "https"};
-            urlValidator = new UrlValidator(supportedURLSchemes, UrlValidator.ALLOW_LOCAL_URLS);
+            final String[] supportedUrlSchemes = {"http", "https"};
+            urlValidator = new UrlValidator(supportedUrlSchemes, UrlValidator.ALLOW_LOCAL_URLS);
         }
         return urlValidator.isValid(urlString);
     }

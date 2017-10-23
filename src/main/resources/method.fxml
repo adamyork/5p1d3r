@@ -22,11 +22,11 @@
             <children>
                 <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label fx:id="urlLabel" text="URL"/>
+                        <Label fx:id="urlLabel" text="Url"/>
                         <HBox spacing="10.0">
                             <children>
-                                <TextField fx:id="startingURLTextfield" alignment="TOP_LEFT"
-                                           nodeOrientation="LEFT_TO_RIGHT" promptText="Starting URL"
+                                <TextField fx:id="startingUrlTextfield" alignment="TOP_LEFT"
+                                           nodeOrientation="LEFT_TO_RIGHT" promptText="Starting Url"
                                            HBox.hgrow="ALWAYS"/>
                                 <Button fx:id="urlListSelectionButton" mnemonicParsing="false" prefWidth="30.0"
                                         text="+"/>
@@ -72,8 +72,8 @@
                 <VBox spacing="5.0">
                     <children>
                         <Label fx:id="linkUrlPatternLabel" text="Link Pattern"/>
-                        <TextField fx:id="linkURLPatternTextfield" alignment="TOP_LEFT" nodeOrientation="LEFT_TO_RIGHT"
-                                   prefWidth="250.0" promptText="Link URL Pattern"/>
+                        <TextField fx:id="linkUrlPatternTextfield" alignment="TOP_LEFT" nodeOrientation="LEFT_TO_RIGHT"
+                                   prefWidth="250.0" promptText="Link Url Pattern"/>
                     </children>
                 </VBox>
             </children>

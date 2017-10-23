@@ -2,8 +2,8 @@ package com.github.adamyork.fx5p1d3r.application.command;
 
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.OutputCommand;
-import com.github.adamyork.fx5p1d3r.common.model.OutputCSVObject;
-import com.github.adamyork.fx5p1d3r.common.model.OutputJSONObject;
+import com.github.adamyork.fx5p1d3r.common.model.OutputCsvObject;
+import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,13 +24,13 @@ public class OutputFileTypeJsonCommand implements OutputCommand {
     }
 
     @Override
-    public void execute(final OutputJSONObject outputJSONObject) {
-        final List<Object> objectList = outputJSONObject.getObjectList();
-        objectList.forEach(outputManager::writeJSONEntry);
+    public void execute(final OutputJsonObject outputJsonObject) {
+        final List<Object> objectList = outputJsonObject.getObjectList();
+        objectList.forEach(outputManager::writeJsonEntry);
     }
 
     @Override
-    public void execute(final OutputCSVObject outputCSVObject) {
+    public void execute(final OutputCsvObject outputCsvObject) {
         //no-op
     }
 

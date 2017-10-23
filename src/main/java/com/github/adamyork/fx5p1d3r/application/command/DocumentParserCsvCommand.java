@@ -4,7 +4,7 @@ import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.OutputCommand;
 import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.model.OutputCSVObject;
+import com.github.adamyork.fx5p1d3r.common.model.OutputCsvObject;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
@@ -69,8 +69,8 @@ public class DocumentParserCsvCommand implements ParserCommand {
             final String[] stringArray = Arrays.copyOf(objectArray, objectArray.length, String[].class);
             objectList.add(stringArray);
         }));
-        final OutputCSVObject outputCSVObject = new OutputCSVObject.Builder().objectList(objectList).build();
-        outputCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(outputCSVObject);
+        final OutputCsvObject outputCsvObject = new OutputCsvObject.Builder().objectList(objectList).build();
+        outputCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(outputCsvObject);
         return elements;
     }
 }

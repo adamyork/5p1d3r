@@ -55,8 +55,8 @@ public class UrlValidatorCommand implements ValidatorCommand {
 
     @Override
     public void execute(final List<String> urlStrings) {
-        final AllValidURLS allURLSValid = validateURLS(urlStrings);
-        isValidMap.get(allURLSValid.isValidity()).getCommand(applicationFormState.multithreading()).execute(allURLSValid.getUrls());
+        final AllValidUrls allUrlsValid = validateUrls(urlStrings);
+        isValidMap.get(allUrlsValid.isValidity()).getCommand(applicationFormState.multithreading()).execute(allUrlsValid.getUrls());
     }
 
     @Override
@@ -64,12 +64,12 @@ public class UrlValidatorCommand implements ValidatorCommand {
         //no-op
     }
 
-    private AllValidURLS validateURLS(final List<String> urlStrings) {
+    private AllValidUrls validateUrls(final List<String> urlStrings) {
         progressService.updateProgress(ProgressType.VALIDATE);
         final List<URL> urls = urlStrings.stream().map(Unchecked.function(URL::new)).collect(Collectors.toList());
         final List<Map<String, Boolean>> validityMap = urlStrings.stream().map(urlString -> {
             final Map<String, Boolean> map = new HashMap<>();
-            final Boolean valid = validator.validateURLString(urlString);
+            final Boolean valid = validator.validateUrlString(urlString);
             map.put(urlString, valid);
             return map;
         }).collect(Collectors.toList());
@@ -78,19 +78,20 @@ public class UrlValidatorCommand implements ValidatorCommand {
                 .allMatch(Boolean::booleanValue));
         //TODO COMMAND
         if (!isValid) {
-            alertService.error("Invalid URL", "One or more URL's is invalid.");
-            return new AllValidURLS(false, urls);
+            //TODO externalize message
+            alertService.error("Invalid Url", "One or more Url's is invalid.");
+            return new AllValidUrls(false, urls);
         }
-        return new AllValidURLS(true, urls);
+        return new AllValidUrls(true, urls);
 
     }
 
-    private class AllValidURLS {
+    private class AllValidUrls {
 
         private boolean validity;
         private List<URL> urls;
 
-        private AllValidURLS(final boolean validity,
+        private AllValidUrls(final boolean validity,
                              final List<URL> urls) {
             this.validity = validity;
             this.urls = urls;

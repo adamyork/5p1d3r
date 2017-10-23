@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.github.adamyork.fx5p1d3r.application.view.query.cell.DOMQuery;
+import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.model.*;
 
 import java.io.File;
@@ -27,8 +27,8 @@ public class FormStateDeserializer extends StdDeserializer<ApplicationFormState>
     @Override
     public ApplicationFormState deserialize(final JsonParser parser, final DeserializationContext context) throws IOException, JsonProcessingException {
         final JsonNode node = parser.getCodec().readTree(parser);
-        final URLMethod urlMethod = URLMethod.valueOf(node.get("urlMethod").asText());
-        final String startingURL = node.get("startingURL").asText();
+        final UrlMethod urlMethod = UrlMethod.valueOf(node.get("urlMethod").asText());
+        final String startingUrl = node.get("startingUrl").asText();
         applicationFormState.setThrottling(node.get("throttling").asBoolean());
         applicationFormState.setMultithreading(node.get("multithreading").asBoolean());
         applicationFormState.setFollowLinks(node.get("followLinks").asBoolean());
@@ -42,7 +42,7 @@ public class FormStateDeserializer extends StdDeserializer<ApplicationFormState>
             applicationFormState.getDomQueryObservableList().clear();
             for (int i = 0; i < queryNodes.size(); i++) {
                 final JsonNode queryNode = queryNodes.get(i);
-                final DOMQuery query = new DOMQuery.Builder().id(i).query(queryNode.get("query").asText()).build();
+                final DomQuery query = new DomQuery.Builder().id(i).query(queryNode.get("query").asText()).build();
                 applicationFormState.getDomQueryObservableList().add(query);
             }
         }
@@ -64,7 +64,7 @@ public class FormStateDeserializer extends StdDeserializer<ApplicationFormState>
             applicationFormState.setUrlListFile(new File(urlFileListString));
         }
         applicationFormState.setUrlMethod(urlMethod);
-        applicationFormState.setStartingURL(startingURL);
+        applicationFormState.setStartingUrl(startingUrl);
         applicationFormState.setMultiThreadMax(multiThreadMax);
         applicationFormState.setThrottleMs(throttleMs);
         applicationFormState.setFollowLinksDepth(followLinksDepth);

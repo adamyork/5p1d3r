@@ -3,7 +3,7 @@ package com.github.adamyork.fx5p1d3r;
 import com.github.adamyork.fx5p1d3r.application.command.*;
 import com.github.adamyork.fx5p1d3r.common.command.*;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
-import com.github.adamyork.fx5p1d3r.common.model.URLMethod;
+import com.github.adamyork.fx5p1d3r.common.model.UrlMethod;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -19,11 +19,11 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 public class ApplicationConfiguration {
 
     @Bean
-    public CommandMap<URLMethod, ApplicationCommand> providesURLMethodCommandMap(final SingleURLCommand singleUrlCommand,
+    public CommandMap<UrlMethod, ApplicationCommand> providesUrlMethodCommandMap(final SingleUrlCommand singleUrlCommand,
                                                                                  @Qualifier("UrlListCommand") final UrlListCommand urlListCommand) {
-        final CommandMap<URLMethod, ApplicationCommand> urlMethodCommandMap = new CommandMap<>();
-        urlMethodCommandMap.add(URLMethod.URL, singleUrlCommand);
-        urlMethodCommandMap.add(URLMethod.URL_LIST, urlListCommand);
+        final CommandMap<UrlMethod, ApplicationCommand> urlMethodCommandMap = new CommandMap<>();
+        urlMethodCommandMap.add(UrlMethod.URL, singleUrlCommand);
+        urlMethodCommandMap.add(UrlMethod.URL_LIST, urlListCommand);
         return urlMethodCommandMap;
     }
 
@@ -98,9 +98,9 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public UrlValidator providesURLValidator() {
-        final String[] supportedURLSchemes = {"http", "https"};
-        return new UrlValidator(supportedURLSchemes, UrlValidator.ALLOW_LOCAL_URLS);
+    public UrlValidator providesUrlValidator() {
+        final String[] supportedUrlSchemes = {"http", "https"};
+        return new UrlValidator(supportedUrlSchemes, UrlValidator.ALLOW_LOCAL_URLS);
     }
 
     @Bean

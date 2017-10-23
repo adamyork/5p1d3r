@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.model.OutputJSONObject;
+import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.jooq.lambda.Unchecked;
@@ -45,7 +45,7 @@ public class OutputManager {
         this.progressService = progressService;
     }
 
-    public void writeJSONEntry(final Object object) {
+    public void writeJsonEntry(final Object object) {
         progressService.updateProgress(ProgressType.OUTPUT);
         final String outputFile = applicationFormState.getOutputFile();
         final File destFile = new File(outputFile);
@@ -57,17 +57,17 @@ public class OutputManager {
         final byte[] jsonData = Unchecked.function(p -> Files.readAllBytes((Path) p)).apply(path);
         final ObjectMapper mapper = new ObjectMapper();
         try {
-            final OutputJSONObject jsonObject = mapper.readValue(jsonData, OutputJSONObject.class);
+            final OutputJsonObject jsonObject = mapper.readValue(jsonData, OutputJsonObject.class);
             jsonObject.getObjectList().add(object);
             Unchecked.consumer(o -> mapper.writeValue(destFile, jsonObject)).accept(null);
         } catch (IOException e) {
-            final OutputJSONObject outputObject = new OutputJSONObject.Builder(new ArrayList<>()).build();
+            final OutputJsonObject outputObject = new OutputJsonObject.Builder(new ArrayList<>()).build();
             outputObject.getObjectList().add(object);
             Unchecked.consumer(o -> mapper.writeValue(destFile, outputObject)).accept(null);
         }
     }
 
-    public void writeCSVEntry(final String[] object) {
+    public void writeCsvEntry(final String[] object) {
         progressService.updateProgress(ProgressType.OUTPUT);
         final String outputFile = applicationFormState.getOutputFile();
         final File destFile = new File(outputFile);
@@ -91,7 +91,7 @@ public class OutputManager {
         Unchecked.consumer(o -> mapper.writeValue(destFile, values)).accept(mapper);
     }
 
-    public List<URL> getURLListFromElements(final Elements elements) {
+    public List<URL> getUrlListFromElements(final Elements elements) {
         return elements.stream()
                 .map(element -> {
                     final String href = element.attr("href");
@@ -104,7 +104,7 @@ public class OutputManager {
                     }
                     return href;
                 })
-                .filter(validator::validateURLString)
+                .filter(validator::validateUrlString)
                 .map(Unchecked.function(URL::new))
                 .collect(Collectors.toList());
     }

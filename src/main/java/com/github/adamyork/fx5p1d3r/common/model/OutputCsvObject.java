@@ -6,11 +6,11 @@ import java.util.List;
  * Created by Adam York on 3/2/2017.
  * Copyright 2017
  */
-public class OutputCSVObject {
+public class OutputCsvObject {
 
     private List<String[]> objectList;
 
-    private OutputCSVObject(final Builder builder) {
+    private OutputCsvObject(final Builder builder) {
         this.objectList = builder.objectList;
     }
 
@@ -29,8 +29,8 @@ public class OutputCSVObject {
             return this;
         }
 
-        public OutputCSVObject build() {
-            return new OutputCSVObject(this);
+        public OutputCsvObject build() {
+            return new OutputCsvObject(this);
         }
 
     }
