@@ -50,6 +50,7 @@ public class ConcurrentUrlService extends Task<List<Document>> {
         return documents;
     }
 
+    //TODO this pattern is ugly
     public void setCallbackObject(final DocumentRetrieveHandler handler) {
         this.handler = handler;
     }

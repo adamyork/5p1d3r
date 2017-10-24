@@ -12,4 +12,6 @@ public interface NullSafeCommand<T> {
 
     void execute(final T listView, final File file);
 
+    T execute(final T instance);
+
 }

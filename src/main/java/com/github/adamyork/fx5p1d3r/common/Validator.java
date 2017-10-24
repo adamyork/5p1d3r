@@ -19,11 +19,6 @@ public class Validator {
     }
 
     public boolean validateUrlString(final String urlString) {
-        //TODO COMMAND
-        if (urlValidator == null) {
-            final String[] supportedUrlSchemes = {"http", "https"};
-            urlValidator = new UrlValidator(supportedUrlSchemes, UrlValidator.ALLOW_LOCAL_URLS);
-        }
         return urlValidator.isValid(urlString);
     }
 }

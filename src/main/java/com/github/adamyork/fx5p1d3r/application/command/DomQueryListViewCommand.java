@@ -24,4 +24,9 @@ public class DomQueryListViewCommand implements NullSafeCommand<ListView<DomQuer
         //no-op
     }
 
+    @Override
+    public ListView<DomQuery> execute(final ListView<DomQuery> instance) {
+        return null;
+    }
+
 }

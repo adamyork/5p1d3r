@@ -1,23 +1,23 @@
 package com.github.adamyork.fx5p1d3r.application.command;
 
 import com.github.adamyork.fx5p1d3r.common.Validator;
-import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
-import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.command.ValidatorCommand;
+import com.github.adamyork.fx5p1d3r.common.command.*;
+import com.github.adamyork.fx5p1d3r.common.model.AllValidUrls;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.scene.control.TextField;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -31,24 +31,29 @@ public class UrlValidatorCommand implements ValidatorCommand {
     private final Validator validator;
     private final ApplicationFormState applicationFormState;
     private final ProgressService progressService;
-    private final AlertService alertService;
-    private final Map<Boolean, CommandMap<Boolean, ApplicationCommand>> isValidMap = new HashMap<>();
+    private final MessageSource messageSource;
+    private final Map<Boolean, CommandMap<Boolean, ApplicationCommand>> isValidMap;
+    private final CommandMap<Boolean, AlertCommand> urlsValidCommandMap;
 
     @Autowired
     public UrlValidatorCommand(@Qualifier("ThreadRequestsCommandMap") final CommandMap<Boolean, ApplicationCommand> threadRequestsCommandMap,
+                               @Qualifier("UrlsValidCommandMap") final CommandMap<Boolean, AlertCommand> urlsValidCommandMap,
                                final Validator validator,
                                final ApplicationFormState applicationFormState,
                                final ProgressService progressService,
-                               final AlertService alertService) {
+                               final MessageSource messageSource) {
         this.validator = validator;
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;
-        this.alertService = alertService;
+        this.messageSource = messageSource;
+        this.urlsValidCommandMap = urlsValidCommandMap;
 
+        //TODO reconsider instantiating this map here in favor of IOC
         final CommandMap<Boolean, ApplicationCommand> noopCommandMap = new CommandMap<>();
         noopCommandMap.add(true, new NoopCommand());
         noopCommandMap.add(false, new NoopCommand());
 
+        isValidMap = new HashMap<>();
         isValidMap.put(true, threadRequestsCommandMap);
         isValidMap.put(false, noopCommandMap);
     }
@@ -73,38 +78,13 @@ public class UrlValidatorCommand implements ValidatorCommand {
             map.put(urlString, valid);
             return map;
         }).collect(Collectors.toList());
-        final boolean isValid = validityMap.stream().allMatch(stringBooleanMap -> stringBooleanMap.values()
-                .stream()
-                .allMatch(Boolean::booleanValue));
-        //TODO COMMAND
-        if (!isValid) {
-            //TODO externalize message
-            alertService.error("Invalid Url", "One or more Url's is invalid.");
-            return new AllValidUrls(false, urls);
-        }
-        return new AllValidUrls(true, urls);
-
-    }
-
-    private class AllValidUrls {
-
-        private boolean validity;
-        private List<URL> urls;
-
-        private AllValidUrls(final boolean validity,
-                             final List<URL> urls) {
-            this.validity = validity;
-            this.urls = urls;
-        }
-
-        boolean isValidity() {
-            return validity;
-        }
-
-        public List<URL> getUrls() {
-            return urls;
-        }
-
+        final boolean isValid = validityMap.stream()
+                .allMatch(stringBooleanMap -> stringBooleanMap.values()
+                        .stream()
+                        .allMatch(Boolean::booleanValue));
+        return (AllValidUrls) urlsValidCommandMap.getCommand(isValid)
+                .execute(messageSource.getMessage("error.url.invalid.header", null, Locale.getDefault()),
+                        messageSource.getMessage("error.url.invalid.content", null, Locale.getDefault()), urls);
     }
 
 }

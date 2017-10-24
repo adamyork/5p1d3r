@@ -2,10 +2,7 @@ package com.github.adamyork.fx5p1d3r.application.command;
 
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
-import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
-import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.command.DocumentRetrieveHandler;
-import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
+import com.github.adamyork.fx5p1d3r.common.command.*;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
@@ -18,11 +15,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -40,9 +39,11 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
     private final ApplicationFormState applicationFormState;
     private final UrlServiceFactory urlServiceFactory;
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
+    private final CommandMap<Boolean, AlertCommand> warnCommandMap;
     private final OutputManager outputManager;
     private final ProgressService progressService;
     private final AlertService alertService;
+    private final MessageSource messageSource;
 
     private int currentDepth;
     private ExecutorService executorService;
@@ -53,15 +54,19 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
     public LinksFollowCommand(final ApplicationFormState applicationFormState,
                               final UrlServiceFactory urlServiceFactory,
                               @Qualifier("ParserCommandMap") final CommandMap<OutputFileType, ParserCommand> parserCommandMap,
+                              @Qualifier("WarnCommandMap") final CommandMap<Boolean, AlertCommand> warnCommandMap,
                               final OutputManager outputManager,
                               final ProgressService progressService,
-                              final AlertService alertService) {
+                              final AlertService alertService,
+                              final MessageSource messageSource) {
         this.applicationFormState = applicationFormState;
         this.urlServiceFactory = urlServiceFactory;
         this.parserCommandMap = parserCommandMap;
         this.outputManager = outputManager;
         this.progressService = progressService;
         this.alertService = alertService;
+        this.warnCommandMap = warnCommandMap;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -94,10 +99,9 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
     public void onDocumentsRetrieved(final List<Document> documents) {
         final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         final List<List<URL>> allLinks = new ArrayList<>();
-        //TODO COMMAND
-        if (documents.size() == 0) {
-            alertService.warn("No Documents.", "No documents found at link depth " + currentDepth + ". Output maybe empty.");
-        }
+        warnCommandMap.getCommand(documents.size() == 0)
+                .execute(messageSource.getMessage("alert.no.documents.header", null, Locale.getDefault()),
+                        messageSource.getMessage("alert.no.documents.content", null, Locale.getDefault()));
         documents.forEach(doc -> {
             final Document document = doc;
             domQueryObservableList.forEach(domQuery -> {
@@ -127,6 +131,7 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
                 return matcher.matches();
             }).collect(Collectors.toList());
         } catch (final PatternSyntaxException exception) {
+            //TODO Externalize
             alertService.warn("Invalid Regex.", "Link follow regex is invalid.");
             exception.printStackTrace();
             return new ArrayList<>();

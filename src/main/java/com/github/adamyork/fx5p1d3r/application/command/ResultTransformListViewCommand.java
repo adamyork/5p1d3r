@@ -23,4 +23,9 @@ public class ResultTransformListViewCommand implements NullSafeCommand<ListView<
         fileListView.getItems().add(file);
     }
 
+    @Override
+    public ListView<File> execute(final ListView<File> instance) {
+        return null;
+    }
+
 }
