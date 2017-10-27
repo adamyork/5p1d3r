@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.List;
 import java.util.Observable;
@@ -43,7 +44,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
 
     protected ExecutorService executorService;
 
-    @Autowired
+    @Inject
     public MultiThreadCommand(final UrlServiceFactory urlServiceFactory,
                               final ApplicationFormState applicationFormState,
                               final OutputManager outputManager,

@@ -7,6 +7,7 @@ import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class OutputFileTypeJsonCommand implements OutputCommand {
 
     private final OutputManager outputManager;
 
-    @Autowired
+    @Inject
     public OutputFileTypeJsonCommand(final OutputManager outputManager) {
         this.outputManager = outputManager;
     }

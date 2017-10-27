@@ -12,12 +12,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -39,7 +39,7 @@ public class LandingController implements Initializable, ApplicationContextAware
     private Button helpButton;
     private ApplicationContext applicationContext;
 
-    @Autowired
+    @Inject
     public LandingController(final GlobalStage globalStage,
                              final MessageSource messageSource) {
         this.globalStage = globalStage;

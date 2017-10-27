@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class LoadUrlListCommand implements ValidatorCommand {
 
     private ApplicationFormState applicationFormState;
 
-    @Autowired
+    @Inject
     public LoadUrlListCommand(final ApplicationFormState applicationFormState) {
         this.applicationFormState = applicationFormState;
     }

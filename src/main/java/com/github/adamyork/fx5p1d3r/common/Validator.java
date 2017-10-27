@@ -1,8 +1,9 @@
 package com.github.adamyork.fx5p1d3r.common;
 
 import org.apache.commons.validator.routines.UrlValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
 
 /**
  * Created by Adam York on 2/23/2017.
@@ -13,7 +14,7 @@ public class Validator {
 
     private UrlValidator urlValidator;
 
-    @Autowired
+    @Inject
     public Validator(final UrlValidator urlValidator) {
         this.urlValidator = urlValidator;
     }

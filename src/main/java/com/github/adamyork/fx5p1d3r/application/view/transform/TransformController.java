@@ -11,11 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
 import java.util.Locale;
@@ -48,7 +48,7 @@ public class TransformController implements Initializable {
     private GlobalStage globalStage;
     private MessageSource messageSource;
 
-    @Autowired
+    @Inject
     public TransformController(final ApplicationFormState applicationFormState,
                                final GlobalStage globalStage,
                                final MessageSource messageSource,

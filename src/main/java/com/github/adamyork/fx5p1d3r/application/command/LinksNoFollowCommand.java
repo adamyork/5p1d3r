@@ -6,6 +6,7 @@ import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -19,7 +20,7 @@ public class LinksNoFollowCommand implements ApplicationCommand {
 
     private final ProgressService progressService;
 
-    @Autowired
+    @Inject
     public LinksNoFollowCommand(final ProgressService progressService) {
         this.progressService = progressService;
     }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class UrlValidatorCommand implements ValidatorCommand {
     private final Map<Boolean, CommandMap<Boolean, ApplicationCommand>> isValidMap;
     private final CommandMap<Boolean, AlertCommand> urlsValidCommandMap;
 
-    @Autowired
+    @Inject
     public UrlValidatorCommand(@Qualifier("ThreadRequestsCommandMap") final CommandMap<Boolean, ApplicationCommand> threadRequestsCommandMap,
                                @Qualifier("UrlsValidCommandMap") final CommandMap<Boolean, AlertCommand> urlsValidCommandMap,
                                final Validator validator,

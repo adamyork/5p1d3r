@@ -4,11 +4,11 @@ import com.github.adamyork.fx5p1d3r.common.command.StepAddCommand;
 import com.github.adamyork.fx5p1d3r.common.command.StepAssignCommand;
 import com.github.adamyork.fx5p1d3r.common.command.StepCommand;
 import javafx.application.Platform;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class ProgressService extends Observable {
     private ProgressState previousState;
     private Map<ProgressType, StepCommand> stepCommandMap;
 
-    @Autowired
+    @Inject
     public ProgressService(final MessageSource messageSource) {
         this.messageSource = messageSource;
     }

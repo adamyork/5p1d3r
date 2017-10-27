@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
@@ -27,7 +28,7 @@ public class UrlListCommand implements ApplicationCommand {
     protected final CommandMap<Boolean, AlertCommand> urlListSelectedCommandMap;
     private final MessageSource messageSource;
 
-    @Autowired
+    @Inject
     public UrlListCommand(final ApplicationFormState applicationFormState,
                           final MessageSource messageSource,
                           @Qualifier("UrlListSelectedCommandMap") final CommandMap<Boolean, AlertCommand> urlListSelectedCommandMap) {

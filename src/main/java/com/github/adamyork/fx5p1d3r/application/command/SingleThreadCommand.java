@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.List;
 import java.util.Observable;
@@ -45,7 +46,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
 
     private ExecutorService executorService;
 
-    @Autowired
+    @Inject
     public SingleThreadCommand(final UrlServiceFactory urlServiceFactory,
                                final ApplicationFormState applicationFormState,
                                final OutputManager outputManager,

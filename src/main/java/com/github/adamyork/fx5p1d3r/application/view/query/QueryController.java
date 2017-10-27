@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -46,7 +47,7 @@ public class QueryController implements Initializable {
     private GlobalDefaults globalDefaults;
     private MessageSource messageSource;
 
-    @Autowired
+    @Inject
     public QueryController(final ApplicationFormState applicationFormState,
                            final GlobalDefaults globalDefaults,
                            final MessageSource messageSource,

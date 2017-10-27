@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +41,7 @@ public class DocumentParserCsvCommand implements ParserCommand {
     private final CommandMap<Boolean, AlertCommand> warnCommandMap;
     private final MessageSource messageSource;
 
-    @Autowired
+    @Inject
     public DocumentParserCsvCommand(final ApplicationFormState applicationFormState,
                                     final ProgressService progressService,
                                     final MessageSource messageSource,

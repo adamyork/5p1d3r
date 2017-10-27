@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
@@ -77,7 +78,7 @@ public class MethodController implements Initializable, Observer {
     private MessageSource messageSource;
     private CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap;
 
-    @Autowired
+    @Inject
     public MethodController(final ApplicationFormState applicationFormState,
                             final GlobalStage globalStage,
                             final GlobalDefaults globalDefaults,

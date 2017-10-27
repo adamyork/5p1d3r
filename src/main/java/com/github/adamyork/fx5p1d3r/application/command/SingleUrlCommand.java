@@ -4,9 +4,9 @@ import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class SingleUrlCommand implements ApplicationCommand {
     private final UrlValidatorCommand urlValidatorCommand;
     private final ProgressService progressService;
 
-    @Autowired
+    @Inject
     public SingleUrlCommand(final ApplicationFormState applicationFormState,
                             final UrlValidatorCommand urlValidatorCommand,
                             final ProgressService progressService) {

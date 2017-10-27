@@ -10,9 +10,9 @@ import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.jooq.lambda.Unchecked;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -36,7 +36,7 @@ public class OutputManager {
     private final Validator validator;
     private final ProgressService progressService;
 
-    @Autowired
+    @Inject
     public OutputManager(final ApplicationFormState applicationFormState,
                          final Validator validator,
                          final ProgressService progressService) {

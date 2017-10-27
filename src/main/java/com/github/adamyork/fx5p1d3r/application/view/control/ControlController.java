@@ -17,10 +17,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.FileChooser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
 import java.util.Locale;
@@ -51,7 +51,7 @@ public class ControlController implements Initializable, Observer {
     @FXML
     private ProgressBar progressBar;
 
-    @Autowired
+    @Inject
     public ControlController(final ApplicationFormState applicationFormState,
                              final GlobalStage globalStage,
                              final CommandMap<UrlMethod, ApplicationCommand> urlMethodCommandMap,

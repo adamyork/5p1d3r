@@ -8,6 +8,7 @@ import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
@@ -22,7 +23,7 @@ public class UrlListSelectedCommand implements AlertCommand<Void> {
     protected final UrlValidatorCommand urlValidatorCommand;
     protected final ProgressService progressService;
 
-    @Autowired
+    @Inject
     public UrlListSelectedCommand(final UrlValidatorCommand urlValidatorCommand,
                                   final ProgressService progressService) {
         this.urlValidatorCommand = urlValidatorCommand;

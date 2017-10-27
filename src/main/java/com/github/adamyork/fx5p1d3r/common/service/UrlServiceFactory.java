@@ -2,9 +2,9 @@ package com.github.adamyork.fx5p1d3r.common.service;
 
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class UrlServiceFactory {
     private ApplicationFormState applicationFormState;
     private ProgressService progressService;
 
-    @Autowired
+    @Inject
     public UrlServiceFactory(final ApplicationFormState applicationFormState, final ProgressService progressService) {
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;

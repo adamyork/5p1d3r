@@ -6,9 +6,9 @@ import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.FlowPane;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,7 +21,7 @@ public class ApplicationController implements Initializable {
     private GlobalStage globalStage;
     private ApplicationFormState applicationFormState;
 
-    @Autowired
+    @Inject
     public ApplicationController(final GlobalStage globalStage,
                                  final ApplicationFormState applicationFormState) {
         this.globalStage = globalStage;

@@ -5,10 +5,10 @@ import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.NullSafeCommand;
 import javafx.collections.ObservableList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Observable;
 
@@ -41,7 +41,7 @@ public class ApplicationFormState extends Observable {
     private File defaultJsonTransform;
     private File defaultCsvTransform;
 
-    @Autowired
+    @Inject
     public ApplicationFormState(@Qualifier("DefaultJsonTransformCommandMap") final CommandMap<Boolean, NullSafeCommand<File>> defaultJsonTransformCommandMap,
                                 @Qualifier("DefaultCsvTransformCommandMap") final CommandMap<Boolean, NullSafeCommand<File>> defaultCsvTransformCommandMap) {
         this.defaultJsonTransformCommandMap = defaultJsonTransformCommandMap;

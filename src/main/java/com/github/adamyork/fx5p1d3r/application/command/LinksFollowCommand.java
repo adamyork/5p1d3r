@@ -13,11 +13,11 @@ import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.collections.ObservableList;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
     private int maxDepth;
     private int threadPoolSize;
 
-    @Autowired
+    @Inject
     public LinksFollowCommand(final ApplicationFormState applicationFormState,
                               final UrlServiceFactory urlServiceFactory,
                               @Qualifier("ParserCommandMap") final CommandMap<OutputFileType, ParserCommand> parserCommandMap,

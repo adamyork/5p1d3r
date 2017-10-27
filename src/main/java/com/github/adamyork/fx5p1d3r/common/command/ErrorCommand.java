@@ -7,9 +7,9 @@ package com.github.adamyork.fx5p1d3r.common.command;
 
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import javafx.scene.control.ButtonType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
@@ -19,7 +19,7 @@ public class ErrorCommand implements AlertCommand<ButtonType> {
 
     private final AlertService alertService;
 
-    @Autowired
+    @Inject
     public ErrorCommand(final AlertService alertService) {
         this.alertService = alertService;
     }
