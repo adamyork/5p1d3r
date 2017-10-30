@@ -1,16 +1,20 @@
 package com.github.adamyork.fx5p1d3r.common.service;
 
+import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.HandlerCommand;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogEvent;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Created by Adam York on 10/18/2017.
@@ -19,15 +23,18 @@ import java.util.Optional;
 @Component
 public class AlertService {
 
+    private final CommandMap<Boolean, HandlerCommand<MessageSource, Function, Boolean>> warnHandlerCommandMap;
     private final ProgressService progressService;
     private final MessageSource messageSource;
     private boolean warningShown = false;
 
     @Inject
     public AlertService(final ProgressService progressService,
-                        final MessageSource messageSource) {
+                        final MessageSource messageSource,
+                        @Qualifier("WarnHandlerCommandMap") final CommandMap<Boolean, HandlerCommand<MessageSource, Function, Boolean>> warnHandlerCommandMap) {
         this.progressService = progressService;
         this.messageSource = messageSource;
+        this.warnHandlerCommandMap = warnHandlerCommandMap;
     }
 
     public Optional<ButtonType> error(final String header, final String content) {
@@ -41,19 +48,18 @@ public class AlertService {
     }
 
     public void warn(final String header, final String content) {
-        //TODO command
-        if (!warningShown) {
-            warningShown = true;
-            final Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle(messageSource.getMessage("alert.service.warning.label", null, Locale.getDefault()));
-            alert.setHeaderText(header);
-            alert.setContentText(content);
-            alert.show();
-            alert.setOnHidden(this::handleOnHidden);
-        }
+        warningShown = warnHandlerCommandMap.getCommand(warningShown)
+                .execute(messageSource, getHandlerFunction(), header, content);
     }
 
-    private void handleOnHidden(final DialogEvent dialogEvent) {
+    public Function<Alert, Alert> getHandlerFunction() {
+        return alert -> {
+            alert.setOnHidden(this::handleOnHidden);
+            return alert;
+        };
+    }
+
+    public void handleOnHidden(final DialogEvent dialogEvent) {
         warningShown = false;
     }
 }

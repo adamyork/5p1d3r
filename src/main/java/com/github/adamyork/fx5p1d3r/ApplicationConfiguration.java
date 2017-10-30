@@ -1,6 +1,14 @@
 package com.github.adamyork.fx5p1d3r;
 
-import com.github.adamyork.fx5p1d3r.application.command.*;
+import com.github.adamyork.fx5p1d3r.application.command.io.*;
+import com.github.adamyork.fx5p1d3r.application.command.thread.LinksFollowCommand;
+import com.github.adamyork.fx5p1d3r.application.command.thread.LinksNoFollowCommand;
+import com.github.adamyork.fx5p1d3r.application.command.thread.MultiThreadCommand;
+import com.github.adamyork.fx5p1d3r.application.command.thread.SingleThreadCommand;
+import com.github.adamyork.fx5p1d3r.application.command.transform.DefaultCsvTransformCommand;
+import com.github.adamyork.fx5p1d3r.application.command.transform.DefaultJsonTransformCommand;
+import com.github.adamyork.fx5p1d3r.application.command.transform.ResultTransformListViewCommand;
+import com.github.adamyork.fx5p1d3r.application.command.url.*;
 import com.github.adamyork.fx5p1d3r.common.command.*;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.model.UrlMethod;
@@ -12,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 import java.io.File;
+import java.util.function.Function;
 
 /**
  * Created by Adam York on 2/26/2017.
@@ -106,6 +115,16 @@ public class ApplicationConfiguration {
         final CommandMap<Boolean, AlertCommand> map = new CommandMap<>();
         map.add(true, warnCommand);
         map.add(false, noopCommand);
+        return map;
+    }
+
+    @Bean
+    @Qualifier("WarnHandlerCommandMap")
+    public CommandMap<Boolean, HandlerCommand<MessageSource, Function, Boolean>> warnHandlerCommandMap(final ShowAlertCommand showAlertCommand,
+                                                                                                       final NoAlertCommand noAlertCommand) {
+        final CommandMap<Boolean, HandlerCommand<MessageSource, Function, Boolean>> map = new CommandMap<>();
+        map.add(true, noAlertCommand);
+        map.add(false, showAlertCommand);
         return map;
     }
 

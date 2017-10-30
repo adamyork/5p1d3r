@@ -1,4 +1,4 @@
-package com.github.adamyork.fx5p1d3r.application.command;
+package com.github.adamyork.fx5p1d3r.application.command.url;
 
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;

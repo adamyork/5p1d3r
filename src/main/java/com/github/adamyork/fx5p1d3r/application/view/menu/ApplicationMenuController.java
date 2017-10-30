@@ -34,6 +34,7 @@ public class ApplicationMenuController {
         menuBar.setPrefWidth(400);
         flowPane.getChildren().add(0, menuBar);
 
+        //TODO externalize there values
         final Menu menu = new Menu("File");
         final MenuItem loadItem = new MenuItem("Load");
         final MenuItem saveItem = new MenuItem("Save");

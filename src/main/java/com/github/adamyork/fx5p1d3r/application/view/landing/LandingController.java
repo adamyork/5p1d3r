@@ -1,4 +1,4 @@
-package com.github.adamyork.fx5p1d3r.landing;
+package com.github.adamyork.fx5p1d3r.application.view.landing;
 
 import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.Main;

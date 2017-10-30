@@ -1,4 +1,4 @@
-package com.github.adamyork.fx5p1d3r.application.command;
+package com.github.adamyork.fx5p1d3r.application.command.io;
 
 import com.github.adamyork.fx5p1d3r.common.command.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
@@ -16,7 +16,6 @@ import org.apache.commons.io.FileUtils;
 import org.jooq.lambda.Unchecked;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -35,22 +34,22 @@ import java.util.Locale;
 @Component
 public class DocumentParserCsvCommand implements ParserCommand {
 
-    private final ApplicationFormState applicationFormState;
-    private final ProgressService progressService;
     private final CommandMap<OutputFileType, OutputCommand> outputCommandMap;
     private final CommandMap<Boolean, AlertCommand> warnCommandMap;
+    private final ApplicationFormState applicationFormState;
+    private final ProgressService progressService;
     private final MessageSource messageSource;
 
     @Inject
-    public DocumentParserCsvCommand(final ApplicationFormState applicationFormState,
+    public DocumentParserCsvCommand(@Qualifier("OutputCommandMap") final CommandMap<OutputFileType, OutputCommand> outputCommandMap,
+                                    @Qualifier("WarnCommandMap") final CommandMap<Boolean, AlertCommand> warnCommandMap,
+                                    final ApplicationFormState applicationFormState,
                                     final ProgressService progressService,
-                                    final MessageSource messageSource,
-                                    @Qualifier("OutputCommandMap") final CommandMap<OutputFileType, OutputCommand> outputCommandMap,
-                                    @Qualifier("WarnCommandMap") final CommandMap<Boolean, AlertCommand> warnCommandMap) {
-        this.applicationFormState = applicationFormState;
-        this.progressService = progressService;
+                                    final MessageSource messageSource) {
         this.outputCommandMap = outputCommandMap;
         this.warnCommandMap = warnCommandMap;
+        this.applicationFormState = applicationFormState;
+        this.progressService = progressService;
         this.messageSource = messageSource;
     }
 

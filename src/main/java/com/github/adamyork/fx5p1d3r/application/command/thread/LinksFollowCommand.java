@@ -1,4 +1,4 @@
-package com.github.adamyork.fx5p1d3r.application.command;
+package com.github.adamyork.fx5p1d3r.application.command.thread;
 
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
@@ -36,10 +36,10 @@ import java.util.stream.Collectors;
 @Component
 public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveHandler {
 
-    private final ApplicationFormState applicationFormState;
-    private final UrlServiceFactory urlServiceFactory;
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
     private final CommandMap<Boolean, AlertCommand> warnCommandMap;
+    private final ApplicationFormState applicationFormState;
+    private final UrlServiceFactory urlServiceFactory;
     private final OutputManager outputManager;
     private final ProgressService progressService;
     private final AlertService alertService;
@@ -51,21 +51,21 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
     private int threadPoolSize;
 
     @Inject
-    public LinksFollowCommand(final ApplicationFormState applicationFormState,
-                              final UrlServiceFactory urlServiceFactory,
-                              @Qualifier("ParserCommandMap") final CommandMap<OutputFileType, ParserCommand> parserCommandMap,
+    public LinksFollowCommand(@Qualifier("ParserCommandMap") final CommandMap<OutputFileType, ParserCommand> parserCommandMap,
                               @Qualifier("WarnCommandMap") final CommandMap<Boolean, AlertCommand> warnCommandMap,
+                              final ApplicationFormState applicationFormState,
+                              final UrlServiceFactory urlServiceFactory,
                               final OutputManager outputManager,
                               final ProgressService progressService,
                               final AlertService alertService,
                               final MessageSource messageSource) {
+        this.parserCommandMap = parserCommandMap;
+        this.warnCommandMap = warnCommandMap;
         this.applicationFormState = applicationFormState;
         this.urlServiceFactory = urlServiceFactory;
-        this.parserCommandMap = parserCommandMap;
         this.outputManager = outputManager;
         this.progressService = progressService;
         this.alertService = alertService;
-        this.warnCommandMap = warnCommandMap;
         this.messageSource = messageSource;
     }
 

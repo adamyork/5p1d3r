@@ -1,9 +1,8 @@
-package com.github.adamyork.fx5p1d3r.application.command;
+package com.github.adamyork.fx5p1d3r.application.command.thread;
 
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;

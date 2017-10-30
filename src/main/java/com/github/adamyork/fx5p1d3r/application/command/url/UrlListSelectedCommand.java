@@ -1,11 +1,10 @@
-package com.github.adamyork.fx5p1d3r.application.command;
+package com.github.adamyork.fx5p1d3r.application.command.url;
 
 import com.github.adamyork.fx5p1d3r.common.command.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.apache.commons.io.FileUtils;
 import org.jooq.lambda.Unchecked;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;

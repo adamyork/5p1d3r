@@ -1,4 +1,4 @@
-package com.github.adamyork.fx5p1d3r.application.command;
+package com.github.adamyork.fx5p1d3r.application.command.io;
 
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.OutputCommand;
@@ -15,24 +15,24 @@ import java.util.List;
  * Copyright 2017
  */
 @Component
-public class OutputFileTypeJsonCommand implements OutputCommand {
+public class OutputFileTypeCsvCommand implements OutputCommand {
 
     private final OutputManager outputManager;
 
     @Inject
-    public OutputFileTypeJsonCommand(final OutputManager outputManager) {
+    public OutputFileTypeCsvCommand(final OutputManager outputManager) {
         this.outputManager = outputManager;
     }
 
     @Override
     public void execute(final OutputJsonObject outputJsonObject) {
-        final List<Object> objectList = outputJsonObject.getObjectList();
-        objectList.forEach(outputManager::writeJsonEntry);
+        //no-op
     }
 
     @Override
     public void execute(final OutputCsvObject outputCsvObject) {
-        //no-op
+        final List<String[]> objectList = outputCsvObject.getObjectList();
+        objectList.forEach(outputManager::writeCsvEntry);
     }
 
 }

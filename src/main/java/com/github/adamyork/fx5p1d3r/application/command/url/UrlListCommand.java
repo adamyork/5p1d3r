@@ -1,10 +1,9 @@
-package com.github.adamyork.fx5p1d3r.application.command;
+package com.github.adamyork.fx5p1d3r.application.command.url;
 
 import com.github.adamyork.fx5p1d3r.common.command.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -24,14 +23,14 @@ import java.util.concurrent.ExecutorService;
 @Qualifier("UrlListCommand")
 public class UrlListCommand implements ApplicationCommand {
 
-    protected final ApplicationFormState applicationFormState;
-    protected final CommandMap<Boolean, AlertCommand> urlListSelectedCommandMap;
+    private final ApplicationFormState applicationFormState;
+    private final CommandMap<Boolean, AlertCommand> urlListSelectedCommandMap;
     private final MessageSource messageSource;
 
     @Inject
-    public UrlListCommand(final ApplicationFormState applicationFormState,
-                          final MessageSource messageSource,
-                          @Qualifier("UrlListSelectedCommandMap") final CommandMap<Boolean, AlertCommand> urlListSelectedCommandMap) {
+    public UrlListCommand(@Qualifier("UrlListSelectedCommandMap") final CommandMap<Boolean, AlertCommand> urlListSelectedCommandMap,
+                          final ApplicationFormState applicationFormState,
+                          final MessageSource messageSource) {
         this.applicationFormState = applicationFormState;
         this.urlListSelectedCommandMap = urlListSelectedCommandMap;
         this.messageSource = messageSource;

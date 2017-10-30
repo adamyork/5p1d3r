@@ -1,4 +1,4 @@
-package com.github.adamyork.fx5p1d3r.application.command;
+package com.github.adamyork.fx5p1d3r.application.command.url;
 
 import com.github.adamyork.fx5p1d3r.common.Validator;
 import com.github.adamyork.fx5p1d3r.common.command.*;
@@ -8,7 +8,6 @@ import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.scene.control.TextField;
 import org.jooq.lambda.Unchecked;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -29,12 +28,12 @@ import java.util.stream.Collectors;
 @Component
 public class UrlValidatorCommand implements ValidatorCommand {
 
+    private final Map<Boolean, CommandMap<Boolean, ApplicationCommand>> isValidMap;
+    private final CommandMap<Boolean, AlertCommand> urlsValidCommandMap;
     private final Validator validator;
     private final ApplicationFormState applicationFormState;
     private final ProgressService progressService;
     private final MessageSource messageSource;
-    private final Map<Boolean, CommandMap<Boolean, ApplicationCommand>> isValidMap;
-    private final CommandMap<Boolean, AlertCommand> urlsValidCommandMap;
 
     @Inject
     public UrlValidatorCommand(@Qualifier("ThreadRequestsCommandMap") final CommandMap<Boolean, ApplicationCommand> threadRequestsCommandMap,
