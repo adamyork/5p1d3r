@@ -1,10 +1,5 @@
 package com.github.adamyork.fx5p1d3r.common.command;
 
-/**
- * Created by Adam York on 10/26/2017.
- * Copyright 2017
- */
-
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import javafx.scene.control.ButtonType;
 import org.springframework.stereotype.Component;
@@ -14,6 +9,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * Created by Adam York on 10/26/2017.
+ * Copyright 2017
+ */
 @Component
 public class ErrorCommand implements AlertCommand<ButtonType> {
 

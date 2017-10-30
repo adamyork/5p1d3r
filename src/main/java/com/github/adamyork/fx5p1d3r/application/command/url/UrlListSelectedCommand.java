@@ -19,8 +19,8 @@ import java.util.List;
 @Component
 public class UrlListSelectedCommand implements AlertCommand<Void> {
 
-    protected final UrlValidatorCommand urlValidatorCommand;
-    protected final ProgressService progressService;
+    private final UrlValidatorCommand urlValidatorCommand;
+    private final ProgressService progressService;
 
     @Inject
     public UrlListSelectedCommand(final UrlValidatorCommand urlValidatorCommand,

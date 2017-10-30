@@ -54,7 +54,7 @@ public class DocumentParserCsvCommand implements ParserCommand {
     }
 
     @Override
-    public Elements execute(final Document document, final String query) {
+    public void execute(final Document document, final String query) {
         progressService.updateProgress(ProgressType.SELECTOR);
         final Elements elements = document.select(query);
         final ObservableList<File> resultTransformObservableList = applicationFormState.getResultTransformObservableList();
@@ -75,6 +75,5 @@ public class DocumentParserCsvCommand implements ParserCommand {
         }));
         final OutputCsvObject outputCsvObject = new OutputCsvObject.Builder().objectList(objectList).build();
         outputCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(outputCsvObject);
-        return elements;
     }
 }

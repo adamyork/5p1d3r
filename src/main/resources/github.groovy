@@ -1,5 +1,3 @@
-package groovy
-
 def map = [:]
 //noinspection GroovyAssignabilityCheck
 map["uri"] = document.baseUri()

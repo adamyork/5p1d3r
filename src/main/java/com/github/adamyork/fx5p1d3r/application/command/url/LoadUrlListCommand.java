@@ -4,7 +4,6 @@ import com.github.adamyork.fx5p1d3r.common.NullSafe;
 import com.github.adamyork.fx5p1d3r.common.command.ValidatorCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import javafx.scene.control.TextField;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -18,7 +17,7 @@ import java.util.List;
 @Component
 public class LoadUrlListCommand implements ValidatorCommand {
 
-    private ApplicationFormState applicationFormState;
+    private final ApplicationFormState applicationFormState;
 
     @Inject
     public LoadUrlListCommand(final ApplicationFormState applicationFormState) {

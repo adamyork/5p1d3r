@@ -23,8 +23,8 @@ public class ConcurrentUrlService extends Task<List<Document>> {
 
     private final List<URL> urls;
     private final ProgressService progressService;
+    private final int threadPoolSize;
     private DocumentRetrieveHandler handler;
-    private int threadPoolSize;
     private int total = 0;
     private List<Document> documents;
 
@@ -37,6 +37,7 @@ public class ConcurrentUrlService extends Task<List<Document>> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected List<Document> call() throws Exception {
         documents = new ArrayList<>();
         final List<UrlServiceCallable> tasks = urls.stream().map(url -> {
@@ -45,9 +46,10 @@ public class ConcurrentUrlService extends Task<List<Document>> {
             return task;
         }).collect(Collectors.toList());
         final ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
-        final List<Future<Document>> futures = tasks.parallelStream().map(documentTask -> (Future<Document>) executorService.submit(documentTask)).collect(Collectors.toList());
-        final List<Document> documents = futures.stream().map(future -> Unchecked.function(a -> future.get()).apply(null)).collect(Collectors.toList());
-        return documents;
+        final List<Future<Document>> futures = tasks.parallelStream()
+                .map(documentTask -> (Future<Document>) executorService.submit(documentTask))
+                .collect(Collectors.toList());
+        return futures.stream().map(future -> Unchecked.function(a -> future.get()).apply(null)).collect(Collectors.toList());
     }
 
     //TODO this pattern is ugly
@@ -55,6 +57,7 @@ public class ConcurrentUrlService extends Task<List<Document>> {
         this.handler = handler;
     }
 
+    @SuppressWarnings("WeakerAccess")
     void onMultiDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         total++;
         documents.add((Document) workerStateEvent.getSource().getValue());

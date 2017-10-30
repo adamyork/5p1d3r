@@ -28,6 +28,11 @@ import java.util.ResourceBundle;
 @Component
 public class TransformController implements Initializable {
 
+    private final ApplicationFormState applicationFormState;
+    private final CommandMap<Boolean, NullSafeCommand> resultTransformCommandMap;
+    private final GlobalStage globalStage;
+    private final MessageSource messageSource;
+
     @FXML
     private ListView<File> resultTransformListView;
     @FXML
@@ -42,11 +47,6 @@ public class TransformController implements Initializable {
     private Label transformCount;
     @FXML
     private Label transformsLabel;
-
-    private ApplicationFormState applicationFormState;
-    private CommandMap<Boolean, NullSafeCommand> resultTransformCommandMap;
-    private GlobalStage globalStage;
-    private MessageSource messageSource;
 
     @Inject
     public TransformController(final ApplicationFormState applicationFormState,
@@ -65,7 +65,7 @@ public class TransformController implements Initializable {
         removeResultTransform.setOnAction(this::handleRemoveResultTransform);
         addDefaultJsonTransformer.setText(messageSource.getMessage("basic.json.transform.label", null, Locale.getDefault()));
         addDefaultJsonTransformer.setOnAction(this::addJsonTransformer);
-        addDefaultCsvTransformer.setText(messageSource.getMessage("basic.json.transform.label", null, Locale.getDefault()));
+        addDefaultCsvTransformer.setText(messageSource.getMessage("basic.csv.transform.label", null, Locale.getDefault()));
         addDefaultCsvTransformer.setOnAction(this::addCsvTransformer);
         resultTransformListView.getItems().add(applicationFormState.getDefaultJsonTransform());
         applicationFormState.setResultTransformObservableList(resultTransformListView.getItems());

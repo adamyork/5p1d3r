@@ -25,7 +25,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import org.controlsfx.control.ToggleSwitch;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -44,6 +43,12 @@ import java.util.ResourceBundle;
  */
 @Component
 public class MethodController implements Initializable, Observer {
+
+    private final ApplicationFormState applicationFormState;
+    private final GlobalStage globalStage;
+    private final GlobalDefaults globalDefaults;
+    private final MessageSource messageSource;
+    private final CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap;
 
     @FXML
     private ChoiceBox<UrlMethodChoice> urlMethodChoiceBox;
@@ -71,12 +76,6 @@ public class MethodController implements Initializable, Observer {
     private Label urlMethodLabel;
     @FXML
     private Label linkUrlPatternLabel;
-
-    private ApplicationFormState applicationFormState;
-    private GlobalStage globalStage;
-    private GlobalDefaults globalDefaults;
-    private MessageSource messageSource;
-    private CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap;
 
     @Inject
     public MethodController(final ApplicationFormState applicationFormState,

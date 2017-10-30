@@ -23,8 +23,8 @@ import java.io.File;
 
 public class ApplicationMenuController {
 
-    private Stage stage;
-    private ApplicationFormState applicationFormState;
+    private final Stage stage;
+    private final ApplicationFormState applicationFormState;
 
     public ApplicationMenuController(final Stage stage, final FlowPane flowPane, final ApplicationFormState applicationFormState) {
         this.stage = stage;

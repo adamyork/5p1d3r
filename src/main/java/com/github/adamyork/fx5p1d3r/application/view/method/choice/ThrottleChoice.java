@@ -12,8 +12,8 @@ import java.awt.*;
  */
 public class ThrottleChoice extends Choice {
 
-    private ThrottleMs throttleMs;
-    private int value;
+    private final ThrottleMs throttleMs;
+    private final int value;
 
     private ThrottleChoice(final ThrottleMs throttleMs, final int value) {
         this.throttleMs = throttleMs;

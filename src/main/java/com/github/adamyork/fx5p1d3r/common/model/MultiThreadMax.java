@@ -14,7 +14,7 @@ public enum MultiThreadMax {
     FIVE_HUNDRED(500),
     THOUSAND(1000);
 
-    private int multiThreadMax;
+    private final int multiThreadMax;
 
     MultiThreadMax(final int multiThreadMax) {
         this.multiThreadMax = multiThreadMax;

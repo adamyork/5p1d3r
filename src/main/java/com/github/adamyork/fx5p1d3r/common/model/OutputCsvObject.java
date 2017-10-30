@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class OutputCsvObject {
 
-    private List<String[]> objectList;
+    private final List<String[]> objectList;
 
     private OutputCsvObject(final Builder builder) {
         this.objectList = builder.objectList;

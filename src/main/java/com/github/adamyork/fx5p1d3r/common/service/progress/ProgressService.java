@@ -22,9 +22,10 @@ import java.util.Observable;
 public class ProgressService extends Observable {
 
     private final MessageSource messageSource;
-    private Map<ProgressType, String> messageMap;
     private ProgressState progressState;
+    @SuppressWarnings("FieldCanBeLocal")
     private ProgressState previousState;
+    private Map<ProgressType, String> messageMap;
     private Map<ProgressType, StepCommand> stepCommandMap;
 
     @Inject

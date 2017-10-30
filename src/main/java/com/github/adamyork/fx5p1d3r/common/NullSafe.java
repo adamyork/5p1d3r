@@ -14,8 +14,8 @@ import java.util.function.Function;
  */
 public class NullSafe<T> {
 
-    private Class<T> type;
-    private Map<Class, Function> instantiationMap;
+    private final Class<T> type;
+    private final Map<Class, Function> instantiationMap;
 
     public NullSafe(final Class<T> type) {
         this.type = type;

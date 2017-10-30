@@ -4,7 +4,6 @@ import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.OutputCommand;
 import com.github.adamyork.fx5p1d3r.common.model.OutputCsvObject;
 import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;

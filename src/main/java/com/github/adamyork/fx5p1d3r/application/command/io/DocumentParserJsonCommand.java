@@ -53,7 +53,7 @@ public class DocumentParserJsonCommand implements ParserCommand {
     }
 
     @Override
-    public Elements execute(final Document document, final String query) {
+    public void execute(final Document document, final String query) {
         progressService.updateProgress(ProgressType.SELECTOR);
         final Elements elements = document.select(query);
         final ObservableList<File> resultTransformObservableList = applicationFormState.getResultTransformObservableList();
@@ -73,6 +73,5 @@ public class DocumentParserJsonCommand implements ParserCommand {
         }));
         final OutputJsonObject outputJsonObject = new OutputJsonObject.Builder().objectList(objectList).build();
         outputCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(outputJsonObject);
-        return elements;
     }
 }

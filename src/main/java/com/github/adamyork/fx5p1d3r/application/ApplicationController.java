@@ -15,11 +15,10 @@ import java.util.ResourceBundle;
 @Component
 public class ApplicationController implements Initializable {
 
+    private final GlobalStage globalStage;
+    private final ApplicationFormState applicationFormState;
     @FXML
     private FlowPane applicationFlowPane;
-
-    private GlobalStage globalStage;
-    private ApplicationFormState applicationFormState;
 
     @Inject
     public ApplicationController(final GlobalStage globalStage,

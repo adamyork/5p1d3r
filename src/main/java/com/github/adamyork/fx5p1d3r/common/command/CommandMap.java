@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class CommandMap<T, C> {
 
-    private Map<T, C> map;
+    private final Map<T, C> map;
 
     public CommandMap() {
         map = new HashMap<>();

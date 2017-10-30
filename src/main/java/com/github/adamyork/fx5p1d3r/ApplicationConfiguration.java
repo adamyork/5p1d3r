@@ -26,6 +26,7 @@ import java.util.function.Function;
  * Created by Adam York on 2/26/2017.
  * Copyright 2017
  */
+@SuppressWarnings("UnusedReturnValue")
 @Configuration
 public class ApplicationConfiguration {
 

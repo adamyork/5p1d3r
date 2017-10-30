@@ -14,7 +14,7 @@ public enum ThrottleMs {
     FIVE_THOUSAND(5000),
     TEN_THOUSAND(10000);
 
-    private int throttleMsValue;
+    private final int throttleMsValue;
 
     ThrottleMs(final int throttleMsValue) {
         this.throttleMsValue = throttleMsValue;

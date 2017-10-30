@@ -9,7 +9,7 @@ public enum OutputFileType {
     JSON(".json"),
     CSV(".csv");
 
-    private String outputFileType;
+    private final String outputFileType;
 
     OutputFileType(final String outputFileType) {
         this.outputFileType = outputFileType;

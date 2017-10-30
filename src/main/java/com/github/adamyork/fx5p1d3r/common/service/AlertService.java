@@ -52,14 +52,14 @@ public class AlertService {
                 .execute(messageSource, getHandlerFunction(), header, content);
     }
 
-    public Function<Alert, Alert> getHandlerFunction() {
+    private Function<Alert, Alert> getHandlerFunction() {
         return alert -> {
             alert.setOnHidden(this::handleOnHidden);
             return alert;
         };
     }
 
-    public void handleOnHidden(final DialogEvent dialogEvent) {
+    private void handleOnHidden(final DialogEvent dialogEvent) {
         warningShown = false;
     }
 }

@@ -13,13 +13,13 @@ import java.net.URL;
  * Created by Adam York on 10/11/2017.
  * Copyright 2017
  */
-public class UrlServiceCallable extends Task<Document> {
+class UrlServiceCallable extends Task<Document> {
 
     private final URL url;
     private final ProgressService progressService;
 
-    public UrlServiceCallable(final URL url,
-                              final ProgressService progressService) {
+    UrlServiceCallable(final URL url,
+                       final ProgressService progressService) {
         this.url = url;
         this.progressService = progressService;
     }

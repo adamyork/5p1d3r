@@ -14,7 +14,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -31,6 +30,11 @@ import java.util.ResourceBundle;
 @Component
 public class QueryController implements Initializable {
 
+    private final ApplicationFormState applicationFormState;
+    private final CommandMap<Boolean, NullSafeCommand> domQueryListViewCommandMap;
+    private final GlobalDefaults globalDefaults;
+    private final MessageSource messageSource;
+
     @FXML
     private ListView<DomQuery> domQueryListView;
     @FXML
@@ -41,11 +45,6 @@ public class QueryController implements Initializable {
     private Label queryCount;
     @FXML
     private Label domQueriesLabel;
-
-    private ApplicationFormState applicationFormState;
-    private CommandMap<Boolean, NullSafeCommand> domQueryListViewCommandMap;
-    private GlobalDefaults globalDefaults;
-    private MessageSource messageSource;
 
     @Inject
     public QueryController(final ApplicationFormState applicationFormState,

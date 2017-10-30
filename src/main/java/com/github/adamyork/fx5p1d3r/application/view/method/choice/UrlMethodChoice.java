@@ -12,8 +12,8 @@ import java.awt.*;
  */
 public class UrlMethodChoice extends Choice {
 
-    private UrlMethod urlMethod;
-    private String displayString;
+    private final String displayString;
+    private final UrlMethod urlMethod;
 
     private UrlMethodChoice(final UrlMethod urlMethod, final String displayString) {
         this.urlMethod = urlMethod;

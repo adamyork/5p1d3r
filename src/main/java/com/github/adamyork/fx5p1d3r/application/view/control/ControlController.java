@@ -47,6 +47,8 @@ public class ControlController implements Initializable, Observer {
     @FXML
     private Button stopButton;
     @FXML
+    private Label staticStatusLabel;
+    @FXML
     private Label statusLabel;
     @FXML
     private ProgressBar progressBar;
@@ -72,6 +74,7 @@ public class ControlController implements Initializable, Observer {
         startButton.setOnAction(this::handleStart);
         stopButton.setText(messageSource.getMessage("abort.label", null, Locale.getDefault()));
         stopButton.setOnAction(this::handleStop);
+        staticStatusLabel.setText(messageSource.getMessage("status.label", null, Locale.getDefault()));
         progressService.addObserver(this);
     }
 

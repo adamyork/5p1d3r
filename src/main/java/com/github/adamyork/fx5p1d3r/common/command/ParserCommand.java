@@ -1,7 +1,6 @@
 package com.github.adamyork.fx5p1d3r.common.command;
 
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 /**
  * Created by Adam York on 3/17/2017.
@@ -9,6 +8,6 @@ import org.jsoup.select.Elements;
  */
 public interface ParserCommand {
 
-    Elements execute(final Document document, final String query);
+    void execute(final Document document, final String query);
 
 }

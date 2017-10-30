@@ -12,7 +12,7 @@ import javax.inject.Inject;
 @Component
 public class Validator {
 
-    private UrlValidator urlValidator;
+    private final UrlValidator urlValidator;
 
     @Inject
     public Validator(final UrlValidator urlValidator) {

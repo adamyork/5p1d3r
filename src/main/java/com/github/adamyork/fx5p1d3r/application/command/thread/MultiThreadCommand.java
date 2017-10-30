@@ -41,7 +41,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
     private final UrlServiceFactory urlServiceFactory;
     private final AlertService alertService;
 
-    protected ExecutorService executorService;
+    private ExecutorService executorService;
 
     @Inject
     public MultiThreadCommand(@Qualifier("FollowLinksCommandMap") final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap,

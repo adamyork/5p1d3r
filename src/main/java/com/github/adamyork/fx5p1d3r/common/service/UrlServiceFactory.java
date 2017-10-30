@@ -15,8 +15,8 @@ import java.util.List;
 @Component
 public class UrlServiceFactory {
 
-    private ApplicationFormState applicationFormState;
-    private ProgressService progressService;
+    private final ApplicationFormState applicationFormState;
+    private final ProgressService progressService;
 
     @Inject
     public UrlServiceFactory(final ApplicationFormState applicationFormState, final ProgressService progressService) {

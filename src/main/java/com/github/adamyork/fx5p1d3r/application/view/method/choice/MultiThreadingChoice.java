@@ -12,8 +12,8 @@ import java.awt.*;
  */
 public class MultiThreadingChoice extends Choice {
 
-    private MultiThreadMax multiThreadMax;
-    private int value;
+    private final MultiThreadMax multiThreadMax;
+    private final int value;
 
     private MultiThreadingChoice(final MultiThreadMax multiThreadMax, final int value) {
         this.multiThreadMax = multiThreadMax;

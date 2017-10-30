@@ -20,7 +20,7 @@
         </HBox>
         <HBox spacing="10.0">
             <children>
-                <Label text="Status :"/>
+                <Label fx:id="staticStatusLabel" text="Status :"/>
                 <Label fx:id="statusLabel" text="not running..."/>
             </children>
             <padding>

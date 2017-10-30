@@ -86,7 +86,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
         //no-op
     }
 
-    @SuppressWarnings({"unchecked", "Duplicates"})
+    @SuppressWarnings({"unchecked", "Duplicates", "WeakerAccess"})
     void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         final List<Document> documents = (List<Document>) workerStateEvent.getSource().getValue();
         final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();

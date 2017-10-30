@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class StepAddCommand implements StepCommand {
 
-    private Map<ProgressType, Double> stepMap;
+    private final Map<ProgressType, Double> stepMap;
 
     public StepAddCommand(final double stepValue) {
         stepMap = new HashMap<>();

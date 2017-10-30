@@ -1,7 +1,6 @@
 package com.github.adamyork.fx5p1d3r.application.view.menu;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -15,17 +14,17 @@ import java.io.IOException;
  * Created by Adam York on 10/12/2017.
  * Copyright 2017
  */
-public class FormStateDeserializer extends StdDeserializer<ApplicationFormState> {
+class FormStateDeserializer extends StdDeserializer<ApplicationFormState> {
 
-    final ApplicationFormState applicationFormState;
+    private final ApplicationFormState applicationFormState;
 
-    public FormStateDeserializer(final ApplicationFormState applicationFormState) {
+    FormStateDeserializer(final ApplicationFormState applicationFormState) {
         super(ApplicationFormState.class);
         this.applicationFormState = applicationFormState;
     }
 
     @Override
-    public ApplicationFormState deserialize(final JsonParser parser, final DeserializationContext context) throws IOException, JsonProcessingException {
+    public ApplicationFormState deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
         final JsonNode node = parser.getCodec().readTree(parser);
         final UrlMethod urlMethod = UrlMethod.valueOf(node.get("urlMethod").asText());
         final String startingUrl = node.get("startingUrl").asText();

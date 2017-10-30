@@ -83,9 +83,9 @@ public class OutputManager {
         final MappingIterator<Object> iterator = Unchecked.function(o -> mapper.readerFor(String[].class).readValues(csvData)).apply(null);
         final List<List<String>> values = new ArrayList<>();
         while (iterator.hasNext()) {
-            final String[] valuez = (String[]) iterator.next();
+            final String[] innerValues = (String[]) iterator.next();
             final List<String> entry = new ArrayList<>();
-            entry.addAll(Arrays.asList(valuez));
+            entry.addAll(Arrays.asList(innerValues));
             values.add(entry);
         }
         values.add(Arrays.asList(object));

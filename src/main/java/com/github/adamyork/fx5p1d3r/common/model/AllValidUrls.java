@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class AllValidUrls {
 
-    private boolean validity;
-    private List<URL> urls;
+    private final boolean validity;
+    private final List<URL> urls;
 
     public AllValidUrls(final boolean validity,
                         final List<URL> urls) {

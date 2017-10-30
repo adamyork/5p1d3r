@@ -1,5 +1,3 @@
-package groovy
-
 def arr = []
 arr.add(element.tagName())
 arr.add(element.baseUri())

@@ -12,8 +12,8 @@ import java.awt.*;
  */
 public class FollowLinksChoice extends Choice {
 
-    private FollowLinksDepth followLinksDepth;
-    private int value;
+    private final FollowLinksDepth followLinksDepth;
+    private final int value;
 
     private FollowLinksChoice(final FollowLinksDepth followLinksDepth, final int value) {
         this.followLinksDepth = followLinksDepth;
