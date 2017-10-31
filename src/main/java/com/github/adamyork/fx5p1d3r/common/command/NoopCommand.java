@@ -1,5 +1,6 @@
 package com.github.adamyork.fx5p1d3r.common.command;
 
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -12,7 +13,7 @@ import java.util.concurrent.ExecutorService;
  * Copyright 2017
  */
 @Component
-public class NoopCommand<T> implements NullSafeCommand<T>, ApplicationCommand, AlertCommand<T> {
+public class NoopCommand<T> implements NullSafeCommand<T>, ApplicationCommand, AlertCommand<T>, ParserCommand {
 
     @Override
     public void execute(final T listView, final int index) {}
@@ -47,5 +48,15 @@ public class NoopCommand<T> implements NullSafeCommand<T>, ApplicationCommand, A
     @Override
     public T execute(final String header, final String content, final File file) {
         return null;
+    }
+
+    @Override
+    public void execute(final Document document, final String query) {
+
+    }
+
+    @Override
+    public void execute(final File file) {
+
     }
 }

@@ -4,18 +4,21 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
+import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
+import com.github.adamyork.fx5p1d3r.common.command.ValidatorCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.jooq.lambda.Unchecked;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,14 +35,20 @@ import java.util.stream.Collectors;
 @Component
 public class OutputManager {
 
+    private final CommandMap<Boolean, ParserCommand> createNewFileCommandMap;
+    private final CommandMap<Boolean, ValidatorCommand> normalizeUrlCommandMap;
     private final ApplicationFormState applicationFormState;
     private final Validator validator;
     private final ProgressService progressService;
 
     @Inject
-    public OutputManager(final ApplicationFormState applicationFormState,
+    public OutputManager(@Qualifier("CreateNewFileCommandMap") final CommandMap<Boolean, ParserCommand> createNewFileCommandMap,
+                         @Qualifier("NormalizeUrlCommandMap") final CommandMap<Boolean, ValidatorCommand> normalizeUrlCommandMap,
+                         final ApplicationFormState applicationFormState,
                          final Validator validator,
                          final ProgressService progressService) {
+        this.createNewFileCommandMap = createNewFileCommandMap;
+        this.normalizeUrlCommandMap = normalizeUrlCommandMap;
         this.applicationFormState = applicationFormState;
         this.validator = validator;
         this.progressService = progressService;
@@ -49,10 +58,7 @@ public class OutputManager {
         progressService.updateProgress(ProgressType.OUTPUT);
         final String outputFile = applicationFormState.getOutputFile();
         final File destFile = new File(outputFile);
-        //TODO COMMAND
-        if (!destFile.exists()) {
-            Unchecked.function(file -> ((File) file).createNewFile()).apply(destFile);
-        }
+        createNewFileCommandMap.getCommand(destFile.exists()).execute(destFile);
         final Path path = Paths.get(outputFile);
         final byte[] jsonData = Unchecked.function(p -> Files.readAllBytes((Path) p)).apply(path);
         final ObjectMapper mapper = new ObjectMapper();
@@ -72,10 +78,7 @@ public class OutputManager {
         progressService.updateProgress(ProgressType.OUTPUT);
         final String outputFile = applicationFormState.getOutputFile();
         final File destFile = new File(outputFile);
-        //TODO COMMAND
-        if (!destFile.exists()) {
-            Unchecked.function(file -> ((File) file).createNewFile()).apply(destFile);
-        }
+        createNewFileCommandMap.getCommand(destFile.exists()).execute(destFile);
         final Path path = Paths.get(outputFile);
         final byte[] csvData = Unchecked.function(p -> Files.readAllBytes((Path) p)).apply(path);
         final CsvMapper mapper = new CsvMapper();
@@ -96,14 +99,8 @@ public class OutputManager {
         return elements.stream()
                 .map(element -> {
                     final String href = element.attr("href");
-                    //TODO COMMAND
-                    if (!href.contains("http") && !href.contains("https")) {
-                        final String baseUri = element.baseUri();
-                        final URI uri = Unchecked.function(t -> new URI(baseUri)).apply(null);
-                        final String baseUriTrimmed = uri.getScheme() + "://" + uri.getHost();
-                        return baseUriTrimmed + href;
-                    }
-                    return href;
+                    return normalizeUrlCommandMap.getCommand(href.contains("http") || href.contains("https"))
+                            .execute(element, href);
                 })
                 .filter(validator::validateUrlString)
                 .map(Unchecked.function(URL::new))

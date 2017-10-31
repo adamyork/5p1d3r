@@ -170,6 +170,26 @@ public class ApplicationConfiguration {
     }
 
     @Bean
+    @Qualifier("CreateNewFileCommandMap")
+    public CommandMap<Boolean, ParserCommand> createNewFileCommandMap(final CreateNewFileCommand createNewFileCommand,
+                                                                      final NoopCommand noopCommand) {
+        final CommandMap<Boolean, ParserCommand> map = new CommandMap<>();
+        map.add(true, noopCommand);
+        map.add(false, createNewFileCommand);
+        return map;
+    }
+
+    @Bean
+    @Qualifier("NormalizeUrlCommandMap")
+    public CommandMap<Boolean, ValidatorCommand> normalizeUrlCommandMap(final NormalizeUrlCommand normalizeUrlCommand,
+                                                                        final NoopValidatorCommand noopValidatorCommand) {
+        final CommandMap<Boolean, ValidatorCommand> map = new CommandMap<>();
+        map.add(true, noopValidatorCommand);
+        map.add(false, normalizeUrlCommand);
+        return map;
+    }
+
+    @Bean
     public UrlValidator urlValidator() {
         final String[] supportedUrlSchemes = {"http", "https"};
         return new UrlValidator(supportedUrlSchemes, UrlValidator.ALLOW_LOCAL_URLS);
