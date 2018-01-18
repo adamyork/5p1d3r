@@ -1,7 +1,6 @@
 package com.github.adamyork.fx5p1d3r.application.view.control;
 
 import com.github.adamyork.fx5p1d3r.GlobalStage;
-import com.github.adamyork.fx5p1d3r.common.NullSafe;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
@@ -23,10 +22,7 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
-import java.util.Locale;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Adam York on 3/24/2017.
@@ -87,8 +83,7 @@ public class ControlController implements Initializable, Observer {
                 new FileChooser.ExtensionFilter("csv", "*.csv")
         );
         final File file = fileChooser.showSaveDialog(globalStage.getStage());
-        final NullSafe<File> nullSafe = new NullSafe<>(File.class);
-        final File nullSafeFile = nullSafe.getNullSafe(file);
+        final File nullSafeFile = Optional.ofNullable(file).orElse(new File(""));
         final String nullSafeFileString = nullSafeFile.toString();
         final int extensionIndex = nullSafeFileString.indexOf(".");
         //TODO COMMAND

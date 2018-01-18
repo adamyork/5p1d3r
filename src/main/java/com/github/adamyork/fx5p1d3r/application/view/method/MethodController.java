@@ -6,7 +6,6 @@ import com.github.adamyork.fx5p1d3r.application.view.method.choice.MultiThreadin
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.ThrottleChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.UrlMethodChoice;
 import com.github.adamyork.fx5p1d3r.common.GlobalDefaults;
-import com.github.adamyork.fx5p1d3r.common.NullSafe;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.ValidatorCommand;
 import com.github.adamyork.fx5p1d3r.common.model.*;
@@ -35,6 +34,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Observer;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -160,7 +160,7 @@ public class MethodController implements Initializable, Observer {
     private void handleStartingUrlChanged(@SuppressWarnings("unused") final Observable observable,
                                           @SuppressWarnings("unused") final String oldValue,
                                           final String newValue) {
-        applicationFormState.setStartingUrl(NullSafe.getSafeString(newValue));
+        applicationFormState.setStartingUrl(Optional.ofNullable(newValue).orElse(""));
     }
 
     private void handleThrottlingChanged(@SuppressWarnings("unused") final Observable observable) {
@@ -211,7 +211,7 @@ public class MethodController implements Initializable, Observer {
     }
 
     private void handleLinkFollowPatternChanged(@SuppressWarnings("unused") final KeyEvent keyEvent) {
-        applicationFormState.setLinkFollowPattern(NullSafe.getSafeString(linkUrlPatternTextfield.getText()));
+        applicationFormState.setLinkFollowPattern(Optional.ofNullable(linkUrlPatternTextfield.getText()).orElse(""));
     }
 
     private void handleAddUrlList(@SuppressWarnings("unused") final ActionEvent actionEvent) {

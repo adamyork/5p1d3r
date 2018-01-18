@@ -62,9 +62,7 @@ public class OutputManager {
         final Path path = Paths.get(outputFile);
         final byte[] jsonData = Unchecked.function(p -> Files.readAllBytes((Path) p)).apply(path);
         final ObjectMapper mapper = new ObjectMapper();
-        //TODO nice to not have to catch here.
         try {
-            //might be able to check if the output json object is null instead
             final OutputJsonObject jsonObject = mapper.readValue(jsonData, OutputJsonObject.class);
             jsonObject.getObjectList().add(object);
             Unchecked.consumer(o -> mapper.writeValue(destFile, jsonObject)).accept(null);

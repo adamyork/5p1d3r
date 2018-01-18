@@ -2,7 +2,6 @@ package com.github.adamyork.fx5p1d3r.application.view.landing;
 
 import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.Main;
-import com.github.adamyork.fx5p1d3r.common.NullSafe;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +19,7 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -66,8 +66,9 @@ public class LandingController implements Initializable, ApplicationContextAware
         basicRoot = (Parent) Unchecked.function(o -> fxmlLoader.load()).apply(null);
         final Scene basicScene = new Scene(basicRoot, 400, 832);
         final URL url = getClass().getClassLoader().getResource("application.css");
-        final NullSafe<URL> nullSafe = new NullSafe<>(URL.class);
-        final URL nullSafeURL = nullSafe.getNullSafe(url);
+        final URL nullSafeURL = Optional.ofNullable(url)
+                .orElse(Unchecked.function(o -> new URL("http://www.123456789010101.com"))
+                        .apply(null));
         basicScene.getStylesheets().addAll(nullSafeURL.toExternalForm());
         globalStage.getStage().setScene(basicScene);
     }

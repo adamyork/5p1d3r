@@ -1,6 +1,5 @@
 package com.github.adamyork.fx5p1d3r;
 
-import com.github.adamyork.fx5p1d3r.common.NullSafe;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.net.URL;
+import java.util.Optional;
 
 @SpringBootApplication
 public class Main extends Application {
@@ -41,7 +41,9 @@ public class Main extends Application {
         final Parent landingRoot = (Parent) Unchecked.function(o -> fxmlLoader.load()).apply(null);
         final Scene landingScene = new Scene(landingRoot, 400, 832);
         final URL url = getClass().getClassLoader().getResource("landing.css");
-        final URL nullSafeUrl = new NullSafe<>(URL.class).getNullSafe(url);
+        final URL nullSafeUrl = Optional.ofNullable(url)
+                .orElse(Unchecked.function(o -> new URL("http://www.123456789010101.com"))
+                        .apply(null));
 
         landingScene.getStylesheets().addAll(nullSafeUrl.toExternalForm());
         stage.setScene(landingScene);
