@@ -6,7 +6,8 @@ import java.util.function.Function;
 public class NullSafeDefaultCommand implements NullSafeInternalCommand {
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object execute(Map<Class, Function> instantiationMap, Class type, Object value) {
-        return value;
+        return instantiationMap.get(type).apply(null);
     }
 }

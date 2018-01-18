@@ -6,11 +6,10 @@ import java.util.function.Function;
 public class NullSafeNotNullCommand implements NullSafeInternalCommand {
 
     @Override
-    @SuppressWarnings("unchecked")
     public Object execute(final Map<Class, Function> instantiationMap,
                           final Class type,
                           final Object value) {
-        return instantiationMap.get(type).apply(null);
+        return value;
     }
 
 }
