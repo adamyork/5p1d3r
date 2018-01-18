@@ -1,6 +1,6 @@
 package com.github.adamyork.fx5p1d3r.application.command.url;
 
-import com.github.adamyork.fx5p1d3r.common.command.AlertCommand;
+import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.apache.commons.io.FileUtils;

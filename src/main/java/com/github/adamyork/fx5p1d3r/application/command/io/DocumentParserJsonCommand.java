@@ -1,9 +1,9 @@
 package com.github.adamyork.fx5p1d3r.application.command.io;
 
-import com.github.adamyork.fx5p1d3r.common.command.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.command.OutputCommand;
-import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.OutputCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
+import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
@@ -73,5 +73,10 @@ public class DocumentParserJsonCommand implements ParserCommand {
         }));
         final OutputJsonObject outputJsonObject = new OutputJsonObject.Builder().objectList(objectList).build();
         outputCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(outputJsonObject);
+    }
+
+    @Override
+    public void execute(final File file) {
+
     }
 }

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.command.ValidatorCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
@@ -64,10 +64,11 @@ public class OutputManager {
         final ObjectMapper mapper = new ObjectMapper();
         //TODO nice to not have to catch here.
         try {
+            //might be able to check if the output json object is null instead
             final OutputJsonObject jsonObject = mapper.readValue(jsonData, OutputJsonObject.class);
             jsonObject.getObjectList().add(object);
             Unchecked.consumer(o -> mapper.writeValue(destFile, jsonObject)).accept(null);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             final OutputJsonObject outputObject = new OutputJsonObject.Builder(new ArrayList<>()).build();
             outputObject.getObjectList().add(object);
             Unchecked.consumer(o -> mapper.writeValue(destFile, outputObject)).accept(null);

@@ -6,6 +6,7 @@ import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.FlowPane;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -17,19 +18,24 @@ public class ApplicationController implements Initializable {
 
     private final GlobalStage globalStage;
     private final ApplicationFormState applicationFormState;
+    private final MessageSource messageSource;
+
     @FXML
     private FlowPane applicationFlowPane;
 
     @Inject
     public ApplicationController(final GlobalStage globalStage,
-                                 final ApplicationFormState applicationFormState) {
+                                 final ApplicationFormState applicationFormState,
+                                 final MessageSource messageSource) {
         this.globalStage = globalStage;
         this.applicationFormState = applicationFormState;
+        this.messageSource = messageSource;
     }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        new ApplicationMenuController(globalStage.getStage(), applicationFlowPane, applicationFormState);
+        new ApplicationMenuController(globalStage.getStage(), applicationFlowPane,
+                applicationFormState, messageSource);
     }
 
 }

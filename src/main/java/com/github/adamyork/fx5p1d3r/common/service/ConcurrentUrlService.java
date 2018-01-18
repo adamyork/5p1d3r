@@ -1,6 +1,6 @@
 package com.github.adamyork.fx5p1d3r.common.service;
 
-import com.github.adamyork.fx5p1d3r.common.command.DocumentRetrieveHandler;
+import com.github.adamyork.fx5p1d3r.common.command.io.DocumentRetrieveHandler;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;

@@ -2,7 +2,11 @@ package com.github.adamyork.fx5p1d3r.application.command.thread;
 
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
-import com.github.adamyork.fx5p1d3r.common.command.*;
+import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
+import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.DocumentRetrieveHandler;
+import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
@@ -123,6 +127,7 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
     }
 
     private List<URL> filterByRegex(final List<URL> urls) {
+        //TODO nice to have to try catch
         try {
             final Pattern pattern = Pattern.compile(applicationFormState.getLinkFollowPattern());
             return urls.stream().filter(url -> {
@@ -131,9 +136,8 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
                 return matcher.matches();
             }).collect(Collectors.toList());
         } catch (final PatternSyntaxException exception) {
-            //TODO Externalize
-            alertService.warn("Invalid Regex.", "Link follow regex is invalid.");
-            exception.printStackTrace();
+            alertService.warn(messageSource.getMessage("alert.invalid.regex.header", null, Locale.getDefault()),
+                    messageSource.getMessage("alert.invalid.regex.content", null, Locale.getDefault()));
             return new ArrayList<>();
         }
     }

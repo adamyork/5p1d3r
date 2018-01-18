@@ -10,6 +10,11 @@ import com.github.adamyork.fx5p1d3r.application.command.transform.DefaultJsonTra
 import com.github.adamyork.fx5p1d3r.application.command.transform.ResultTransformListViewCommand;
 import com.github.adamyork.fx5p1d3r.application.command.url.*;
 import com.github.adamyork.fx5p1d3r.common.command.*;
+import com.github.adamyork.fx5p1d3r.common.command.alert.*;
+import com.github.adamyork.fx5p1d3r.common.command.io.ExecutorCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.HandlerCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.OutputCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.model.UrlMethod;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -186,6 +191,16 @@ public class ApplicationConfiguration {
         final CommandMap<Boolean, ValidatorCommand> map = new CommandMap<>();
         map.add(true, noopValidatorCommand);
         map.add(false, normalizeUrlCommand);
+        return map;
+    }
+
+    @Bean
+    @Qualifier("ExecutorCleanUpCommandMap")
+    public CommandMap<Boolean, ExecutorCommand> executorCleanUpCommandMap(final CleanUpExecutorCommand cleanUpExecutorCommand,
+                                                                          final NoopCommand noopCommand) {
+        final CommandMap<Boolean, ExecutorCommand> map = new CommandMap<>();
+        map.add(true, noopCommand);
+        map.add(false, cleanUpExecutorCommand);
         return map;
     }
 

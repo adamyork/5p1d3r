@@ -4,8 +4,10 @@ import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.command.DocumentRetrieveHandler;
-import com.github.adamyork.fx5p1d3r.common.command.ParserCommand;
+import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.DocumentRetrieveHandler;
+import com.github.adamyork.fx5p1d3r.common.command.io.ExecutorCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.service.AbortService;
@@ -16,11 +18,13 @@ import javafx.collections.ObservableList;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutorService;
@@ -35,29 +39,38 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
 
     private final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap;
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
+    private final CommandMap<Boolean, ExecutorCommand> executorCommandCommandMap;
+    private final CommandMap<Boolean, AlertCommand> warnCommandMap;
     private final ApplicationFormState applicationFormState;
     private final OutputManager outputManager;
     private final AbortService abortService;
     private final UrlServiceFactory urlServiceFactory;
     private final AlertService alertService;
+    private final MessageSource messageSource;
 
     private ExecutorService executorService;
 
     @Inject
     public MultiThreadCommand(@Qualifier("FollowLinksCommandMap") final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap,
                               @Qualifier("ParserCommandMap") final CommandMap<OutputFileType, ParserCommand> parserCommandMap,
+                              @Qualifier("WarnCommandMap") final CommandMap<Boolean, AlertCommand> warnCommandMap,
+                              @Qualifier("ExecutorCleanUpCommandMap") final CommandMap<Boolean, ExecutorCommand> executorCommandCommandMap,
                               final UrlServiceFactory urlServiceFactory,
                               final ApplicationFormState applicationFormState,
                               final OutputManager outputManager,
                               final AbortService abortService,
-                              final AlertService alertService) {
+                              final AlertService alertService,
+                              final MessageSource messageSource) {
         this.followLinksCommandMap = followLinksCommandMap;
         this.parserCommandMap = parserCommandMap;
+        this.warnCommandMap = warnCommandMap;
+        this.executorCommandCommandMap = executorCommandCommandMap;
         this.urlServiceFactory = urlServiceFactory;
         this.applicationFormState = applicationFormState;
         this.outputManager = outputManager;
         this.abortService = abortService;
         this.alertService = alertService;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -82,10 +95,9 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
     @SuppressWarnings({"unchecked", "Duplicates"})
     public void onDocumentsRetrieved(final List<Document> documents) {
         final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
-        //TODO COMMAND
-        if (documents.size() == 0) {
-            alertService.warn("No Documents.", "No parsable documents found. Output may be empty");
-        }
+        warnCommandMap.getCommand(documents.size() == 0)
+                .execute(messageSource.getMessage("alert.no.documents.header", null, Locale.getDefault()),
+                        messageSource.getMessage("alert.no.documents.content", null, Locale.getDefault()));
         documents.forEach(document -> {
             domQueryObservableList.forEach(domQuery -> {
                 final String domQueryString = domQuery.getQuery();
@@ -100,10 +112,6 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
 
     @Override
     public void update(final Observable observable, final Object arg) {
-        //TODO COMMAND
-        if (executorService != null) {
-            executorService.shutdown();
-            abortService.clear();
-        }
+        executorCommandCommandMap.getCommand(executorService != null).execute(executorService);
     }
 }

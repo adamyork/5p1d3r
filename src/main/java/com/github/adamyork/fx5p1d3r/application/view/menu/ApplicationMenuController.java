@@ -13,8 +13,10 @@ import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jooq.lambda.Unchecked;
+import org.springframework.context.MessageSource;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * Created by Adam York on 3/5/2017.
@@ -25,21 +27,30 @@ public class ApplicationMenuController {
 
     private final Stage stage;
     private final ApplicationFormState applicationFormState;
+    private final MessageSource messageSource;
 
-    public ApplicationMenuController(final Stage stage, final FlowPane flowPane, final ApplicationFormState applicationFormState) {
+    public ApplicationMenuController(final Stage stage,
+                                     final FlowPane flowPane,
+                                     final ApplicationFormState applicationFormState,
+                                     final MessageSource messageSource) {
         this.stage = stage;
         this.applicationFormState = applicationFormState;
+        this.messageSource = messageSource;
+
         final MenuBar menuBar = new MenuBar();
         menuBar.useSystemMenuBarProperty().set(true);
         menuBar.setPrefWidth(400);
         flowPane.getChildren().add(0, menuBar);
 
-        //TODO externalize there values
-        final Menu menu = new Menu("File");
-        final MenuItem loadItem = new MenuItem("Load");
-        final MenuItem saveItem = new MenuItem("Save");
+        final Menu menu = new Menu(messageSource.getMessage("menu.file.label",
+                null, Locale.getDefault()));
+        final MenuItem loadItem = new MenuItem(messageSource.getMessage("menu.load.label",
+                null, Locale.getDefault()));
+        final MenuItem saveItem = new MenuItem(messageSource.getMessage("menu.save.label",
+                null, Locale.getDefault()));
         final SeparatorMenuItem separator = new SeparatorMenuItem();
-        final MenuItem exitItem = new MenuItem("Exit");
+        final MenuItem exitItem = new MenuItem(messageSource.getMessage("menu.exit.label",
+                null, Locale.getDefault()));
 
         menu.getItems().add(loadItem);
         menu.getItems().add(saveItem);

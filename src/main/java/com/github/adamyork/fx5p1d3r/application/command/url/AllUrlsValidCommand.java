@@ -1,6 +1,6 @@
 package com.github.adamyork.fx5p1d3r.application.command.url;
 
-import com.github.adamyork.fx5p1d3r.common.command.AlertCommand;
+import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.model.AllValidUrls;
 import org.springframework.stereotype.Component;
 

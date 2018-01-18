@@ -4,6 +4,7 @@ import com.github.adamyork.fx5p1d3r.common.NullSafe;
 import com.github.adamyork.fx5p1d3r.common.command.ValidatorCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import javafx.scene.control.TextField;
+import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -36,5 +37,10 @@ public class LoadUrlListCommand implements ValidatorCommand {
         final String nullSafeFilePath = nullSafeFile.toString();
         textField.setText(nullSafeFilePath);
         applicationFormState.setUrlListFile(nullSafeFile);
+    }
+
+    @Override
+    public String execute(final Element element, final String href) {
+        return null;
     }
 }

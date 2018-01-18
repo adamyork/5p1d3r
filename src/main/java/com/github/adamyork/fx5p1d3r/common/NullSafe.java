@@ -1,5 +1,9 @@
 package com.github.adamyork.fx5p1d3r.common;
 
+import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.nullsafe.NullSafeInternalCommand;
+import com.github.adamyork.fx5p1d3r.common.command.nullsafe.NullSafeNotNullCommand;
+import com.github.adamyork.fx5p1d3r.common.command.nullsafe.NullSafeNullCommand;
 import org.jooq.lambda.Unchecked;
 
 import java.io.File;
@@ -16,6 +20,7 @@ public class NullSafe<T> {
 
     private final Class<T> type;
     private final Map<Class, Function> instantiationMap;
+    private CommandMap<Boolean, NullSafeInternalCommand> nullSafeInternalCommandMap;
 
     public NullSafe(final Class<T> type) {
         this.type = type;
@@ -23,22 +28,22 @@ public class NullSafe<T> {
         instantiationMap.put(URL.class, getNewUrlFunction());
         instantiationMap.put(String.class, getNewString());
         instantiationMap.put(File.class, getNewFile());
+        nullSafeInternalCommandMap = new CommandMap<>();
+        nullSafeInternalCommandMap.add(true, new NullSafeNullCommand());
+        nullSafeInternalCommandMap.add(false, new NullSafeNotNullCommand());
     }
 
     @SuppressWarnings("unchecked")
     public T getNullSafe(final T value) {
-        //TODO COMMAND
-        if (value == null) {
-            return (T) instantiationMap.get(type).apply(null);
-        } else if (value instanceof String && ((String) value).isEmpty()) {
-            return (T) instantiationMap.get(String.class).apply(value);
-        }
-        return value;
+        return (T) nullSafeInternalCommandMap
+                .getCommand(value == null)
+                .execute(instantiationMap, type, value);
     }
 
     @SuppressWarnings("unchecked")
     private Function<T, T> getNewUrlFunction() {
-        return t -> (T) Unchecked.function(o -> new URL("http://www.123456789010101.com")).apply(null);
+        return t -> (T) Unchecked.function(o -> new URL("http://www.123456789010101.com"))
+                .apply(null);
     }
 
     @SuppressWarnings("unchecked")

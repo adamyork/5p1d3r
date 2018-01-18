@@ -1,8 +1,8 @@
 package com.github.adamyork.fx5p1d3r.common.service.progress;
 
-import com.github.adamyork.fx5p1d3r.common.command.StepAddCommand;
-import com.github.adamyork.fx5p1d3r.common.command.StepAssignCommand;
-import com.github.adamyork.fx5p1d3r.common.command.StepCommand;
+import com.github.adamyork.fx5p1d3r.common.command.progress.StepAddCommand;
+import com.github.adamyork.fx5p1d3r.common.command.progress.StepAssignCommand;
+import com.github.adamyork.fx5p1d3r.common.command.progress.StepCommand;
 import javafx.application.Platform;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
