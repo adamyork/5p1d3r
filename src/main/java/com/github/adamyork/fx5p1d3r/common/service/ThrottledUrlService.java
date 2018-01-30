@@ -34,14 +34,13 @@ public class ThrottledUrlService extends Task<List<Document>> {
     }
 
     @Override
-    protected List<Document> call() throws Exception {
+    protected List<Document> call() {
         final Whitelist whitelist = Whitelist.relaxed();
         //final Cleaner cleaner = new Cleaner(whitelist);
         //cleaned = cleaner.clean(dirty);
         //outputManager.outputToApplication("Document Cleaned...");
         final List<Document> documentList = new ArrayList<>();
         urls.forEach(url -> {
-            //if (!executorService.isShutdown()) {
             progressService.updateProgress(ProgressType.FETCH);
             final Document document = Unchecked.function(urlToCall -> Jsoup.connect(urlToCall.toString())
                     .userAgent(USER_AGENT)
@@ -51,7 +50,6 @@ public class ThrottledUrlService extends Task<List<Document>> {
             final long requestDelay = applicationFormState.getThrottleMs().getValue();
             progressService.updateProgress(ProgressType.RETRIEVED);
             Unchecked.consumer(o -> Thread.sleep(requestDelay)).accept(null);
-            //}
         });
         return documentList;
     }

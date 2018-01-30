@@ -127,7 +127,6 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
     }
 
     private List<URL> filterByRegex(final List<URL> urls) {
-        //TODO nice to have to try catch
         try {
             final Pattern pattern = Pattern.compile(applicationFormState.getLinkFollowPattern());
             return urls.stream().filter(url -> {

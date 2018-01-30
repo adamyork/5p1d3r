@@ -8,6 +8,7 @@ import java.util.List;
  * Created by Adam York on 10/24/2017.
  * Copyright 2017
  */
+@SuppressWarnings("UnusedReturnValue")
 public interface AlertCommand<R> {
 
     R execute(final String header, final String content);

@@ -1,8 +1,8 @@
 package com.github.adamyork.fx5p1d3r.application.view.menu;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.github.adamyork.fx5p1d3r.application.view.menu.command.*;
+import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
@@ -22,12 +22,12 @@ import java.util.Locale;
  * Created by Adam York on 3/5/2017.
  * Copyright 2017
  */
-
 public class ApplicationMenuController {
 
     private final Stage stage;
     private final ApplicationFormState applicationFormState;
-    private final MessageSource messageSource;
+    private final CommandMap<Boolean, ManageConfigCommand> saveCommandMap;
+    private final CommandMap<Boolean, ManageConfigCommand> loadCommandMap;
 
     public ApplicationMenuController(final Stage stage,
                                      final FlowPane flowPane,
@@ -35,7 +35,6 @@ public class ApplicationMenuController {
                                      final MessageSource messageSource) {
         this.stage = stage;
         this.applicationFormState = applicationFormState;
-        this.messageSource = messageSource;
 
         final MenuBar menuBar = new MenuBar();
         menuBar.useSystemMenuBarProperty().set(true);
@@ -61,6 +60,13 @@ public class ApplicationMenuController {
         exitItem.setOnAction(this::handleExitSelected);
         saveItem.setOnAction(this::handleSave);
         loadItem.setOnAction(this::handleLoad);
+
+        saveCommandMap = new CommandMap<>();
+        saveCommandMap.add(true, new DontSaveAppConfigCommand());
+        saveCommandMap.add(true, new SaveAppConfigCommand());
+        loadCommandMap = new CommandMap<>();
+        saveCommandMap.add(true, new DontLoadAppConfigCommand());
+        saveCommandMap.add(true, new LoadAppConfigCommand());
     }
 
     @SuppressWarnings("unused")
@@ -78,11 +84,7 @@ public class ApplicationMenuController {
                 new FileChooser.ExtensionFilter("json", "*.json")
         );
         final File file = fileChooser.showSaveDialog(stage);
-        //TODO COMMAND
-        if (file == null) {
-            return;
-        }
-        Unchecked.consumer(consumer -> mapper.writerWithDefaultPrettyPrinter().writeValue(file, applicationFormState)).accept(null);
+        saveCommandMap.getCommand(file == null).execute(mapper, file, applicationFormState);
     }
 
     @SuppressWarnings("unused")
@@ -94,15 +96,6 @@ public class ApplicationMenuController {
                 new FileChooser.ExtensionFilter("json", "*.json")
         );
         final File file = fileChooser.showOpenDialog(stage);
-        //TODO COMMAND
-        if (file == null) {
-            return;
-        }
-        mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        final SimpleModule module = new SimpleModule();
-        module.addDeserializer(ApplicationFormState.class, new FormStateDeserializer(applicationFormState));
-        mapper.registerModule(module);
-        final ApplicationFormState state = Unchecked.function(func -> mapper.readValue(file, ApplicationFormState.class)).apply(null);
-        state.notifyChanged();
+        loadCommandMap.getCommand(file == null).execute(mapper, file, applicationFormState);
     }
 }

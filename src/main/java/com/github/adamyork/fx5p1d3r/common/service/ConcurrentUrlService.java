@@ -38,7 +38,7 @@ public class ConcurrentUrlService extends Task<List<Document>> {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected List<Document> call() throws Exception {
+    protected List<Document> call() {
         documents = new ArrayList<>();
         final List<UrlServiceCallable> tasks = urls.stream().map(url -> {
             final UrlServiceCallable task = new UrlServiceCallable(url, progressService);

@@ -86,8 +86,7 @@ public class OutputManager {
         final List<List<String>> values = new ArrayList<>();
         while (iterator.hasNext()) {
             final String[] innerValues = (String[]) iterator.next();
-            final List<String> entry = new ArrayList<>();
-            entry.addAll(Arrays.asList(innerValues));
+            final List<String> entry = new ArrayList<>(Arrays.asList(innerValues));
             values.add(entry);
         }
         values.add(Arrays.asList(object));

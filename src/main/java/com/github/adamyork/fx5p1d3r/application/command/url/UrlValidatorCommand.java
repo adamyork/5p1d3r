@@ -53,7 +53,6 @@ public class UrlValidatorCommand implements ValidatorCommand {
         this.messageSource = messageSource;
         this.urlsValidCommandMap = urlsValidCommandMap;
 
-        //TODO reconsider instantiating this map here in favor of IOC
         final CommandMap<Boolean, ApplicationCommand> noopCommandMap = new CommandMap<>();
         noopCommandMap.add(true, new NoopCommand());
         noopCommandMap.add(false, new NoopCommand());

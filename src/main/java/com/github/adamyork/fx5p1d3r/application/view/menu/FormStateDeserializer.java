@@ -4,23 +4,35 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
+import com.github.adamyork.fx5p1d3r.application.view.menu.command.*;
+import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.model.*;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
  * Created by Adam York on 10/12/2017.
  * Copyright 2017
  */
-class FormStateDeserializer extends StdDeserializer<ApplicationFormState> {
+public class FormStateDeserializer extends StdDeserializer<ApplicationFormState> {
 
     private final ApplicationFormState applicationFormState;
+    private final CommandMap<Boolean, FormStateConfigCommand> queryNodesCommandMap;
+    private final CommandMap<Boolean, FormStateConfigCommand> transFormNodesCommandMap;
+    private final CommandMap<Boolean, FormStateConfigCommand> urlListFileCommandMap;
 
-    FormStateDeserializer(final ApplicationFormState applicationFormState) {
+    public FormStateDeserializer(final ApplicationFormState applicationFormState) {
         super(ApplicationFormState.class);
         this.applicationFormState = applicationFormState;
+        queryNodesCommandMap = new CommandMap<>();
+        queryNodesCommandMap.add(true, new HasQueryNodesCommand());
+        queryNodesCommandMap.add(false, new FormStateConfigNoopCommand());
+        transFormNodesCommandMap = new CommandMap<>();
+        transFormNodesCommandMap.add(true, new HasTransformNodesCommand());
+        transFormNodesCommandMap.add(false, new FormStateConfigNoopCommand());
+        urlListFileCommandMap = new CommandMap<>();
+        urlListFileCommandMap.add(true, new HasUrlListFilesCommand());
+        urlListFileCommandMap.add(false, new FormStateConfigNoopCommand());
     }
 
     @Override
@@ -36,32 +48,13 @@ class FormStateDeserializer extends StdDeserializer<ApplicationFormState> {
         final FollowLinksDepth followLinksDepth = FollowLinksDepth.valueOf(node.get("followLinksDepth").asText());
         final String linkFollowPattern = node.get("linkFollowPattern").asText();
         final JsonNode queryNodes = node.get("domQueryObservableList");
-        //TODO COMMAND
-        if (queryNodes.size() > 0) {
-            applicationFormState.getDomQueryObservableList().clear();
-            for (int i = 0; i < queryNodes.size(); i++) {
-                final JsonNode queryNode = queryNodes.get(i);
-                final DomQuery query = new DomQuery.Builder().id(i).query(queryNode.get("query").asText()).build();
-                applicationFormState.getDomQueryObservableList().add(query);
-            }
-        }
+        queryNodesCommandMap.getCommand(queryNodes.size() > 0).execute(applicationFormState, queryNodes);
         final JsonNode transFormNodes = node.get("resultTransformObservableList");
-        //TODO COMMAND
-        if (transFormNodes.size() > 0) {
-            applicationFormState.getResultTransformObservableList().clear();
-            for (int i = 0; i < transFormNodes.size(); i++) {
-                final JsonNode transFormNode = transFormNodes.get(i);
-                final File file = new File(transFormNode.asText());
-                applicationFormState.getResultTransformObservableList().add(file);
-            }
-        }
+        transFormNodesCommandMap.getCommand(transFormNodes.size() > 0).execute(applicationFormState, transFormNodes);
         applicationFormState.setOutputFile(node.get("outputFile").asText());
         final OutputFileType outputFileType = OutputFileType.valueOf(node.get("outputFileType").asText());
         final String urlFileListString = node.get("urlListFile").asText();
-        //TODO COMMAND
-        if (urlFileListString != null) {
-            applicationFormState.setUrlListFile(new File(urlFileListString));
-        }
+        urlListFileCommandMap.getCommand(urlFileListString != null).execute(applicationFormState, urlFileListString);
         applicationFormState.setUrlMethod(urlMethod);
         applicationFormState.setStartingUrl(startingUrl);
         applicationFormState.setMultiThreadMax(multiThreadMax);

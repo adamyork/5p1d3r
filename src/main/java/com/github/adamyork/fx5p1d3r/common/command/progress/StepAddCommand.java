@@ -18,8 +18,6 @@ public class StepAddCommand implements StepCommand {
         stepMap = new HashMap<>();
         stepMap.put(ProgressType.FETCH, stepValue);
         stepMap.put(ProgressType.VALIDATE, 0.0);
-        stepMap.put(ProgressType.FETCH, 0.0);
-        stepMap.put(ProgressType.RETRIEVED, 0.0);
         stepMap.put(ProgressType.SELECTOR, 0.0);
         stepMap.put(ProgressType.TRANSFORM, 0.0);
         stepMap.put(ProgressType.OUTPUT, 0.0);

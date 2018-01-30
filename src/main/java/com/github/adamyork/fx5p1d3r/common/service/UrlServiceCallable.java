@@ -25,7 +25,7 @@ class UrlServiceCallable extends Task<Document> {
     }
 
     @Override
-    public Document call() throws Exception {
+    public Document call() {
         progressService.updateProgress(ProgressType.FETCH);
         final Document document = Unchecked.function(urlToCall -> Jsoup.connect(urlToCall.toString())
                 .userAgent(ThrottledUrlService.USER_AGENT)

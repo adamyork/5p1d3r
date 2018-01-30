@@ -20,7 +20,7 @@ public class Main extends Application {
     private ConfigurableApplicationContext applicationContext;
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         System.setProperty("java.awt.headless", "false");
         applicationContext = SpringApplication.run(Main.class);
     }
@@ -52,7 +52,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         applicationContext.close();
     }
 
