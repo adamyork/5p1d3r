@@ -9,6 +9,7 @@ import com.github.adamyork.fx5p1d3r.application.command.transform.DefaultCsvTran
 import com.github.adamyork.fx5p1d3r.application.command.transform.DefaultJsonTransformCommand;
 import com.github.adamyork.fx5p1d3r.application.command.transform.ResultTransformListViewCommand;
 import com.github.adamyork.fx5p1d3r.application.command.url.*;
+import com.github.adamyork.fx5p1d3r.application.view.control.command.*;
 import com.github.adamyork.fx5p1d3r.common.command.*;
 import com.github.adamyork.fx5p1d3r.common.command.alert.*;
 import com.github.adamyork.fx5p1d3r.common.command.io.ExecutorCommand;
@@ -201,6 +202,26 @@ public class ApplicationConfiguration {
         final CommandMap<Boolean, ExecutorCommand> map = new CommandMap<>();
         map.add(true, noopCommand);
         map.add(false, cleanUpExecutorCommand);
+        return map;
+    }
+
+    @Bean
+    @Qualifier("ControlCommandMap")
+    public CommandMap<Boolean, ControlCommand> controlCommandMap(final OutputFileTypeCsvControlCommand outputFileTypeCsvControlCommand,
+                                                                 final OutputFileTypeJsonControlCommand outputFileTypeJsonControlCommand) {
+        final CommandMap<Boolean, ControlCommand> map = new CommandMap<>();
+        map.add(true, outputFileTypeCsvControlCommand);
+        map.add(false, outputFileTypeJsonControlCommand);
+        return map;
+    }
+
+    @Bean
+    @Qualifier("ControlStartCommandMap")
+    public CommandMap<Boolean, ControlStartCommand> controlStartCommandMap(final StartSpiderCommand startSpiderCommand,
+                                                                           final ControlNoopCommand controlNoopCommand) {
+        final CommandMap<Boolean, ControlStartCommand> map = new CommandMap<>();
+        map.add(true, startSpiderCommand);
+        map.add(false, controlNoopCommand);
         return map;
     }
 

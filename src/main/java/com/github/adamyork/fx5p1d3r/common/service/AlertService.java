@@ -59,6 +59,7 @@ public class AlertService {
         };
     }
 
+    @SuppressWarnings("unused")
     private void handleOnHidden(final DialogEvent dialogEvent) {
         warningShown = false;
     }

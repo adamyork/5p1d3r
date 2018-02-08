@@ -2,9 +2,10 @@ package com.github.adamyork.fx5p1d3r.application.command.thread;
 
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.OutputManager;
-import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
+import com.github.adamyork.fx5p1d3r.common.command.io.ExecutorCommand;
 import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
@@ -38,6 +39,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
     private final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap;
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
     private final CommandMap<Boolean, AlertCommand> warnCommandMap;
+    private final CommandMap<Boolean, ExecutorCommand> executorCommandMap;
     private final ApplicationFormState applicationFormState;
     private final OutputManager outputManager;
     private final AbortService abortService;
@@ -50,6 +52,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
     public SingleThreadCommand(@Qualifier("FollowLinksCommandMap") final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap,
                                @Qualifier("ParserCommandMap") final CommandMap<OutputFileType, ParserCommand> parserCommandMap,
                                @Qualifier("WarnCommandMap") final CommandMap<Boolean, AlertCommand> warnCommandMap,
+                               @Qualifier("ExecutorCleanUpCommandMap") final CommandMap<Boolean, ExecutorCommand> executorCommandMap,
                                final UrlServiceFactory urlServiceFactory,
                                final ApplicationFormState applicationFormState,
                                final OutputManager outputManager,
@@ -58,6 +61,7 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
         this.followLinksCommandMap = followLinksCommandMap;
         this.parserCommandMap = parserCommandMap;
         this.warnCommandMap = warnCommandMap;
+        this.executorCommandMap = executorCommandMap;
         this.urlServiceFactory = urlServiceFactory;
         this.applicationFormState = applicationFormState;
         this.outputManager = outputManager;
@@ -107,10 +111,6 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
 
     @Override
     public void update(final Observable observable, final Object arg) {
-        //TODO COMMAND
-        if (executorService != null) {
-            executorService.shutdown();
-            abortService.clear();
-        }
+        executorCommandMap.getCommand(executorService != null).execute(executorService);
     }
 }

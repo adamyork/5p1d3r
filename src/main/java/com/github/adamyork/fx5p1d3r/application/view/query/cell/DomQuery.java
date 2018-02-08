@@ -14,8 +14,6 @@ public class DomQuery {
         id = builder.id;
     }
 
-    public DomQuery() {}
-
     public String getQuery() {
         return query;
     }
@@ -24,6 +22,7 @@ public class DomQuery {
         this.query = query;
     }
 
+    @SuppressWarnings("unused")
     public int getId() {
         return id;
     }
@@ -33,7 +32,8 @@ public class DomQuery {
         private String query;
         private int id;
 
-        public Builder() {}
+        public Builder() {
+        }
 
         public Builder(final String query, final int id) {
             this.query = query;

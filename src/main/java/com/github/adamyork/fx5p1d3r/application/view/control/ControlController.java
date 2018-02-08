@@ -1,11 +1,9 @@
 package com.github.adamyork.fx5p1d3r.application.view.control;
 
 import com.github.adamyork.fx5p1d3r.GlobalStage;
-import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
+import com.github.adamyork.fx5p1d3r.application.view.control.command.ControlCommand;
+import com.github.adamyork.fx5p1d3r.application.view.control.command.ControlStartCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
-import com.github.adamyork.fx5p1d3r.common.model.UrlMethod;
 import com.github.adamyork.fx5p1d3r.common.service.AbortService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressState;
@@ -16,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.FileChooser;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -31,10 +30,10 @@ import java.util.*;
 @Component
 public class ControlController implements Initializable, Observer {
 
+    private final CommandMap<Boolean, ControlCommand> controlCommandMap;
+    private final CommandMap<Boolean, ControlStartCommand> controlStartCommandMap;
     private final MessageSource messageSource;
-    private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
-    private final CommandMap<UrlMethod, ApplicationCommand> urlMethodCommandMap;
     private final ProgressService progressService;
     private final AbortService abortService;
 
@@ -50,15 +49,15 @@ public class ControlController implements Initializable, Observer {
     private ProgressBar progressBar;
 
     @Inject
-    public ControlController(final ApplicationFormState applicationFormState,
+    public ControlController(@Qualifier("ControlCommandMap") final CommandMap<Boolean, ControlCommand> controlCommandMap,
+                             @Qualifier("ControlStartCommandMap") final CommandMap<Boolean, ControlStartCommand> controlStartCommandMap,
                              final GlobalStage globalStage,
-                             final CommandMap<UrlMethod, ApplicationCommand> urlMethodCommandMap,
                              final ProgressService progressService,
                              final AbortService abortService,
                              final MessageSource messageSource) {
-        this.applicationFormState = applicationFormState;
+        this.controlCommandMap = controlCommandMap;
+        this.controlStartCommandMap = controlStartCommandMap;
         this.globalStage = globalStage;
-        this.urlMethodCommandMap = urlMethodCommandMap;
         this.progressService = progressService;
         this.abortService = abortService;
         this.messageSource = messageSource;
@@ -86,18 +85,7 @@ public class ControlController implements Initializable, Observer {
         final File nullSafeFile = Optional.ofNullable(file).orElse(new File(""));
         final String nullSafeFileString = nullSafeFile.toString();
         final int extensionIndex = nullSafeFileString.indexOf(".");
-        //TODO COMMAND
-        if (extensionIndex != -1) {
-            final String fileTypeString = nullSafeFileString.substring(extensionIndex);
-            //TODO COMMAND
-            if (fileTypeString.equals(OutputFileType.JSON.toString())) {
-                applicationFormState.setOutputFileType(OutputFileType.JSON);
-            } else {
-                applicationFormState.setOutputFileType(OutputFileType.CSV);
-            }
-            applicationFormState.setOutputFile(nullSafeFileString);
-            urlMethodCommandMap.getCommand(applicationFormState.getUrlMethod()).execute();
-        }
+        controlStartCommandMap.getCommand(extensionIndex != -1).execute(nullSafeFileString, extensionIndex, controlCommandMap);
     }
 
     @SuppressWarnings("unused")
