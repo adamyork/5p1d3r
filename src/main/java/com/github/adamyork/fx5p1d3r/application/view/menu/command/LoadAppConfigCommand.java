@@ -9,6 +9,10 @@ import org.jooq.lambda.Unchecked;
 
 import java.io.File;
 
+/**
+ * Created by Adam York on 1/2/2018.
+ * Copyright 2018
+ */
 public class LoadAppConfigCommand implements ManageConfigCommand {
     @Override
     public void execute(final ObjectMapper mapper, final File file, final ApplicationFormState applicationFormState) {

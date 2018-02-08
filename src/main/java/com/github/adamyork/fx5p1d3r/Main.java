@@ -14,6 +14,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.net.URL;
 import java.util.Optional;
 
+/**
+ * Created by Adam York on 1/2/2018.
+ * Copyright 2018
+ */
 @SpringBootApplication
 public class Main extends Application {
 

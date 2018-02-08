@@ -7,6 +7,10 @@ import java.io.File;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Created by Adam York on 1/2/2018.
+ * Copyright 2018
+ */
 public class HasTransformNodesCommand implements FormStateConfigCommand {
     @Override
     public void execute(final ApplicationFormState applicationFormState, final JsonNode jsonNode) {

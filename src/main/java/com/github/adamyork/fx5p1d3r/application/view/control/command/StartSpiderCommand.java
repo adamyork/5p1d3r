@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
+/**
+ * Created by Adam York on 1/2/2018.
+ * Copyright 2018
+ */
 @Component
 public class StartSpiderCommand implements ControlStartCommand {
 

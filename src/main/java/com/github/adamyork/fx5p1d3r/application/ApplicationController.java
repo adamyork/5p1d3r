@@ -13,6 +13,10 @@ import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Created by Adam York on 1/2/2018.
+ * Copyright 2018
+ */
 @Component
 public class ApplicationController implements Initializable {
 

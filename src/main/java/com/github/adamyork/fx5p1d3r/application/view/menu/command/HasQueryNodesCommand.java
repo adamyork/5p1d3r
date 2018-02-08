@@ -7,6 +7,10 @@ import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Created by Adam York on 1/2/2018.
+ * Copyright 2018
+ */
 public class HasQueryNodesCommand implements FormStateConfigCommand {
     @Override
     public void execute(final ApplicationFormState applicationFormState, final JsonNode jsonNode) {

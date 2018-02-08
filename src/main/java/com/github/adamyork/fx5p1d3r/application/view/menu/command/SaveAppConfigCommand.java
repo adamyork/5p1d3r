@@ -6,6 +6,10 @@ import org.jooq.lambda.Unchecked;
 
 import java.io.File;
 
+/**
+ * Created by Adam York on 1/2/2018.
+ * Copyright 2018
+ */
 public class SaveAppConfigCommand implements ManageConfigCommand {
 
     @Override
