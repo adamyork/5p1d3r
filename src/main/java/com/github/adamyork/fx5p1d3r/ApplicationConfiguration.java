@@ -10,6 +10,7 @@ import com.github.adamyork.fx5p1d3r.application.command.transform.DefaultJsonTra
 import com.github.adamyork.fx5p1d3r.application.command.transform.ResultTransformListViewCommand;
 import com.github.adamyork.fx5p1d3r.application.command.url.*;
 import com.github.adamyork.fx5p1d3r.application.view.control.command.*;
+import com.github.adamyork.fx5p1d3r.application.view.method.command.*;
 import com.github.adamyork.fx5p1d3r.common.command.*;
 import com.github.adamyork.fx5p1d3r.common.command.alert.*;
 import com.github.adamyork.fx5p1d3r.common.command.io.ExecutorCommand;
@@ -224,6 +225,27 @@ public class ApplicationConfiguration {
         map.add(false, controlNoopCommand);
         return map;
     }
+
+    @Bean
+    @Qualifier("ManageMethodTogglesCommandMap")
+    public CommandMap<Boolean, ManageMethodTogglesCommand> manageMethodTogglesCommandMap(final ToggleWhenSingleUrlCommand toggleWhenSingleUrlCommand,
+                                                                                         final ToggleWhenListUrlCommand toggleWhenListUrlCommand) {
+        final CommandMap<Boolean, ManageMethodTogglesCommand> map = new CommandMap<>();
+        map.add(true, toggleWhenSingleUrlCommand);
+        map.add(false, toggleWhenListUrlCommand);
+        return map;
+    }
+
+    @Bean
+    @Qualifier("SelectToggleCommandMap")
+    public CommandMap<Boolean, ManageMethodTogglesCommand> selectToggleCommandMap(final DeSelectTogglesCommand deSelectTogglesCommand,
+                                                                                  final NoopSelectionCommand noopSelectionCommand) {
+        final CommandMap<Boolean, ManageMethodTogglesCommand> map = new CommandMap<>();
+        map.add(true, deSelectTogglesCommand);
+        map.add(false, noopSelectionCommand);
+        return map;
+    }
+
 
     @Bean
     public UrlValidator urlValidator() {

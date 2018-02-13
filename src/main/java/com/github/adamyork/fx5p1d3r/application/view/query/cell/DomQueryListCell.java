@@ -44,7 +44,7 @@ public class DomQueryListCell extends ListCell<DomQuery> {
 
     private Consumer2<DomQueryListCell, DomQuery> getItemNotEmptyConsumer() {
         return (domQueryListCell, domQuery) -> {
-            final FXMLLoader fxmlLoader = new FXMLLoader(domQueryListCell.getClass().getClassLoader().getResource("dom-query-list-cell.fxml"));
+            final FXMLLoader fxmlLoader = new FXMLLoader(domQueryListCell.getClass().getClassLoader().getResource("fxml/dom-query-list-cell.fxml"));
             final Parent parent = (Parent) Unchecked.function(o -> fxmlLoader.load()).apply(null);
             final DomQueryListCellController casted = fxmlLoader.getController();
             casted.setDomQuery(domQuery);

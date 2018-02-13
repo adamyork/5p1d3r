@@ -116,7 +116,7 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
             final List<URL> linksList = outputManager.getUrlListFromElements(linksElementsList);
             allLinks.add(linksList);
         });
-        //TODO COMMAND
+        //TODO the problem pattern
         if (currentDepth < maxDepth) {
             final List<URL> flattened = allLinks.stream().flatMap(List::stream).collect(Collectors.toList());
             execute(flattened, executorService);

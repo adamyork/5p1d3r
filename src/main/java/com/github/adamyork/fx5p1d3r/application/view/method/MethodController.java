@@ -5,10 +5,14 @@ import com.github.adamyork.fx5p1d3r.application.view.method.choice.FollowLinksCh
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.MultiThreadingChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.ThrottleChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.UrlMethodChoice;
+import com.github.adamyork.fx5p1d3r.application.view.method.command.ManageMethodTogglesCommand;
 import com.github.adamyork.fx5p1d3r.common.GlobalDefaults;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.ValidatorCommand;
-import com.github.adamyork.fx5p1d3r.common.model.*;
+import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.common.model.GlobalDefault;
+import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
+import com.github.adamyork.fx5p1d3r.common.model.UrlMethod;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -44,11 +48,13 @@ import java.util.ResourceBundle;
 @Component
 public class MethodController implements Initializable, Observer {
 
+    private final CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap;
+    private final CommandMap<Boolean, ManageMethodTogglesCommand> manageMethodTogglesCommandMap;
+    private final CommandMap<Boolean, ManageMethodTogglesCommand> selectToggleCommandMap;
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
     private final GlobalDefaults globalDefaults;
     private final MessageSource messageSource;
-    private final CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap;
 
     @FXML
     private ChoiceBox<UrlMethodChoice> urlMethodChoiceBox;
@@ -78,15 +84,19 @@ public class MethodController implements Initializable, Observer {
     private Label linkUrlPatternLabel;
 
     @Inject
-    public MethodController(final ApplicationFormState applicationFormState,
+    public MethodController(final @Qualifier("LoadUrlListCommandMap") CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap,
+                            final @Qualifier("ManageMethodTogglesCommandMap") CommandMap<Boolean, ManageMethodTogglesCommand> manageMethodTogglesCommandMap,
+                            final @Qualifier("SelectToggleCommandMap") CommandMap<Boolean, ManageMethodTogglesCommand> selectToggleCommandMap,
+                            final ApplicationFormState applicationFormState,
                             final GlobalStage globalStage,
                             final GlobalDefaults globalDefaults,
-                            final MessageSource messageSource,
-                            final @Qualifier("LoadUrlListCommandMap") CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap) {
+                            final MessageSource messageSource) {
+        this.loadUrlListCommandMap = loadUrlListCommandMap;
+        this.manageMethodTogglesCommandMap = manageMethodTogglesCommandMap;
+        this.selectToggleCommandMap = selectToggleCommandMap;
         this.applicationFormState = applicationFormState;
         this.globalStage = globalStage;
         this.globalDefaults = globalDefaults;
-        this.loadUrlListCommandMap = loadUrlListCommandMap;
         this.messageSource = messageSource;
     }
 
@@ -106,8 +116,8 @@ public class MethodController implements Initializable, Observer {
 
         requestThrottlingToggleSwitch.setText(messageSource.getMessage("throttling.label", null, Locale.getDefault()));
         requestThrottlingToggleSwitch.selectedProperty().addListener(this::handleThrottlingChanged);
-        requestThrottlingToggleSwitch.setSelected(true);
-        requestThrottlingChoiceBox.setDisable(false);
+        requestThrottlingToggleSwitch.setDisable(true);
+        requestThrottlingChoiceBox.setDisable(true);
         requestThrottlingChoiceBox.setItems(ThrottleChoice.getThrottleChoices());
         requestThrottlingChoiceBox.getSelectionModel().selectedItemProperty().addListener(this::handleThrottlingOptionChanged);
         requestThrottlingChoiceBox.setValue(requestThrottlingChoiceBox.getItems().get(3));
@@ -115,6 +125,7 @@ public class MethodController implements Initializable, Observer {
 
         multiThreadingToggleSwitch.setText(messageSource.getMessage("threading.label", null, Locale.getDefault()));
         multiThreadingToggleSwitch.selectedProperty().addListener(this::handleMultiThreadingChanged);
+        multiThreadingToggleSwitch.setDisable(true);
         multiThreadingChoiceBox.setDisable(true);
         multiThreadingChoiceBox.setItems(MultiThreadingChoice.getMultiThreadingChoices());
         multiThreadingChoiceBox.getSelectionModel().selectedItemProperty().addListener(this::handleMultiThreadingOptionChanged);
@@ -155,6 +166,9 @@ public class MethodController implements Initializable, Observer {
         final String urlListString = messageSource.getMessage("url.list.label", null, Locale.getDefault());
         urlLabel.setText(urlMethod.equals(UrlMethod.URL) ? urlString : urlListString);
         urlListSelectionButton.setDisable(urlMethod.equals(UrlMethod.URL));
+        final boolean isSingleUrl = urlMethodChoiceBox.getSelectionModel().getSelectedItem().getUrlMethod().equals(UrlMethod.URL);
+        manageMethodTogglesCommandMap.getCommand(isSingleUrl).execute(requestThrottlingToggleSwitch, multiThreadingToggleSwitch,
+                followLinksToggleSwitch);
     }
 
     private void handleStartingUrlChanged(@SuppressWarnings("unused") final Observable observable,
@@ -181,11 +195,6 @@ public class MethodController implements Initializable, Observer {
         final boolean selected = ((BooleanProperty) observable).get();
         multiThreadingChoiceBox.setDisable(!selected);
         applicationFormState.setMultithreading(selected);
-        requestThrottlingToggleSwitch.setSelected(!selected);
-        requestThrottlingChoiceBox.setValue(requestThrottlingChoiceBox.getItems().get(0));
-        requestThrottlingChoiceBox.setDisable(selected);
-        final ThrottleMs throttleMs = (selected) ? ThrottleMs.ZERO : requestThrottlingChoiceBox.getSelectionModel().getSelectedItem().getThrottleMs();
-        applicationFormState.setThrottleMs(throttleMs);
     }
 
     @SuppressWarnings("unused")
@@ -201,6 +210,11 @@ public class MethodController implements Initializable, Observer {
         followLinksChoiceBox.setDisable(!selected);
         linkUrlPatternTextfield.setDisable(!selected);
         applicationFormState.setFollowLinks(selected);
+        final boolean isSingleUrl = urlMethodChoiceBox.getSelectionModel().getSelectedItem().getUrlMethod().equals(UrlMethod.URL);
+        multiThreadingToggleSwitch.setDisable(!followLinksToggleSwitch.isSelected() && isSingleUrl);
+        requestThrottlingToggleSwitch.setDisable(!followLinksToggleSwitch.isSelected() && isSingleUrl);
+        selectToggleCommandMap.getCommand(!selected && multiThreadingToggleSwitch.isSelected() && isSingleUrl).execute(requestThrottlingToggleSwitch,
+                multiThreadingToggleSwitch, followLinksToggleSwitch);
     }
 
     @SuppressWarnings("unused")

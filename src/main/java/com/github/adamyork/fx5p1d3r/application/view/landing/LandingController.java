@@ -61,11 +61,11 @@ public class LandingController implements Initializable, ApplicationContextAware
 
     private void handleBasicSelection(@SuppressWarnings("unused") final ActionEvent actionEvent) {
         final Parent basicRoot;
-        final FXMLLoader fxmlLoader = Unchecked.function(a -> new FXMLLoader(Main.class.getClassLoader().getResource("application.fxml"))).apply(null);
+        final FXMLLoader fxmlLoader = Unchecked.function(a -> new FXMLLoader(Main.class.getClassLoader().getResource("fxml/application.fxml"))).apply(null);
         fxmlLoader.setControllerFactory(applicationContext::getBean);
         basicRoot = (Parent) Unchecked.function(o -> fxmlLoader.load()).apply(null);
         final Scene basicScene = new Scene(basicRoot, 400, 832);
-        final URL url = getClass().getClassLoader().getResource("application.css");
+        final URL url = getClass().getClassLoader().getResource("css/application.css");
         final URL nullSafeURL = Optional.ofNullable(url)
                 .orElse(Unchecked.function(o -> new URL("http://www.123456789010101.com"))
                         .apply(null));

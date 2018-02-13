@@ -37,14 +37,14 @@ public class Main extends Application {
                 new Image(getClass().getClassLoader().getResourceAsStream("image/icon32.png")),
                 new Image(getClass().getClassLoader().getResourceAsStream("image/icon64.png")));
 
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("landing.fxml"));
+        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/landing.fxml"));
         fxmlLoader.setControllerFactory(applicationContext::getBean);
         final GlobalStage globalStage = applicationContext.getBean(GlobalStage.class);
         globalStage.setStage(stage);
 
         final Parent landingRoot = (Parent) Unchecked.function(o -> fxmlLoader.load()).apply(null);
         final Scene landingScene = new Scene(landingRoot, 400, 832);
-        final URL url = getClass().getClassLoader().getResource("landing.css");
+        final URL url = getClass().getClassLoader().getResource("css/landing.css");
         final URL nullSafeUrl = Optional.ofNullable(url)
                 .orElse(Unchecked.function(o -> new URL("http://www.123456789010101.com"))
                         .apply(null));

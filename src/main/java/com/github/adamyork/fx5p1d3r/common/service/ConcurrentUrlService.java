@@ -52,7 +52,7 @@ public class ConcurrentUrlService extends Task<List<Document>> {
         return futures.stream().map(future -> Unchecked.function(a -> future.get()).apply(null)).collect(Collectors.toList());
     }
 
-    //TODO this pattern is ugly
+    //TODO the problem pattern
     public void setCallbackObject(final DocumentRetrieveHandler handler) {
         this.handler = handler;
     }
@@ -61,7 +61,7 @@ public class ConcurrentUrlService extends Task<List<Document>> {
     void onMultiDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         total++;
         documents.add((Document) workerStateEvent.getSource().getValue());
-        //TODO COMMAND
+        //TODO the problem pattern
         if (total == urls.size()) {
             total = 0;
             handler.onDocumentsRetrieved(documents);

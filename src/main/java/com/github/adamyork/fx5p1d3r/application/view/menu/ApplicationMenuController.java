@@ -63,10 +63,10 @@ public class ApplicationMenuController {
 
         saveCommandMap = new CommandMap<>();
         saveCommandMap.add(true, new DontSaveAppConfigCommand());
-        saveCommandMap.add(true, new SaveAppConfigCommand());
+        saveCommandMap.add(false, new SaveAppConfigCommand());
         loadCommandMap = new CommandMap<>();
-        saveCommandMap.add(true, new DontLoadAppConfigCommand());
-        saveCommandMap.add(true, new LoadAppConfigCommand());
+        loadCommandMap.add(true, new DontLoadAppConfigCommand());
+        loadCommandMap.add(false, new LoadAppConfigCommand());
     }
 
     @SuppressWarnings("unused")
