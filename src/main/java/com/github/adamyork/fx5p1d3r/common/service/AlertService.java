@@ -48,8 +48,7 @@ public class AlertService {
     }
 
     public void warn(final String header, final String content) {
-        warningShown = warnHandlerCommandMap.getCommand(warningShown)
-                .execute(messageSource, getHandlerFunction(), header, content);
+        warningShown = warnHandlerCommandMap.getCommand(warningShown).execute(messageSource, getHandlerFunction(), header, content);
     }
 
     private Function<Alert, Alert> getHandlerFunction() {

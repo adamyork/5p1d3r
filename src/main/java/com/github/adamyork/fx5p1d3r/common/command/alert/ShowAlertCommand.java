@@ -27,6 +27,6 @@ public class ShowAlertCommand implements HandlerCommand<MessageSource, Function,
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.show();
-        return null;
+        return true;
     }
 }

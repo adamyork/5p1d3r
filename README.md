@@ -1,9 +1,19 @@
 # 5p1d3r
 web page parser with a javafx gui
 
-#TODO
-- move the remove buttons for list into the list element
-- fix focus after editing a field
-- hook up about and help buttons
+## Overview
+
+**5p1d3r** is a tool for parsing web page data. It is for educational purposes only.
+
+## Features
+
+- request throttling
+- multithreading
+- link following
+
+![application preview][app.png]
+
+
+# TODO
 - rework multi-thread pattern
 - functional test cases

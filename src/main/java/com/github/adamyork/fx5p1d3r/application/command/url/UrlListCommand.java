@@ -1,8 +1,8 @@
 package com.github.adamyork.fx5p1d3r.application.command.url;
 
-import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -41,7 +41,8 @@ public class UrlListCommand implements ApplicationCommand {
         final File urlListFile = applicationFormState.getUrlListFile();
         urlListSelectedCommandMap.getCommand(urlListFile == null)
                 .execute(messageSource.getMessage("error.no.url.list.header", null, Locale.getDefault()),
-                        messageSource.getMessage("error.no.url.list.content", null, Locale.getDefault()));
+                        messageSource.getMessage("error.no.url.list.content", null, Locale.getDefault()),
+                        urlListFile);
     }
 
     @Override

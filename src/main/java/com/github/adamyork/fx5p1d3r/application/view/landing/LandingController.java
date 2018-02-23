@@ -17,6 +17,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.awt.*;
+import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Optional;
@@ -49,6 +51,8 @@ public class LandingController implements Initializable, ApplicationContextAware
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         startButton.setOnAction(this::handleBasicSelection);
+        aboutButton.setOnAction(this::handleAbout);
+        helpButton.setOnAction(this::handleHelp);
         startButton.setText(messageSource.getMessage("start.label", null, Locale.getDefault()));
         aboutButton.setText(messageSource.getMessage("about.label", null, Locale.getDefault()));
         helpButton.setText(messageSource.getMessage("help.label", null, Locale.getDefault()));
@@ -71,6 +75,14 @@ public class LandingController implements Initializable, ApplicationContextAware
                         .apply(null));
         basicScene.getStylesheets().addAll(nullSafeURL.toExternalForm());
         globalStage.getStage().setScene(basicScene);
+    }
+
+    private void handleAbout(@SuppressWarnings("unused") final ActionEvent actionEvent) {
+        Unchecked.consumer(o -> Desktop.getDesktop().browse(new URI("http://www.github.com/adamyork/5p1d3r"))).accept(null);
+    }
+
+    private void handleHelp(@SuppressWarnings("unused") final ActionEvent actionEvent) {
+        Unchecked.consumer(o -> Desktop.getDesktop().browse(new URI("http://www.github.com/adamyork/5p1d3r#howToUse"))).accept(null);
     }
 
 }

@@ -5,7 +5,6 @@ import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
-import com.github.adamyork.fx5p1d3r.common.command.io.DocumentRetrieveHandler;
 import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
@@ -15,6 +14,7 @@ import com.github.adamyork.fx5p1d3r.common.service.UrlServiceFactory;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.collections.ObservableList;
+import javafx.concurrent.WorkerStateEvent;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,8 +26,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * Copyright 2017
  */
 @Component
-public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveHandler {
+public class LinksFollowCommand implements ApplicationCommand {
 
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
     private final CommandMap<Boolean, AlertCommand> warnCommandMap;
@@ -80,10 +80,6 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
 
     @Override
     public void execute(final List<URL> urls) {
-        progressService.updateProgress(ProgressType.LINKS);
-        threadPoolSize = Integer.parseInt(applicationFormState.getMultiThreadMax().toString());
-        executorService = Executors.newFixedThreadPool(threadPoolSize);
-        execute(urls, executorService);
     }
 
     @Override
@@ -95,27 +91,27 @@ public class LinksFollowCommand implements ApplicationCommand, DocumentRetrieveH
         final List<URL> filtered = filterByRegex(urls);
         threadPoolSize = Integer.parseInt(applicationFormState.getMultiThreadMax().toString());
         final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(filtered, threadPoolSize);
-        concurrentUrlService.setCallbackObject(this);
+        concurrentUrlService.setOnSucceeded(this::onDocumentsRetrieved);
         executorService.submit(concurrentUrlService);
     }
 
     @SuppressWarnings("unchecked")
-    public void onDocumentsRetrieved(final List<Document> documents) {
+    public void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
+        final List<Document> documents = ((List<Document>) workerStateEvent.getSource().getValue()).stream()
+                .filter(Objects::nonNull).collect(Collectors.toList());
         final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
-        final List<List<URL>> allLinks = new ArrayList<>();
         warnCommandMap.getCommand(documents.size() == 0)
                 .execute(messageSource.getMessage("alert.no.documents.header", null, Locale.getDefault()),
                         messageSource.getMessage("alert.no.documents.content", null, Locale.getDefault()));
-        documents.forEach(doc -> {
+        final List<List<URL>> allLinks = documents.stream().map(doc -> {
             final Document document = doc;
             domQueryObservableList.forEach(domQuery -> {
                 final String domQueryString = domQuery.getQuery();
                 parserCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(document, domQueryString);
             });
             final Elements linksElementsList = document.select("a");
-            final List<URL> linksList = outputManager.getUrlListFromElements(linksElementsList);
-            allLinks.add(linksList);
-        });
+            return outputManager.getUrlListFromElements(linksElementsList);
+        }).collect(Collectors.toList());
         //TODO the problem pattern
         if (currentDepth < maxDepth) {
             final List<URL> flattened = allLinks.stream().flatMap(List::stream).collect(Collectors.toList());

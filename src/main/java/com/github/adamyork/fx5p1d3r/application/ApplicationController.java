@@ -40,6 +40,7 @@ public class ApplicationController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         new ApplicationMenuController(globalStage.getStage(), applicationFlowPane,
                 applicationFormState, messageSource);
+        applicationFlowPane.setOnMouseClicked(event -> applicationFlowPane.requestFocus());
     }
 
 }

@@ -7,6 +7,7 @@ import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.NullSafeCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.GlobalDefault;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -65,6 +66,7 @@ public class QueryController implements Initializable {
         final DomQuery defaultQuery = new DomQuery.Builder(globalDefaults.getDefaultForKey(GlobalDefault.DOM_QUERY),
                 domQueryListView.getItems().size()).build();
         domQueryListView.getItems().add(defaultQuery);
+        FXCollections.observableArrayList(domQueryListView.getItems());
         applicationFormState.setDomQueryObservableList(domQueryListView.getItems());
         domQueriesLabel.setText(messageSource.getMessage("dom.queries.label", null, Locale.getDefault()));
     }

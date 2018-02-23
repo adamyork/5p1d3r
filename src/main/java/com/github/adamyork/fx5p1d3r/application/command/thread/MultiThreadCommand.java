@@ -5,7 +5,6 @@ import com.github.adamyork.fx5p1d3r.common.OutputManager;
 import com.github.adamyork.fx5p1d3r.common.command.ApplicationCommand;
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
-import com.github.adamyork.fx5p1d3r.common.command.io.DocumentRetrieveHandler;
 import com.github.adamyork.fx5p1d3r.common.command.io.ExecutorCommand;
 import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
@@ -14,6 +13,7 @@ import com.github.adamyork.fx5p1d3r.common.service.AbortService;
 import com.github.adamyork.fx5p1d3r.common.service.ConcurrentUrlService;
 import com.github.adamyork.fx5p1d3r.common.service.UrlServiceFactory;
 import javafx.collections.ObservableList;
+import javafx.concurrent.WorkerStateEvent;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,19 +22,17 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.net.URL;
-import java.util.List;
-import java.util.Locale;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Created by Adam York on 2/28/2017.
  * Copyright 2017
  */
 @Component
-public class MultiThreadCommand implements ApplicationCommand, Observer, DocumentRetrieveHandler {
+public class MultiThreadCommand implements ApplicationCommand, Observer {
 
     private final CommandMap<Boolean, ApplicationCommand> followLinksCommandMap;
     private final CommandMap<OutputFileType, ParserCommand> parserCommandMap;
@@ -79,7 +77,7 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
         final int threadPoolSize = Integer.parseInt(applicationFormState.getMultiThreadMax().toString());
         executorService = Executors.newFixedThreadPool(1);
         final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(urls, threadPoolSize - 1);
-        concurrentUrlService.setCallbackObject(this);
+        concurrentUrlService.setOnSucceeded(this::onDocumentsRetrieved);
         executorService.submit(concurrentUrlService);
     }
 
@@ -89,7 +87,9 @@ public class MultiThreadCommand implements ApplicationCommand, Observer, Documen
     }
 
     @SuppressWarnings({"unchecked", "Duplicates"})
-    public void onDocumentsRetrieved(final List<Document> documents) {
+    public void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
+        final List<Document> documents = ((List<Document>) workerStateEvent.getSource().getValue()).stream()
+                .filter(Objects::nonNull).collect(Collectors.toList());
         final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         warnCommandMap.getCommand(documents.size() == 0)
                 .execute(messageSource.getMessage("alert.no.documents.header", null, Locale.getDefault()),

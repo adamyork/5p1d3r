@@ -211,8 +211,8 @@ public class ApplicationConfiguration {
     public CommandMap<Boolean, ControlCommand> controlCommandMap(final OutputFileTypeCsvControlCommand outputFileTypeCsvControlCommand,
                                                                  final OutputFileTypeJsonControlCommand outputFileTypeJsonControlCommand) {
         final CommandMap<Boolean, ControlCommand> map = new CommandMap<>();
-        map.add(true, outputFileTypeCsvControlCommand);
-        map.add(false, outputFileTypeJsonControlCommand);
+        map.add(false, outputFileTypeCsvControlCommand);
+        map.add(true, outputFileTypeJsonControlCommand);
         return map;
     }
 

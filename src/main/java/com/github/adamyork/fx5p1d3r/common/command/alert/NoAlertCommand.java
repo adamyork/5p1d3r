@@ -15,12 +15,12 @@ public class NoAlertCommand implements HandlerCommand<MessageSource, Function, B
 
     @Override
     public Boolean execute(final MessageSource instance, final Function handler) {
-        return true;
+        return false;
     }
 
     @Override
     public Boolean execute(final MessageSource instance, final Function handler, final String header, final String content) {
-        return true;
+        return false;
     }
 
 }

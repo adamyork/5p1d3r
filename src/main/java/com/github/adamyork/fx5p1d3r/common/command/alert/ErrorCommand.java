@@ -30,12 +30,12 @@ public class ErrorCommand implements AlertCommand<ButtonType> {
 
     @Override
     public ButtonType execute(final String header, final String content, final List<URL> urls) {
-        return null;
+        return alertService.error(header, content).orElse(new ButtonType(""));
     }
 
     @Override
     public ButtonType execute(final String header, final String content, final File file) {
-        return null;
+        return alertService.error(header, content).orElse(new ButtonType(""));
     }
 }
 
