@@ -74,15 +74,20 @@ public class MultiThreadCommand implements ApplicationCommand, Observer {
 
     @Override
     public void execute(final List<URL> urls) {
-        final int threadPoolSize = Integer.parseInt(applicationFormState.getMultiThreadMax().toString());
         executorService = Executors.newFixedThreadPool(1);
-        final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(urls, threadPoolSize - 1);
+        final int threadPoolSize = Integer.parseInt(applicationFormState.getMultiThreadMax().toString());
+        final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(urls, 1,
+                applicationFormState.getFollowLinksDepth().getValue(), threadPoolSize - 1);
         concurrentUrlService.setOnSucceeded(this::onDocumentsRetrieved);
         executorService.submit(concurrentUrlService);
     }
 
     @Override
-    public void execute(final List<URL> urls, final ExecutorService executorService) {
+    public void execute(final List<URL> urls,
+                        final ExecutorService executorService,
+                        final int currentDepth,
+                        final int maxDepth,
+                        final int threadPoolsSize) {
         //no-op
     }
 
@@ -101,7 +106,9 @@ public class MultiThreadCommand implements ApplicationCommand, Observer {
             });
             final Elements linksElementsList = document.select("a");
             final List<URL> linksList = outputManager.getUrlListFromElements(linksElementsList);
-            followLinksCommandMap.getCommand(applicationFormState.followLinks()).execute(linksList, executorService);
+            followLinksCommandMap.getCommand(applicationFormState.followLinks()).execute(linksList, executorService, 1,
+                    applicationFormState.getFollowLinksDepth().getValue(),
+                    Integer.parseInt(applicationFormState.getMultiThreadMax().toString()) - 1);
         });
         abortService.deleteObserver(this);
     }

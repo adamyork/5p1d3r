@@ -14,6 +14,10 @@ public interface ApplicationCommand {
 
     void execute(final List<URL> urls);
 
-    void execute(final List<URL> urls, final ExecutorService executorService);
+    void execute(final List<URL> urls,
+                 final ExecutorService executorService,
+                 final int currentDepth,
+                 final int maxDepth,
+                 final int threadPoolSize);
 
 }

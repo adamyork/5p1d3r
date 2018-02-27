@@ -15,5 +15,4 @@ web page parser with a javafx gui
 
 
 # TODO
-- rework multi-thread pattern
 - functional test cases

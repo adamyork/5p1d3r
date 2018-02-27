@@ -24,8 +24,11 @@ public class UrlServiceFactory {
         this.progressService = progressService;
     }
 
-    public ConcurrentUrlService getConcurrentServiceForUrls(final List<URL> urls, final int threadPoolSize) {
-        return new ConcurrentUrlService(urls, threadPoolSize, progressService);
+    public ConcurrentUrlService getConcurrentServiceForUrls(final List<URL> urls,
+                                                            final int currentDepth,
+                                                            final int maxDepth,
+                                                            final int threadPoolSize) {
+        return new ConcurrentUrlService(urls, threadPoolSize, currentDepth, maxDepth, progressService);
     }
 
     public ThrottledUrlService getThrottledServiceForUrls(final List<URL> urls) {

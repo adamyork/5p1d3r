@@ -86,9 +86,14 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
 
     @Override
     @SuppressWarnings("EmptyMethod")
-    public void execute(final List<URL> urls, final ExecutorService executorService) {
+    public void execute(final List<URL> urls,
+                        final ExecutorService executorService,
+                        final int currentDepth,
+                        final int maxDepth,
+                        final int threadPoolsSize) {
         //no-op
     }
+
 
     @SuppressWarnings({"unchecked", "Duplicates", "WeakerAccess"})
     void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
@@ -104,7 +109,9 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
             });
             final Elements linksElementsList = document.select("a");
             final List<URL> linksList = outputManager.getUrlListFromElements(linksElementsList);
-            followLinksCommandMap.getCommand(applicationFormState.followLinks()).execute(linksList, executorService);
+            followLinksCommandMap.getCommand(applicationFormState.followLinks()).execute(linksList, executorService, 1,
+                    applicationFormState.getFollowLinksDepth().getValue(),
+                    Integer.parseInt(applicationFormState.getMultiThreadMax().toString()) - 1);
         });
         abortService.deleteObserver(this);
     }

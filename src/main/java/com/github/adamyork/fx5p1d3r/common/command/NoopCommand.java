@@ -19,10 +19,12 @@ import java.util.concurrent.ExecutorService;
 public class NoopCommand<T> implements NullSafeCommand<T>, ApplicationCommand, AlertCommand<T>, ParserCommand, ExecutorCommand {
 
     @Override
-    public void execute(final T listView, final int index) {}
+    public void execute(final T listView, final int index) {
+    }
 
     @Override
-    public void execute(final T listView, final File file) {}
+    public void execute(final T listView, final File file) {
+    }
 
     @Override
     public T execute(final T instance) {
@@ -30,13 +32,20 @@ public class NoopCommand<T> implements NullSafeCommand<T>, ApplicationCommand, A
     }
 
     @Override
-    public void execute() {}
+    public void execute() {
+    }
 
     @Override
-    public void execute(final List<URL> urls) {}
+    public void execute(final List<URL> urls) {
+    }
 
     @Override
-    public void execute(final List<URL> urls, final ExecutorService executorService) {}
+    public void execute(final List<URL> urls,
+                        final ExecutorService executorService,
+                        final int currentDepth,
+                        final int maxDepth,
+                        final int threadPoolsSize) {
+    }
 
     @Override
     public T execute(final String header, final String content) {

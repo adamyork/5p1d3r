@@ -47,8 +47,11 @@ public class SingleUrlCommand implements ApplicationCommand {
     }
 
     @Override
-    public void execute(final List<URL> urls, final ExecutorService executorService) {
+    public void execute(final List<URL> urls,
+                        final ExecutorService executorService,
+                        final int currentDepth,
+                        final int maxDepth,
+                        final int threadPoolsSize) {
         //no-op
     }
-
 }

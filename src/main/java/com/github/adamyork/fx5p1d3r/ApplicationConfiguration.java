@@ -1,10 +1,7 @@
 package com.github.adamyork.fx5p1d3r;
 
 import com.github.adamyork.fx5p1d3r.application.command.io.*;
-import com.github.adamyork.fx5p1d3r.application.command.thread.LinksFollowCommand;
-import com.github.adamyork.fx5p1d3r.application.command.thread.LinksNoFollowCommand;
-import com.github.adamyork.fx5p1d3r.application.command.thread.MultiThreadCommand;
-import com.github.adamyork.fx5p1d3r.application.command.thread.SingleThreadCommand;
+import com.github.adamyork.fx5p1d3r.application.command.thread.*;
 import com.github.adamyork.fx5p1d3r.application.command.transform.DefaultCsvTransformCommand;
 import com.github.adamyork.fx5p1d3r.application.command.transform.DefaultJsonTransformCommand;
 import com.github.adamyork.fx5p1d3r.application.command.transform.ResultTransformListViewCommand;
@@ -246,6 +243,15 @@ public class ApplicationConfiguration {
         return map;
     }
 
+    @Bean
+    @Qualifier("LinkRecursionCommandMap")
+    public CommandMap<Boolean, LinkRecursionCommand> linkRecursionCommandMap(final RecurseCommand recurseCommand,
+                                                                             final RecursionCompleteCommand recursionCompleteCommand) {
+        final CommandMap<Boolean, LinkRecursionCommand> map = new CommandMap<>();
+        map.add(true, recurseCommand);
+        map.add(false, recursionCompleteCommand);
+        return map;
+    }
 
     @Bean
     public UrlValidator urlValidator() {
