@@ -1,5 +1,10 @@
 group "com.github.adamyork"
 version "0.0.1-SNAPSHOT"
+project.ext.set("buildDate", getDate())
+
+static def getDate() {
+    new Date().format('yyyy-MM-dd')
+}
 
 buildscript {
     dependencies {
@@ -39,10 +44,16 @@ dependencies {
     testCompile group: "junit", name: "junit", version: "4.11"
 }
 
+processResources {
+    filesMatching('application.properties') {
+        expand(project.properties)
+    }
+}
+
 jfx {
     mainClass = "com.github.adamyork.fx5p1d3r.Main"
     vendor = "Adam York"
-    jvmArgs = ["-agentlib:jdwp=transport=dt_socket,address=8004,server=y,suspend=y"]
+    //jvmArgs = ["-agentlib:jdwp=transport=dt_socket,address=8004,server=y,suspend=y"]
 }
 
 sourceSets {

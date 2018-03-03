@@ -91,7 +91,7 @@ public class LinksFollowCommand implements ApplicationCommand {
         progressService.updateProgress(ProgressType.LINKS);
         this.executorService = executorService;
         final List<URL> filtered = filterByRegex(urls);
-        final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(filtered, 1,
+        final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(filtered, currentDepth,
                 maxDepth, threadPoolSize);
         concurrentUrlService.setOnSucceeded(this::onDocumentsRetrieved);
         executorService.submit(concurrentUrlService);

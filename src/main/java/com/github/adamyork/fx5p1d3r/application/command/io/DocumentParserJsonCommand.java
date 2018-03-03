@@ -1,12 +1,13 @@
 package com.github.adamyork.fx5p1d3r.application.command.io;
 
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.command.io.OutputCommand;
 import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
-import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
+import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import groovy.lang.Binding;
@@ -38,18 +39,21 @@ public class DocumentParserJsonCommand implements ParserCommand {
     private final ApplicationFormState applicationFormState;
     private final ProgressService progressService;
     private final MessageSource messageSource;
+    private final AlertService alertService;
 
     @Inject
     public DocumentParserJsonCommand(@Qualifier("OutputCommandMap") final CommandMap<OutputFileType, OutputCommand> outputCommandMap,
                                      @Qualifier("WarnCommandMap") final CommandMap<Boolean, AlertCommand> warnCommandMap,
                                      final ApplicationFormState applicationFormState,
                                      final ProgressService progressService,
-                                     final MessageSource messageSource) {
+                                     final MessageSource messageSource,
+                                     final AlertService alertService) {
         this.outputCommandMap = outputCommandMap;
         this.warnCommandMap = warnCommandMap;
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;
         this.messageSource = messageSource;
+        this.alertService = alertService;
     }
 
     @Override
@@ -68,8 +72,13 @@ public class DocumentParserJsonCommand implements ParserCommand {
             final GroovyShell shell = new GroovyShell(binding);
             binding.setProperty("document", document);
             binding.setProperty("element", element);
-            final Object obj = shell.evaluate(script);
-            objectList.add(obj);
+            try {
+                final Object obj = shell.evaluate(script);
+                objectList.add(obj);
+            } catch (final Exception exception) {
+                alertService.warn(messageSource.getMessage("alert.bad.transform.header", null, Locale.getDefault()),
+                        messageSource.getMessage("alert.bad.transform.content", null, Locale.getDefault()));
+            }
         }));
         final OutputJsonObject outputJsonObject = new OutputJsonObject.Builder().objectList(objectList).build();
         outputCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(outputJsonObject);

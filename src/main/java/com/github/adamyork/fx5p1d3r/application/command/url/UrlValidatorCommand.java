@@ -11,7 +11,6 @@ import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.scene.control.TextField;
-import org.jooq.lambda.Unchecked;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -80,7 +78,6 @@ public class UrlValidatorCommand implements ValidatorCommand {
 
     private AllValidUrls validateUrls(final List<String> urlStrings) {
         progressService.updateProgress(ProgressType.VALIDATE);
-        final List<URL> urls = urlStrings.stream().map(Unchecked.function(URL::new)).collect(Collectors.toList());
         final List<Map<String, Boolean>> validityMap = urlStrings.stream().map(urlString -> {
             final Map<String, Boolean> map = new HashMap<>();
             final Boolean valid = validator.validateUrlString(urlString);
@@ -93,7 +90,7 @@ public class UrlValidatorCommand implements ValidatorCommand {
                         .allMatch(Boolean::booleanValue));
         return (AllValidUrls) urlsValidCommandMap.getCommand(isValid)
                 .execute(messageSource.getMessage("error.url.invalid.header", null, Locale.getDefault()),
-                        messageSource.getMessage("error.url.invalid.content", null, Locale.getDefault()), urls);
+                        messageSource.getMessage("error.url.invalid.content", null, Locale.getDefault()), urlStrings);
     }
 
 }

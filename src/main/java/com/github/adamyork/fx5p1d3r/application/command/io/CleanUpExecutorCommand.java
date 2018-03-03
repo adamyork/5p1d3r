@@ -23,7 +23,7 @@ public class CleanUpExecutorCommand implements ExecutorCommand {
 
     @Override
     public void execute(final ExecutorService executorService) {
-        executorService.shutdown();
+        executorService.shutdownNow();
         abortService.clear();
     }
 }

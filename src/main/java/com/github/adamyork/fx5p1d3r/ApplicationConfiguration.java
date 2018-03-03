@@ -198,8 +198,8 @@ public class ApplicationConfiguration {
     public CommandMap<Boolean, ExecutorCommand> executorCleanUpCommandMap(final CleanUpExecutorCommand cleanUpExecutorCommand,
                                                                           final NoopCommand noopCommand) {
         final CommandMap<Boolean, ExecutorCommand> map = new CommandMap<>();
-        map.add(true, noopCommand);
-        map.add(false, cleanUpExecutorCommand);
+        map.add(true, cleanUpExecutorCommand);
+        map.add(false, noopCommand);
         return map;
     }
 

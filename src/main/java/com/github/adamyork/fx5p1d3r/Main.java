@@ -31,6 +31,7 @@ public class Main extends Application {
 
     @Override
     public void start(final Stage stage) {
+        //Platform.setImplicitExit(false);
         stage.setTitle("5p1d3r");
         stage.getIcons().addAll(
                 new Image(getClass().getClassLoader().getResourceAsStream("image/icon16.png")),
@@ -56,7 +57,8 @@ public class Main extends Application {
     }
 
     @Override
-    public void stop() {
+    public void stop() throws Exception {
+        super.stop();
         applicationContext.close();
     }
 

@@ -32,9 +32,13 @@ public class FollowLinksChoice extends Choice {
     public static ObservableList<FollowLinksChoice> getFollowLinksChoices() {
         return FXCollections.observableArrayList(new FollowLinksChoice(FollowLinksDepth.X1, 1),
                 new FollowLinksChoice(FollowLinksDepth.X2, 2),
-                new FollowLinksChoice(FollowLinksDepth.X5, 50),
-                new FollowLinksChoice(FollowLinksDepth.X10, 100),
-                new FollowLinksChoice(FollowLinksDepth.X50, 200),
-                new FollowLinksChoice(FollowLinksDepth.X100, 500));
+                new FollowLinksChoice(FollowLinksDepth.X3, 3),
+                new FollowLinksChoice(FollowLinksDepth.X4, 4),
+                new FollowLinksChoice(FollowLinksDepth.X5, 5),
+                new FollowLinksChoice(FollowLinksDepth.X6, 6),
+                new FollowLinksChoice(FollowLinksDepth.X7, 7),
+                new FollowLinksChoice(FollowLinksDepth.X8, 8),
+                new FollowLinksChoice(FollowLinksDepth.X9, 9),
+                new FollowLinksChoice(FollowLinksDepth.X10, 10));
     }
 }

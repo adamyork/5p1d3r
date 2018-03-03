@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class ErrorCommand implements AlertCommand<ButtonType> {
     }
 
     @Override
-    public ButtonType execute(final String header, final String content, final List<URL> urls) {
+    public ButtonType execute(final String header, final String content, final List<String> urlStrings) {
         return alertService.error(header, content).orElse(new ButtonType(""));
     }
 

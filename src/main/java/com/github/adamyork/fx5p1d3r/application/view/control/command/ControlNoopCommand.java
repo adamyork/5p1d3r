@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 public class ControlNoopCommand implements ControlStartCommand {
 
     @Override
-    public void execute(final String nullSafeFileString, final int extensionIndex, CommandMap<Boolean, ControlCommand> controlCommandMap) {
-
+    public Boolean execute(final String nullSafeFileString, final int extensionIndex, CommandMap<Boolean, ControlCommand> controlCommandMap) {
+        return false;
     }
 
 }

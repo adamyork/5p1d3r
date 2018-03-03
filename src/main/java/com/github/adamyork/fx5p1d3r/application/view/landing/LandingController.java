@@ -8,12 +8,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -39,6 +41,7 @@ public class LandingController implements Initializable, ApplicationContextAware
     private Button aboutButton;
     @FXML
     private Button helpButton;
+
     private ApplicationContext applicationContext;
 
     @Inject
@@ -78,7 +81,38 @@ public class LandingController implements Initializable, ApplicationContextAware
     }
 
     private void handleAbout(@SuppressWarnings("unused") final ActionEvent actionEvent) {
-        Unchecked.consumer(o -> Desktop.getDesktop().browse(new URI("http://www.github.com/adamyork/5p1d3r"))).accept(null);
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(messageSource.getMessage("alert.service.about.label", null, Locale.getDefault()));
+        alert.setHeaderText("5p1d3r");
+        alert.setContentText(buildAboutContent());
+        alert.show();
+    }
+
+    private String buildAboutContent() {
+        final AnnotationConfigApplicationContext configContext = (AnnotationConfigApplicationContext) applicationContext;
+        String versionString;
+        String dateString;
+        try {
+            versionString = configContext.getBeanFactory().resolveEmbeddedValue("${info.build.version}");
+            dateString = configContext.getBeanFactory().resolveEmbeddedValue("${info.build.date}");
+        } catch (final Exception exception) {
+            versionString = "unknown";
+            dateString = "unknown";
+        }
+        return messageSource.getMessage("about.build.version.label", null, Locale.getDefault()) +
+                ": " +
+                versionString +
+                "\n" +
+                messageSource.getMessage("about.build.date.label", null, Locale.getDefault()) +
+                ": " +
+                dateString +
+                "\n" +
+                messageSource.getMessage("about.repository.label", null, Locale.getDefault()) +
+                ": " +
+                "http://www.github.com/adamyork/5p1d3r" +
+                "\n" +
+                "\n" +
+                messageSource.getMessage("about.disclaimer", null, Locale.getDefault());
     }
 
     private void handleHelp(@SuppressWarnings("unused") final ActionEvent actionEvent) {

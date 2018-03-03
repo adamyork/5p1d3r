@@ -17,7 +17,7 @@ public class RecurseCommand implements LinkRecursionCommand {
                         final DocumentListWithMemo memo,
                         final ProgressService progressService,
                         LinksFollowCommand linksFollowCommand) {
-        linksFollowCommand.execute(flattened, executorService, memo.getCurrentDepth(), memo.getMaxDepth(), memo.getThreadPoolSize());
+        linksFollowCommand.execute(flattened, executorService, memo.getCurrentDepth() + 1, memo.getMaxDepth(), memo.getThreadPoolSize());
     }
 
 }

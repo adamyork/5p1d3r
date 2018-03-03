@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,9 +30,9 @@ public class UrlsInvalidCommand implements AlertCommand<AllValidUrls> {
     }
 
     @Override
-    public AllValidUrls execute(final String header, final String content, final List<URL> urls) {
+    public AllValidUrls execute(final String header, final String content, final List<String> urlStrings) {
         alertService.error(header, content);
-        return new AllValidUrls(false, urls);
+        return new AllValidUrls(false, new ArrayList<>());
     }
 
     @Override

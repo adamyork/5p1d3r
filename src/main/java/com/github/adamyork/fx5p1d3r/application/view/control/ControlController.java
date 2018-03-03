@@ -7,6 +7,7 @@ import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
 import com.github.adamyork.fx5p1d3r.common.service.AbortService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressState;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -71,6 +72,8 @@ public class ControlController implements Initializable, Observer {
         stopButton.setOnAction(this::handleStop);
         staticStatusLabel.setText(messageSource.getMessage("status.label", null, Locale.getDefault()));
         progressService.addObserver(this);
+        startButton.setDisable(false);
+        stopButton.setDisable(true);
     }
 
     @SuppressWarnings("unused")
@@ -85,12 +88,17 @@ public class ControlController implements Initializable, Observer {
         final File nullSafeFile = Optional.ofNullable(file).orElse(new File(""));
         final String nullSafeFileString = nullSafeFile.toString();
         final int extensionIndex = nullSafeFileString.indexOf(".");
-        controlStartCommandMap.getCommand(extensionIndex != -1).execute(nullSafeFileString, extensionIndex, controlCommandMap);
+        final Boolean started = controlStartCommandMap.getCommand(extensionIndex != -1).execute(nullSafeFileString,
+                extensionIndex, controlCommandMap);
+        startButton.setDisable(started);
+        stopButton.setDisable(!started);
     }
 
     @SuppressWarnings("unused")
     private void handleStop(final ActionEvent actionEvent) {
         abortService.stopAllCalls();
+        startButton.setDisable(false);
+        stopButton.setDisable(true);
     }
 
     @Override
@@ -98,5 +106,7 @@ public class ControlController implements Initializable, Observer {
         final ProgressState progressState = progressService.getProgressState();
         statusLabel.setText(progressState.getMessage());
         progressBar.setProgress(progressState.getProgress());
+        startButton.setDisable(!progressService.getCurrentProgressType().equals(ProgressType.COMPLETE));
+        stopButton.setDisable(progressService.getCurrentProgressType().equals(ProgressType.COMPLETE));
     }
 }

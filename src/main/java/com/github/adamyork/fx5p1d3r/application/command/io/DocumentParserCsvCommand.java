@@ -1,12 +1,13 @@
 package com.github.adamyork.fx5p1d3r.application.command.io;
 
 import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.command.io.OutputCommand;
 import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
-import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputCsvObject;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
+import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import groovy.lang.Binding;
@@ -39,18 +40,21 @@ public class DocumentParserCsvCommand implements ParserCommand {
     private final ApplicationFormState applicationFormState;
     private final ProgressService progressService;
     private final MessageSource messageSource;
+    private final AlertService alertService;
 
     @Inject
     public DocumentParserCsvCommand(@Qualifier("OutputCommandMap") final CommandMap<OutputFileType, OutputCommand> outputCommandMap,
                                     @Qualifier("WarnCommandMap") final CommandMap<Boolean, AlertCommand> warnCommandMap,
                                     final ApplicationFormState applicationFormState,
                                     final ProgressService progressService,
-                                    final MessageSource messageSource) {
+                                    final MessageSource messageSource,
+                                    final AlertService alertService) {
         this.outputCommandMap = outputCommandMap;
         this.warnCommandMap = warnCommandMap;
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;
         this.messageSource = messageSource;
+        this.alertService = alertService;
     }
 
     @Override
@@ -69,9 +73,14 @@ public class DocumentParserCsvCommand implements ParserCommand {
             final GroovyShell shell = new GroovyShell(binding);
             binding.setProperty("element", element);
             binding.setProperty("document", document);
-            final Object[] objectArray = (Object[]) shell.evaluate(script);
-            final String[] stringArray = Arrays.copyOf(objectArray, objectArray.length, String[].class);
-            objectList.add(stringArray);
+            try {
+                final Object[] objectArray = (Object[]) shell.evaluate(script);
+                final String[] stringArray = Arrays.copyOf(objectArray, objectArray.length, String[].class);
+                objectList.add(stringArray);
+            } catch (final Exception exception) {
+                alertService.warn(messageSource.getMessage("alert.bad.transform.header", null, Locale.getDefault()),
+                        messageSource.getMessage("alert.bad.transform.content", null, Locale.getDefault()));
+            }
         }));
         final OutputCsvObject outputCsvObject = new OutputCsvObject.Builder().objectList(objectList).build();
         outputCommandMap.getCommand(applicationFormState.getOutputFileType()).execute(outputCsvObject);

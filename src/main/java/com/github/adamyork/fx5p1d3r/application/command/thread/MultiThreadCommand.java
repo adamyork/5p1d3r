@@ -8,6 +8,7 @@ import com.github.adamyork.fx5p1d3r.common.command.alert.AlertCommand;
 import com.github.adamyork.fx5p1d3r.common.command.io.ExecutorCommand;
 import com.github.adamyork.fx5p1d3r.common.command.io.ParserCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.common.model.DocumentListWithMemo;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.service.AbortService;
 import com.github.adamyork.fx5p1d3r.common.service.ConcurrentUrlService;
@@ -93,7 +94,8 @@ public class MultiThreadCommand implements ApplicationCommand, Observer {
 
     @SuppressWarnings({"unchecked", "Duplicates"})
     public void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
-        final List<Document> documents = ((List<Document>) workerStateEvent.getSource().getValue()).stream()
+        final DocumentListWithMemo memo = (DocumentListWithMemo) workerStateEvent.getSource().getValue();
+        final List<Document> documents = memo.getDocuments().stream()
                 .filter(Objects::nonNull).collect(Collectors.toList());
         final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
         warnCommandMap.getCommand(documents.size() == 0)
@@ -116,5 +118,6 @@ public class MultiThreadCommand implements ApplicationCommand, Observer {
     @Override
     public void update(final Observable observable, final Object arg) {
         executorCommandMap.getCommand(executorService != null).execute(executorService);
+        abortService.deleteObserver(this);
     }
 }

@@ -119,5 +119,6 @@ public class SingleThreadCommand implements ApplicationCommand, Observer {
     @Override
     public void update(final Observable observable, final Object arg) {
         executorCommandMap.getCommand(executorService != null).execute(executorService);
+        abortService.deleteObserver(this);
     }
 }

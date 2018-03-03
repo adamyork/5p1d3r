@@ -225,7 +225,7 @@ public class MethodController implements Initializable, Observer {
     }
 
     private void handleLinkFollowPatternChanged(@SuppressWarnings("unused") final KeyEvent keyEvent) {
-        applicationFormState.setLinkFollowPattern(Optional.ofNullable(linkUrlPatternTextfield.getText()).orElse(""));
+        applicationFormState.setLinkFollowPattern(Optional.of(linkUrlPatternTextfield.getText() + keyEvent.getCharacter()).orElse(""));
     }
 
     private void handleAddUrlList(@SuppressWarnings("unused") final ActionEvent actionEvent) {

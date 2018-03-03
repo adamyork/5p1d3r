@@ -40,7 +40,7 @@ public class AlertService {
     public Optional<ButtonType> error(final String header, final String content) {
         progressService.updateSteps(0);
         progressService.updateProgress(ProgressType.ABORT);
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        final Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(messageSource.getMessage("alert.service.error.label", null, Locale.getDefault()));
         alert.setHeaderText(header);
         alert.setContentText(content);

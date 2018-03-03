@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class WarnCommand implements AlertCommand<Void> {
     }
 
     @Override
-    public Void execute(final String header, final String content, final List<URL> urls) {
+    public Void execute(final String header, final String content, final List<String> urlStrings) {
         return null;
     }
 

@@ -27,11 +27,12 @@ public class StartSpiderCommand implements ControlStartCommand {
     }
 
     @Override
-    public void execute(final String nullSafeFileString, final int extensionIndex, final CommandMap<Boolean, ControlCommand> controlCommandMap) {
+    public Boolean execute(final String nullSafeFileString, final int extensionIndex, final CommandMap<Boolean, ControlCommand> controlCommandMap) {
         final String fileTypeString = nullSafeFileString.substring(extensionIndex);
         applicationFormState.setOutputFileType(controlCommandMap
                 .getCommand(fileTypeString.equals(OutputFileType.JSON.toString())).execute());
         applicationFormState.setOutputFile(nullSafeFileString);
         urlMethodCommandMap.getCommand(applicationFormState.getUrlMethod()).execute();
+        return true;
     }
 }

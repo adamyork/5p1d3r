@@ -27,6 +27,7 @@ public class ProgressService extends Observable {
     private ProgressState previousState;
     private Map<ProgressType, String> messageMap;
     private Map<ProgressType, StepCommand> stepCommandMap;
+    private ProgressType currentProgressType;
 
     @Inject
     public ProgressService(final MessageSource messageSource) {
@@ -65,9 +66,14 @@ public class ProgressService extends Observable {
 
     public void updateProgress(final ProgressType progressType) {
         previousState = progressState;
+        currentProgressType = progressType;
         progressState = stepCommandMap.get(progressType).execute(progressType, messageMap.get(progressType), previousState);
         setChanged();
         Platform.runLater(this::notifyObservers);
+    }
+
+    public ProgressType getCurrentProgressType() {
+        return currentProgressType;
     }
 
     public ProgressState getProgressState() {
