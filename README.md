@@ -27,7 +27,7 @@ I love data analysis. I often find my self creating graph and charts of various 
     - mac: 
 - run the app
 
-![application preview][app.png]
+![application preview](/app.png?raw=true "Application Preview")
 
 
 - Select a URL method:
