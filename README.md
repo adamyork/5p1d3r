@@ -23,8 +23,8 @@ I love data analysis. I often find my self creating graph and charts of various 
 
 - Download the source and build the jar
 - Download a pre-build binary
-    - windows: 
-    - mac: 
+    - windows: [5p1d3r-0.1.zip](https://github.com/adamyork/5p1d3r/releases/download/0.1/5p1d3r-0.1.zip.windows.zip) 
+    - mac: TBD
 - run the app
 
 ![application preview](/app.png?raw=true "Application Preview")
@@ -56,4 +56,7 @@ I love data analysis. I often find my self creating graph and charts of various 
 - Select a save file option compatible with the transforms you have provided.
 - You can abort the process at any time.
 - You can save your configuration under File -> Save
+
+
+**Note this is effectively beta software. I am sure there are issues. Please file a bug report if you find anything**
     
