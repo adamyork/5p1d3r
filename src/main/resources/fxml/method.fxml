@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.ToggleSwitch?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" prefWidth="400.0" styleClass="panel-body"
+      xmlns="http://javafx.com/javafx/8.0.121"
+      fx:controller="com.github.adamyork.fx5p1d3r.application.view.method.MethodController">
+    <children>
+        <VBox spacing="5.0">
+            <children>
+                <Label fx:id="urlMethodLabel" alignment="CENTER_RIGHT" text="Url Method"/>
+                <ChoiceBox fx:id="urlMethodChoiceBox" nodeOrientation="LEFT_TO_RIGHT" prefWidth="100.0"
+                           styleClass="split-menu-btn-default"/>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </VBox>
+        <HBox>
+            <children>
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label fx:id="urlLabel" text="Url"/>
+                        <HBox spacing="10.0">
+                            <children>
+                                <TextField fx:id="startingUrlTextfield" alignment="TOP_LEFT"
+                                           nodeOrientation="LEFT_TO_RIGHT" promptText="Starting Url"
+                                           HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="urlListSelectionButton" mnemonicParsing="false" prefWidth="30.0"
+                                        text="+"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0">
+            <children>
+                <VBox spacing="10.0">
+                    <children>
+                        <ToggleSwitch fx:id="requestThrottlingToggleSwitch" prefWidth="150.0" text="Throttling"/>
+                        <ChoiceBox fx:id="requestThrottlingChoiceBox" prefWidth="150.0"/>
+                    </children>
+                </VBox>
+                <VBox spacing="10.0">
+                    <children>
+                        <ToggleSwitch fx:id="multiThreadingToggleSwitch" prefWidth="150.0" text="Threading"/>
+                        <ChoiceBox fx:id="multiThreadingChoiceBox" prefWidth="150.0"/>
+                    </children>
+                </VBox>
+                <VBox spacing="10.0">
+                    <children>
+                        <ToggleSwitch fx:id="followLinksToggleSwitch" prefWidth="150.0" text="Follow Links"/>
+                        <ChoiceBox fx:id="followLinksChoiceBox" prefWidth="150.0"/>
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </HBox>
+        <HBox>
+            <children>
+                <VBox spacing="5.0">
+                    <children>
+                        <Label fx:id="linkUrlPatternLabel" text="Link Pattern"/>
+                        <TextField fx:id="linkUrlPatternTextfield" alignment="TOP_LEFT" nodeOrientation="LEFT_TO_RIGHT"
+                                   prefWidth="250.0" promptText="Link Url Pattern"/>
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </HBox>
+    </children>
+</VBox>

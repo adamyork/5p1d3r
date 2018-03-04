@@ -1,0 +1,7 @@
+/*noinspection CssUnusedSymbol*/
+.root {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Garamond";
+    -fx-base: whitesmoke;
+    -fx-background: rgb(24, 25, 32);
+}

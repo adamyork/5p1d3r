@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.FlowPane?>
+<FlowPane xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="com.github.adamyork.fx5p1d3r.application.ApplicationController"
+          fx:id="applicationFlowPane"
+          maxHeight="-Infinity" maxWidth="-Infinity"
+          minHeight="-Infinity"
+          minWidth="-Infinity"
+          prefHeight="832.0" prefWidth="400.0" prefWrapLength="0.0"
+          xmlns="http://javafx.com/javafx/8.0.121">
+    <children>
+        <fx:include source="method.fxml"/>
+        <fx:include source="query.fxml"/>
+        <fx:include source="transform.fxml"/>
+        <fx:include source="control.fxml"/>
+    </children>
+</FlowPane>
