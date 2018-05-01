@@ -76,6 +76,7 @@ public class UrlValidatorCommand implements ValidatorCommand {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     private AllValidUrls validateUrls(final List<String> urlStrings) {
         progressService.updateProgress(ProgressType.VALIDATE);
         final List<Map<String, Boolean>> validityMap = urlStrings.stream().map(urlString -> {

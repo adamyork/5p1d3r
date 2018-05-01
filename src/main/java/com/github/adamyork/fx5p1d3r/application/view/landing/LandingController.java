@@ -116,7 +116,7 @@ public class LandingController implements Initializable, ApplicationContextAware
     }
 
     private void handleHelp(@SuppressWarnings("unused") final ActionEvent actionEvent) {
-        Unchecked.consumer(o -> Desktop.getDesktop().browse(new URI("http://www.github.com/adamyork/5p1d3r#howToUse"))).accept(null);
+        Unchecked.consumer(o -> Desktop.getDesktop().browse(new URI("https://github.com/adamyork/5p1d3r#how-to"))).accept(null);
     }
 
 }
