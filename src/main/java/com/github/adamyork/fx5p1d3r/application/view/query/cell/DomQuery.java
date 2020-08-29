@@ -6,8 +6,8 @@ package com.github.adamyork.fx5p1d3r.application.view.query.cell;
  */
 public class DomQuery {
 
+    private final int id;
     private String query;
-    private int id;
 
     private DomQuery(final Builder builder) {
         query = builder.query;
@@ -22,7 +22,6 @@ public class DomQuery {
         this.query = query;
     }
 
-    @SuppressWarnings("unused")
     public int getId() {
         return id;
     }

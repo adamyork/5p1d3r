@@ -20,15 +20,6 @@ public class FollowLinksChoice extends Choice {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return "x" + Integer.toString(value);
-    }
-
-    public FollowLinksDepth getFollowLinksDepth() {
-        return followLinksDepth;
-    }
-
     public static ObservableList<FollowLinksChoice> getFollowLinksChoices() {
         return FXCollections.observableArrayList(new FollowLinksChoice(FollowLinksDepth.X1, 1),
                 new FollowLinksChoice(FollowLinksDepth.X2, 2),
@@ -40,5 +31,14 @@ public class FollowLinksChoice extends Choice {
                 new FollowLinksChoice(FollowLinksDepth.X8, 8),
                 new FollowLinksChoice(FollowLinksDepth.X9, 9),
                 new FollowLinksChoice(FollowLinksDepth.X10, 10));
+    }
+
+    @Override
+    public String toString() {
+        return "x" + value;
+    }
+
+    public FollowLinksDepth getFollowLinksDepth() {
+        return followLinksDepth;
     }
 }

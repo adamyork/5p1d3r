@@ -1,0 +1,53 @@
+package com.github.adamyork.fx5p1d3r.application.service.io;
+
+import com.github.adamyork.fx5p1d3r.common.service.OutputService;
+import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.common.service.AlertService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import groovy.lang.GroovyShell;
+import javafx.collections.ObservableList;
+import org.jooq.lambda.tuple.Tuple2;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.springframework.context.MessageSource;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Created by Adam York on 2/28/2017.
+ * Copyright 2017
+ */
+public class JsonDocumentParser extends BaseDocumentParser implements DocumentParserService {
+
+    private final OutputService outputService;
+
+    public JsonDocumentParser(final ApplicationFormState applicationFormState,
+                              final ProgressService progressService,
+                              final MessageSource messageSource,
+                              final AlertService alertService,
+                              final OutputService outputService) {
+        super(applicationFormState, progressService, messageSource, alertService);
+        this.outputService = outputService;
+    }
+
+    @Override
+    public void parse(final Document document, final String query) {
+        final List<Object> objectList = new ArrayList<>();
+        final Tuple2<Elements, ObservableList<File>> elementsAndWatchList = getElementsAndWatchList(document, query);
+        elementsAndWatchList.v1.forEach(element -> elementsAndWatchList.v2.forEach(file -> {
+            final Tuple2<String, GroovyShell> groovyObjects = initGroovy(file, element, document);
+            try {
+                final Object obj = groovyObjects.v2.evaluate(groovyObjects.v1);
+                objectList.add(obj);
+            } catch (final Exception exception) {
+                alertService.warn(messageSource.getMessage("alert.bad.transform.header", null, Locale.getDefault()),
+                        messageSource.getMessage("alert.bad.transform.content", null, Locale.getDefault()));
+            }
+        }));
+        objectList.forEach(outputService::writeEntry);
+    }
+
+}

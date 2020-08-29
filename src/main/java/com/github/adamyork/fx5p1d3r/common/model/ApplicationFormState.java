@@ -1,26 +1,22 @@
 package com.github.adamyork.fx5p1d3r.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.adamyork.fx5p1d3r.Main;
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
-import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.command.NullSafeCommand;
 import javafx.collections.ObservableList;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import org.apache.commons.io.FileUtils;
+import org.jooq.lambda.Unchecked;
 
-import javax.inject.Inject;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Observable;
 
 /**
  * Created by Adam York on 2/27/2017.
  * Copyright 2017
  */
-@Component
 public class ApplicationFormState extends Observable {
 
-    private final CommandMap<Boolean, NullSafeCommand<File>> defaultJsonTransformCommandMap;
-    private final CommandMap<Boolean, NullSafeCommand<File>> defaultCsvTransformCommandMap;
     private UrlMethod urlMethod;
     private String startingUrl;
     @JsonProperty("followLinks")
@@ -38,15 +34,6 @@ public class ApplicationFormState extends Observable {
     private String outputFile;
     private OutputFileType outputFileType;
     private File urlListFile;
-    private File defaultJsonTransform;
-    private File defaultCsvTransform;
-
-    @Inject
-    public ApplicationFormState(@Qualifier("DefaultJsonTransformCommandMap") final CommandMap<Boolean, NullSafeCommand<File>> defaultJsonTransformCommandMap,
-                                @Qualifier("DefaultCsvTransformCommandMap") final CommandMap<Boolean, NullSafeCommand<File>> defaultCsvTransformCommandMap) {
-        this.defaultJsonTransformCommandMap = defaultJsonTransformCommandMap;
-        this.defaultCsvTransformCommandMap = defaultCsvTransformCommandMap;
-    }
 
     public UrlMethod getUrlMethod() {
         return urlMethod;
@@ -161,15 +148,25 @@ public class ApplicationFormState extends Observable {
     }
 
     public File getDefaultJsonTransform() {
-        defaultJsonTransform = defaultJsonTransformCommandMap.getCommand(defaultJsonTransform == null)
-                .execute(defaultJsonTransform);
-        return defaultJsonTransform;
+        final InputStream stream = Main.class.getClassLoader().getResourceAsStream("basicJsonTransform.groovy");
+        final File basicJsonTransform = new File("basicJsonTransform");
+        basicJsonTransform.deleteOnExit();
+        Unchecked.consumer(consumer -> {
+            assert stream != null;
+            FileUtils.copyInputStreamToFile(stream, basicJsonTransform);
+        }).accept(null);
+        return basicJsonTransform;
     }
 
     public File getDefaultCsvTransform() {
-        defaultCsvTransform = defaultCsvTransformCommandMap.getCommand(defaultCsvTransform == null)
-                .execute(defaultCsvTransform);
-        return defaultCsvTransform;
+        final InputStream stream = Main.class.getClassLoader().getResourceAsStream(("basicCsvTransform.groovy"));
+        final File basicCsvTransform = new File("basicCsvTransform");
+        basicCsvTransform.deleteOnExit();
+        Unchecked.consumer(consumer -> {
+            assert stream != null;
+            FileUtils.copyInputStreamToFile(stream, basicCsvTransform);
+        }).accept(null);
+        return basicCsvTransform;
     }
 
     public void notifyChanged() {

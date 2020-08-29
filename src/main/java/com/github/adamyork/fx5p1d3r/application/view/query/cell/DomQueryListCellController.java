@@ -38,13 +38,11 @@ public class DomQueryListCellController implements Initializable {
         domQueryListCellEditButton.setOnAction(this::handleEdit);
     }
 
-    @SuppressWarnings("unused")
     private void handleTextfieldChanged(final ObservableValue<? extends String> observableValue,
                                         final String oldValue, final String newValue) {
         domQuery.setQuery(newValue);
     }
 
-    @SuppressWarnings("unused")
     private void handleEdit(final ActionEvent actionEvent) {
         domQueryListCellTextField.setEditable(domQueryListCellEditButton.isSelected());
         domQueryListCellTextField.setMouseTransparent(!domQueryListCellEditButton.isSelected());

@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -23,6 +24,10 @@ public class Main extends Application {
 
     private ConfigurableApplicationContext applicationContext;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void init() {
         System.setProperty("java.awt.headless", "false");
@@ -31,12 +36,14 @@ public class Main extends Application {
 
     @Override
     public void start(final Stage stage) {
-        //Platform.setImplicitExit(false);
         stage.setTitle("5p1d3r");
         stage.getIcons().addAll(
-                new Image(getClass().getClassLoader().getResourceAsStream("image/icon16.png")),
-                new Image(getClass().getClassLoader().getResourceAsStream("image/icon32.png")),
-                new Image(getClass().getClassLoader().getResourceAsStream("image/icon64.png")));
+                new Image(Objects.requireNonNull(getClass().getClassLoader()
+                        .getResourceAsStream("image/icon16.png"))),
+                new Image(Objects.requireNonNull(getClass()
+                        .getClassLoader().getResourceAsStream("image/icon32.png"))),
+                new Image(Objects.requireNonNull(getClass()
+                        .getClassLoader().getResourceAsStream("image/icon64.png"))));
 
         final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/landing.fxml"));
         fxmlLoader.setControllerFactory(applicationContext::getBean);
@@ -60,9 +67,5 @@ public class Main extends Application {
     public void stop() throws Exception {
         super.stop();
         applicationContext.close();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

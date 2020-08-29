@@ -5,38 +5,28 @@
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" prefWidth="400.0" spacing="5.0" GridPane.columnIndex="1"
       GridPane.rowIndex="1" xmlns="http://javafx.com/javafx/8.0.121"
-      fx:controller="com.github.adamyork.fx5p1d3r.application.view.transform.TransformController">
-    <children>
-        <HBox>
-            <children>
-                <HBox>
-                    <children>
-                        <Label fx:id="transformsLabel" text="Transforms"/>
-                    </children>
-                </HBox>
-                <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label fx:id="transformCount" text="1"/>
-                    </children>
-                </HBox>
-            </children>
-        </HBox>
-        <ListView fx:id="resultTransformListView" prefHeight="100.0" prefWidth="200.0"/>
-        <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="200.0" spacing="10.0">
-            <children>
-                <Button fx:id="addResultTransform" mnemonicParsing="false" prefWidth="30.0" text="+"/>
-                <Button fx:id="removeResultTransform" mnemonicParsing="false" prefWidth="30.0" text="-"/>
-                <Button fx:id="addDefaultJsonTransformer" layoutX="365.0" layoutY="20.0" mnemonicParsing="false"
-                        prefWidth="30.0" text="j"/>
-                <Button fx:id="addDefaultCsvTransformer" layoutX="365.0" layoutY="20.0" mnemonicParsing="false"
-                        prefWidth="30.0" text="c"/>
-            </children>
-            <padding>
-                <Insets bottom="10.0" left="10.0" top="10.0"/>
-            </padding>
-        </HBox>
-    </children>
+      fx:controller="com.github.adamyork.fx5p1d3r.application.view.TransformController">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
+    <HBox>
+        <HBox>
+            <Label fx:id="transformsLabel" text="Transforms"/>
+        </HBox>
+        <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+            <Label fx:id="transformCount" text="1"/>
+        </HBox>
+    </HBox>
+    <ListView fx:id="resultTransformListView" prefHeight="100.0" prefWidth="200.0"/>
+    <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="200.0" spacing="10.0">
+        <padding>
+            <Insets bottom="10.0" left="10.0" top="10.0"/>
+        </padding>
+        <Button fx:id="addResultTransform" mnemonicParsing="false" prefWidth="30.0" text="+"/>
+        <Button fx:id="removeResultTransform" mnemonicParsing="false" prefWidth="30.0" text="-"/>
+        <Button fx:id="addDefaultJsonTransformer" layoutX="365.0" layoutY="20.0" mnemonicParsing="false"
+                prefWidth="30.0" text="j"/>
+        <Button fx:id="addDefaultCsvTransformer" layoutX="365.0" layoutY="20.0" mnemonicParsing="false"
+                prefWidth="30.0" text="c"/>
+    </HBox>
 </VBox>

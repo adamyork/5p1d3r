@@ -1,8 +1,8 @@
 package com.github.adamyork.fx5p1d3r.application.view.menu;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.adamyork.fx5p1d3r.application.view.menu.command.*;
-import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
@@ -26,8 +26,6 @@ public class ApplicationMenuController {
 
     private final Stage stage;
     private final ApplicationFormState applicationFormState;
-    private final CommandMap<Boolean, ManageConfigCommand> saveCommandMap;
-    private final CommandMap<Boolean, ManageConfigCommand> loadCommandMap;
 
     public ApplicationMenuController(final Stage stage,
                                      final FlowPane flowPane,
@@ -60,34 +58,28 @@ public class ApplicationMenuController {
         exitItem.setOnAction(this::handleExitSelected);
         saveItem.setOnAction(this::handleSave);
         loadItem.setOnAction(this::handleLoad);
-
-        saveCommandMap = new CommandMap<>();
-        saveCommandMap.add(true, new DontSaveAppConfigCommand());
-        saveCommandMap.add(false, new SaveAppConfigCommand());
-        loadCommandMap = new CommandMap<>();
-        loadCommandMap.add(true, new DontLoadAppConfigCommand());
-        loadCommandMap.add(false, new LoadAppConfigCommand());
     }
 
-    @SuppressWarnings("unused")
     private void handleExitSelected(final ActionEvent actionEvent) {
         stage.close();
     }
 
-    @SuppressWarnings("unused")
     private void handleSave(final ActionEvent actionEvent) {
         final ObjectMapper mapper = new ObjectMapper();
-        final String stateString = Unchecked.function(state -> mapper.writeValueAsString(applicationFormState)).apply(null);
+        Unchecked.function(state -> mapper.writeValueAsString(applicationFormState)).apply(null);
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save configuration as...");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("json", "*.json")
         );
         final File file = fileChooser.showSaveDialog(stage);
-        saveCommandMap.getCommand(file == null).execute(mapper, file, applicationFormState);
+        if (file != null) {
+            Unchecked.consumer(consumer -> mapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(file, applicationFormState))
+                    .accept(null);
+        }
     }
 
-    @SuppressWarnings("unused")
     private void handleLoad(final ActionEvent actionEvent) {
         final ObjectMapper mapper = new ObjectMapper();
         final FileChooser fileChooser = new FileChooser();
@@ -96,6 +88,13 @@ public class ApplicationMenuController {
                 new FileChooser.ExtensionFilter("json", "*.json")
         );
         final File file = fileChooser.showOpenDialog(stage);
-        loadCommandMap.getCommand(file == null).execute(mapper, file, applicationFormState);
+        if (file != null) {
+            mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+            final SimpleModule module = new SimpleModule();
+            module.addDeserializer(ApplicationFormState.class, new FormStateDeserializer(applicationFormState));
+            mapper.registerModule(module);
+            final ApplicationFormState state = Unchecked.function(func -> mapper.readValue(file, ApplicationFormState.class)).apply(null);
+            state.notifyChanged();
+        }
     }
 }

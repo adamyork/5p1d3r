@@ -20,15 +20,6 @@ public class ThrottleChoice extends Choice {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return Integer.toString(value) + " ms";
-    }
-
-    public ThrottleMs getThrottleMs() {
-        return throttleMs;
-    }
-
     public static ObservableList<ThrottleChoice> getThrottleChoices() {
         return FXCollections.observableArrayList(new ThrottleChoice(ThrottleMs.ZERO, 0),
                 new ThrottleChoice(ThrottleMs.TWO_HUNDRED, 200),
@@ -37,6 +28,15 @@ public class ThrottleChoice extends Choice {
                 new ThrottleChoice(ThrottleMs.TWO_THOUSAND, 2000),
                 new ThrottleChoice(ThrottleMs.FIVE_THOUSAND, 5000),
                 new ThrottleChoice(ThrottleMs.TEN_THOUSAND, 10000));
+    }
+
+    @Override
+    public String toString() {
+        return value + " ms";
+    }
+
+    public ThrottleMs getThrottleMs() {
+        return throttleMs;
     }
 
 }

@@ -5,7 +5,7 @@ web page parser with a javafx gui
 
 I love data analysis. I often find my self creating graph and charts of various things. This can be a tedious task; copying and pasting data from one place to another. Manually running DOM selectors with jquery in a page,or building a node/python based web parser. I really wanted something simple with a gui.
 
-###### *This software is for educational purposes only. The author is not responsible for it's misuse. Please use in accordance with data source policies, threshold, and limits.*
+###### *This software is for educational purposes only. The author is not responsible for its misuse. Please use in accordance with data source policies, threshold, and limits.*
 
 
 **5p1d3r** does this.
@@ -47,7 +47,7 @@ I love data analysis. I often find my self creating graph and charts of various 
         - Two are provided with the app: 
             - basicJSONTransform
             - basicCSVTransform
-        - Any valid groovy will work. However the context is considered to be the internals of a function.
+        - Any valid groovy will work. However, the context is considered the internals of a function.
             - input type is : **org.jsoup.select.Elements**
             - input variable name is : element
             - must return a map or in the case of a csv transform, an array

@@ -5,10 +5,7 @@ import com.github.adamyork.fx5p1d3r.application.view.method.choice.FollowLinksCh
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.MultiThreadingChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.ThrottleChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.UrlMethodChoice;
-import com.github.adamyork.fx5p1d3r.application.view.method.command.ManageMethodTogglesCommand;
 import com.github.adamyork.fx5p1d3r.common.GlobalDefaults;
-import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.command.ValidatorCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.GlobalDefault;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
@@ -28,7 +25,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import org.controlsfx.control.ToggleSwitch;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -48,9 +44,6 @@ import java.util.ResourceBundle;
 @Component
 public class MethodController implements Initializable, Observer {
 
-    private final CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap;
-    private final CommandMap<Boolean, ManageMethodTogglesCommand> manageMethodTogglesCommandMap;
-    private final CommandMap<Boolean, ManageMethodTogglesCommand> selectToggleCommandMap;
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
     private final GlobalDefaults globalDefaults;
@@ -84,16 +77,10 @@ public class MethodController implements Initializable, Observer {
     private Label linkUrlPatternLabel;
 
     @Inject
-    public MethodController(final @Qualifier("LoadUrlListCommandMap") CommandMap<Boolean, ValidatorCommand> loadUrlListCommandMap,
-                            final @Qualifier("ManageMethodTogglesCommandMap") CommandMap<Boolean, ManageMethodTogglesCommand> manageMethodTogglesCommandMap,
-                            final @Qualifier("SelectToggleCommandMap") CommandMap<Boolean, ManageMethodTogglesCommand> selectToggleCommandMap,
-                            final ApplicationFormState applicationFormState,
+    public MethodController(final ApplicationFormState applicationFormState,
                             final GlobalStage globalStage,
                             final GlobalDefaults globalDefaults,
                             final MessageSource messageSource) {
-        this.loadUrlListCommandMap = loadUrlListCommandMap;
-        this.manageMethodTogglesCommandMap = manageMethodTogglesCommandMap;
-        this.selectToggleCommandMap = selectToggleCommandMap;
         this.applicationFormState = applicationFormState;
         this.globalStage = globalStage;
         this.globalDefaults = globalDefaults;
@@ -155,7 +142,6 @@ public class MethodController implements Initializable, Observer {
         Platform.runLater(() -> startingUrlTextfield.requestFocus());
     }
 
-    @SuppressWarnings("unused")
     private void handleUrlMethodChange(final ObservableValue<? extends UrlMethodChoice> observableValue,
                                        final Choice oldChoice, final Choice newChoice) {
         final UrlMethodChoice methodChoice = (UrlMethodChoice) newChoice;
@@ -167,23 +153,27 @@ public class MethodController implements Initializable, Observer {
         urlLabel.setText(urlMethod.equals(UrlMethod.URL) ? urlString : urlListString);
         urlListSelectionButton.setDisable(urlMethod.equals(UrlMethod.URL));
         final boolean isSingleUrl = urlMethodChoiceBox.getSelectionModel().getSelectedItem().getUrlMethod().equals(UrlMethod.URL);
-        manageMethodTogglesCommandMap.getCommand(isSingleUrl).execute(requestThrottlingToggleSwitch, multiThreadingToggleSwitch,
-                followLinksToggleSwitch);
+        if (isSingleUrl) {
+            multiThreadingToggleSwitch.setDisable(!followLinksToggleSwitch.isSelected());
+            requestThrottlingToggleSwitch.setDisable(!followLinksToggleSwitch.isSelected());
+        } else {
+            multiThreadingToggleSwitch.setDisable(false);
+            requestThrottlingToggleSwitch.setDisable(false);
+        }
     }
 
-    private void handleStartingUrlChanged(@SuppressWarnings("unused") final Observable observable,
-                                          @SuppressWarnings("unused") final String oldValue,
+    private void handleStartingUrlChanged(final Observable observable,
+                                          final String oldValue,
                                           final String newValue) {
         applicationFormState.setStartingUrl(Optional.ofNullable(newValue).orElse(""));
     }
 
-    private void handleThrottlingChanged(@SuppressWarnings("unused") final Observable observable) {
+    private void handleThrottlingChanged(final Observable observable) {
         final boolean selected = ((BooleanProperty) observable).get();
         requestThrottlingChoiceBox.setDisable(!selected);
         applicationFormState.setThrottling(selected);
     }
 
-    @SuppressWarnings("unused")
     private void handleThrottlingOptionChanged(final ObservableValue<? extends ThrottleChoice> observableValue,
                                                final Choice oldChoice,
                                                final Choice newChoice) {
@@ -191,13 +181,12 @@ public class MethodController implements Initializable, Observer {
         applicationFormState.setThrottleMs(throttleChoice.getThrottleMs());
     }
 
-    private void handleMultiThreadingChanged(@SuppressWarnings("unused") final Observable observable) {
+    private void handleMultiThreadingChanged(final Observable observable) {
         final boolean selected = ((BooleanProperty) observable).get();
         multiThreadingChoiceBox.setDisable(!selected);
         applicationFormState.setMultithreading(selected);
     }
 
-    @SuppressWarnings("unused")
     private void handleMultiThreadingOptionChanged(final ObservableValue<? extends MultiThreadingChoice> observableValue,
                                                    final Choice oldChoice,
                                                    final Choice newChoice) {
@@ -205,7 +194,7 @@ public class MethodController implements Initializable, Observer {
         applicationFormState.setMultiThreadMax(multiThreadingChoice.getMultiThreadMax());
     }
 
-    private void handleFollowLinksChanged(@SuppressWarnings("unused") final Observable observable) {
+    private void handleFollowLinksChanged(final Observable observable) {
         final boolean selected = ((BooleanProperty) observable).get();
         followLinksChoiceBox.setDisable(!selected);
         linkUrlPatternTextfield.setDisable(!selected);
@@ -213,22 +202,23 @@ public class MethodController implements Initializable, Observer {
         final boolean isSingleUrl = urlMethodChoiceBox.getSelectionModel().getSelectedItem().getUrlMethod().equals(UrlMethod.URL);
         multiThreadingToggleSwitch.setDisable(!followLinksToggleSwitch.isSelected() && isSingleUrl);
         requestThrottlingToggleSwitch.setDisable(!followLinksToggleSwitch.isSelected() && isSingleUrl);
-        selectToggleCommandMap.getCommand(!selected && multiThreadingToggleSwitch.isSelected() && isSingleUrl).execute(requestThrottlingToggleSwitch,
-                multiThreadingToggleSwitch, followLinksToggleSwitch);
+        if (!selected && multiThreadingToggleSwitch.isSelected() && isSingleUrl) {
+            multiThreadingToggleSwitch.setSelected(false);
+            requestThrottlingToggleSwitch.setSelected(false);
+        }
     }
 
-    @SuppressWarnings("unused")
     private void handleFollowLinksOptionChanged(final ObservableValue<? extends FollowLinksChoice> observableValue,
                                                 final Choice oldChoice, final Choice newChoice) {
         final FollowLinksChoice followLinksChoice = (FollowLinksChoice) newChoice;
         applicationFormState.setFollowLinksDepth(followLinksChoice.getFollowLinksDepth());
     }
 
-    private void handleLinkFollowPatternChanged(@SuppressWarnings("unused") final KeyEvent keyEvent) {
+    private void handleLinkFollowPatternChanged(final KeyEvent keyEvent) {
         applicationFormState.setLinkFollowPattern(Optional.of(linkUrlPatternTextfield.getText() + keyEvent.getCharacter()).orElse(""));
     }
 
-    private void handleAddUrlList(@SuppressWarnings("unused") final ActionEvent actionEvent) {
+    private void handleAddUrlList(final ActionEvent actionEvent) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(messageSource.getMessage("select.url.list.label", null, Locale.getDefault()));
         final String[] validExtensions = {"*.txt"};
@@ -236,7 +226,12 @@ public class MethodController implements Initializable, Observer {
         fileChooser.getExtensionFilters().add(txtFileFilter);
         final File file = fileChooser.showOpenDialog(globalStage.getStage());
         final boolean fileSelected = !(file == null && applicationFormState.getUrlListFile() != null);
-        loadUrlListCommandMap.getCommand(fileSelected).execute(file, startingUrlTextfield);
+        if (fileSelected) {
+            final File nullSafeFile = Optional.ofNullable(file).orElse(new File(""));
+            final String nullSafeFilePath = nullSafeFile.toString();
+            startingUrlTextfield.setText(nullSafeFilePath);
+            applicationFormState.setUrlListFile(nullSafeFile);
+        }
     }
 
     @Override

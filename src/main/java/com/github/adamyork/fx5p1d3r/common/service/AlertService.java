@@ -1,19 +1,14 @@
 package com.github.adamyork.fx5p1d3r.common.service;
 
-import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.command.io.HandlerCommand;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogEvent;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -23,32 +18,36 @@ import java.util.function.Function;
 @Component
 public class AlertService {
 
-    private final CommandMap<Boolean, HandlerCommand<MessageSource, Function, Boolean>> warnHandlerCommandMap;
     private final ProgressService progressService;
     private final MessageSource messageSource;
     private boolean warningShown = false;
 
     @Inject
     public AlertService(final ProgressService progressService,
-                        final MessageSource messageSource,
-                        @Qualifier("WarnHandlerCommandMap") final CommandMap<Boolean, HandlerCommand<MessageSource, Function, Boolean>> warnHandlerCommandMap) {
+                        final MessageSource messageSource) {
         this.progressService = progressService;
         this.messageSource = messageSource;
-        this.warnHandlerCommandMap = warnHandlerCommandMap;
     }
 
-    public Optional<ButtonType> error(final String header, final String content) {
+    public void error(final String header, final String content) {
         progressService.updateSteps(0);
         progressService.updateProgress(ProgressType.ABORT);
         final Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(messageSource.getMessage("alert.service.error.label", null, Locale.getDefault()));
         alert.setHeaderText(header);
         alert.setContentText(content);
-        return alert.showAndWait();
+        alert.showAndWait();
     }
 
     public void warn(final String header, final String content) {
-        warningShown = warnHandlerCommandMap.getCommand(warningShown).execute(messageSource, getHandlerFunction(), header, content);
+        if (!warningShown) {
+            final Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle(messageSource.getMessage("alert.service.warning.label", null, Locale.getDefault()));
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+            alert.show();
+            warningShown = true;
+        }
     }
 
     private Function<Alert, Alert> getHandlerFunction() {
@@ -58,7 +57,6 @@ public class AlertService {
         };
     }
 
-    @SuppressWarnings("unused")
     private void handleOnHidden(final DialogEvent dialogEvent) {
         warningShown = false;
     }

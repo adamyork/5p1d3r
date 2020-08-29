@@ -3,8 +3,6 @@ package com.github.adamyork.fx5p1d3r.application.view.query;
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQueryListCell;
 import com.github.adamyork.fx5p1d3r.common.GlobalDefaults;
-import com.github.adamyork.fx5p1d3r.common.command.CommandMap;
-import com.github.adamyork.fx5p1d3r.common.command.NullSafeCommand;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.GlobalDefault;
 import javafx.collections.FXCollections;
@@ -15,7 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +29,6 @@ import java.util.ResourceBundle;
 public class QueryController implements Initializable {
 
     private final ApplicationFormState applicationFormState;
-    private final CommandMap<Boolean, NullSafeCommand> domQueryListViewCommandMap;
     private final GlobalDefaults globalDefaults;
     private final MessageSource messageSource;
 
@@ -50,10 +46,8 @@ public class QueryController implements Initializable {
     @Inject
     public QueryController(final ApplicationFormState applicationFormState,
                            final GlobalDefaults globalDefaults,
-                           final MessageSource messageSource,
-                           @Qualifier("DomQueryListViewCommandMap") final CommandMap<Boolean, NullSafeCommand> domQueryListViewCommandMap) {
+                           final MessageSource messageSource) {
         this.applicationFormState = applicationFormState;
-        this.domQueryListViewCommandMap = domQueryListViewCommandMap;
         this.globalDefaults = globalDefaults;
         this.messageSource = messageSource;
     }
@@ -71,7 +65,6 @@ public class QueryController implements Initializable {
         domQueriesLabel.setText(messageSource.getMessage("dom.queries.label", null, Locale.getDefault()));
     }
 
-    @SuppressWarnings("unused")
     private void handleAddDomQuery(final ActionEvent actionEvent) {
         final ObservableList<DomQuery> domQueries = domQueryListView.getItems();
         domQueryListView.getItems().add(new DomQuery.Builder().id(domQueries.size()).build());
@@ -79,10 +72,11 @@ public class QueryController implements Initializable {
         queryCount.setText(Integer.toString(domQueryListView.getItems().size()));
     }
 
-    @SuppressWarnings({"unchecked", "unused"})
     private void handleRemoveDomQuery(final ActionEvent actionEvent) {
         final int selectedIndex = domQueryListView.getSelectionModel().getSelectedIndex();
-        domQueryListViewCommandMap.getCommand(selectedIndex != -1).execute(domQueryListView, selectedIndex);
+        if (selectedIndex != -1) {
+            domQueryListView.getItems().remove(selectedIndex);
+        }
         applicationFormState.setDomQueryObservableList(domQueryListView.getItems());
         queryCount.setText(Integer.toString(domQueryListView.getItems().size()));
     }
