@@ -10,6 +10,8 @@ import com.github.adamyork.fx5p1d3r.common.service.UrlServiceFactory;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.context.MessageSource;
@@ -26,6 +28,8 @@ import java.util.concurrent.ExecutorService;
  * Copyright 2020
  */
 public class BaseThreadService extends BaseObservableProcessor implements ThreadService, Observer {
+
+    private static final Logger logger = LogManager.getLogger(BaseThreadService.class);
 
     protected final ApplicationFormState applicationFormState;
     protected final OutputService outputService;
@@ -64,21 +68,26 @@ public class BaseThreadService extends BaseObservableProcessor implements Thread
 
     @SuppressWarnings("DuplicatedCode")
     protected void processDocuments(final List<Document> documents) {
+        logger.debug("Processing documents");
         final ObservableList<DomQuery> domQueryObservableList = getDomQueryList(applicationFormState);
         if (documents.size() == 0) {
             final String header = messageSource.getMessage("alert.no.documents.header", null, Locale.getDefault());
             final String content = messageSource.getMessage("alert.no.documents.content", null, Locale.getDefault());
             alertService.warn(header, content);
+            logger.debug("No documents to process");
         }
         documents.forEach(document -> {
             parseQueries(domQueryObservableList, applicationFormState, jsonDocumentParser, csvDocumentParser, document);
             final Elements linksElementsList = document.select("a");
             final List<URL> linksList = outputService.getUrlListFromElements(linksElementsList);
             if (applicationFormState.followLinks()) {
+                logger.debug("Link following enabled.");
                 linksFollower.traverse(linksList, executorService, 1,
                         applicationFormState.getFollowLinksDepth().getValue(),
                         Integer.parseInt(applicationFormState.getMultiThreadMax().toString()) - 1);
             } else {
+                logger.debug("Link following disabled.");
+                logger.debug("Crawl completed");
                 progressService.updateProgress(ProgressType.COMPLETE);
             }
         });

@@ -16,6 +16,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.FileChooser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,8 @@ import java.util.*;
  */
 @Component
 public class ControlController implements Initializable, Observer {
+
+    private static final Logger logger = LogManager.getLogger(ControlController.class);
 
     private final MessageSource messageSource;
     private final GlobalStage globalStage;
@@ -77,6 +81,7 @@ public class ControlController implements Initializable, Observer {
     }
 
     private void handleStart(final ActionEvent actionEvent) {
+        logger.debug("Starting crawl");
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(messageSource.getMessage("save.output.as.label", null, Locale.getDefault()));
         fileChooser.getExtensionFilters().addAll(
@@ -91,8 +96,10 @@ public class ControlController implements Initializable, Observer {
             final String fileTypeString = nullSafeFileString.substring(extensionIndex);
             if (fileTypeString.equals(OutputFileType.JSON.toString())) {
                 applicationFormState.setOutputFileType(OutputFileType.JSON);
+                logger.debug("JSON output file type selected");
             } else {
                 applicationFormState.setOutputFileType(OutputFileType.CSV);
+                logger.debug("CSV output file type selected");
             }
             applicationFormState.setOutputFile(nullSafeFileString);
             if (applicationFormState.getUrlMethod().equals(UrlMethod.URL)) {
@@ -109,6 +116,7 @@ public class ControlController implements Initializable, Observer {
     }
 
     private void handleStop(final ActionEvent actionEvent) {
+        logger.debug("Cancelling Crawl");
         abortService.stopAllCalls();
         startButton.setDisable(false);
         stopButton.setDisable(true);

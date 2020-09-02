@@ -5,6 +5,8 @@ import com.github.adamyork.fx5p1d3r.common.Validator;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.tuple.Tuple2;
 
@@ -18,6 +20,8 @@ import java.util.ArrayList;
  */
 public class JsonOutputService extends BaseOutputService {
 
+    private static final Logger logger = LogManager.getLogger(CsvOutputService.class);
+
     public JsonOutputService(final ApplicationFormState applicationFormState,
                              final Validator validator,
                              final ProgressService progressService) {
@@ -26,6 +30,7 @@ public class JsonOutputService extends BaseOutputService {
 
     @Override
     public void writeEntry(final Object object) {
+        logger.debug("writing json output");
         final Tuple2<File, byte[]> fileAndBytes = getFileAndBytes();
         final ObjectMapper mapper = new ObjectMapper();
         try {

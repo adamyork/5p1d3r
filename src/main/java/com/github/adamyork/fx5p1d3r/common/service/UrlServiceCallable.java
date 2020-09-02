@@ -1,8 +1,11 @@
 package com.github.adamyork.fx5p1d3r.common.service;
 
+import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.concurrent.Task;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,6 +18,8 @@ import java.net.URL;
  */
 class UrlServiceCallable extends Task<Document> {
 
+    private static final Logger logger = LogManager.getLogger(UrlServiceCallable.class);
+
     private final URL url;
     private final ProgressService progressService;
 
@@ -26,12 +31,15 @@ class UrlServiceCallable extends Task<Document> {
 
     @Override
     public Document call() {
+        LogDirectoryHelper.manage();
         progressService.updateProgress(ProgressType.FETCH);
+        logger.debug("Fetching " + url);
         final Document document = Unchecked.function(urlToCall -> Jsoup.connect(urlToCall.toString())
                 .userAgent(ThrottledUrlService.USER_AGENT)
                 .timeout(30000)
                 .get()).apply(url);
         progressService.updateProgress(ProgressType.RETRIEVED);
+        logger.debug("Document Fetched .. ");
         return document;
     }
 }

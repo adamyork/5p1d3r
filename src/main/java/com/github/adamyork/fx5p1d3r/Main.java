@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.jooq.lambda.Unchecked;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -22,6 +24,8 @@ import java.util.Optional;
 @SpringBootApplication
 public class Main extends Application {
 
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
     private ConfigurableApplicationContext applicationContext;
 
     public static void main(String[] args) {
@@ -36,6 +40,7 @@ public class Main extends Application {
 
     @Override
     public void start(final Stage stage) {
+        LogDirectoryHelper.manage();
         stage.setTitle("5p1d3r");
         stage.getIcons().addAll(
                 new Image(Objects.requireNonNull(getClass().getClassLoader()
@@ -69,3 +74,8 @@ public class Main extends Application {
         applicationContext.close();
     }
 }
+
+//TODO finish native packaging
+//TODO replace observer pattern
+//TODO REWORK groovy transform dir
+//TODO fix ui locking bug

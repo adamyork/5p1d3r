@@ -5,6 +5,8 @@ import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
 
 /**
@@ -12,6 +14,8 @@ import org.jsoup.nodes.Document;
  * Copyright 2020
  */
 public class BaseObservableProcessor {
+
+    private static final Logger logger = LogManager.getLogger(BaseObservableProcessor.class);
 
     protected ObservableList<DomQuery> getDomQueryList(final ApplicationFormState applicationFormState) {
         return applicationFormState.getDomQueryObservableList();
@@ -24,6 +28,7 @@ public class BaseObservableProcessor {
                                 final Document document) {
         domQueryObservableList.forEach(domQuery -> {
             final String domQueryString = domQuery.getQuery();
+            logger.debug("Parsing document for " + domQueryString);
             if (applicationFormState.getOutputFileType().equals(OutputFileType.JSON)) {
                 jsonDocumentParser.parse(document, domQueryString);
             } else {

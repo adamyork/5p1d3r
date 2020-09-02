@@ -54,6 +54,8 @@ public class BaseOutputService implements OutputService {
                         final URI uri = Unchecked.function(t -> new URI(baseUri)).apply(null);
                         final String baseUriTrimmed = uri.getScheme() + "://" + uri.getHost();
                         return baseUriTrimmed + href;
+                    } else if (href.contains("//")) {
+                        return "https:" + href;
                     }
                     return href;
                 })

@@ -7,6 +7,8 @@ import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
 import org.springframework.context.MessageSource;
 
@@ -20,6 +22,8 @@ import java.util.Locale;
  * Copyright 2017
  */
 public class HybridUrlService implements UrlService {
+
+    private static final Logger logger = LogManager.getLogger(HybridUrlService.class);
 
     private final ApplicationFormState applicationFormState;
     private final ValidatorService urlValidatorService;
@@ -49,6 +53,7 @@ public class HybridUrlService implements UrlService {
     public void executeSingle() {
         final List<String> urlStrings = new ArrayList<>();
         urlStrings.add(applicationFormState.getStartingUrl());
+        logger.debug("Crawling single URL " + applicationFormState.getStartingUrl());
         progressService.updateSteps(urlStrings.size());
         progressService.updateProgress(ProgressType.START);
         validateUrlsAndExecute(urlStrings);
@@ -56,11 +61,13 @@ public class HybridUrlService implements UrlService {
 
     @Override
     public void executeList() {
+        logger.debug("Crawling URL list");
         final File urlListFile = applicationFormState.getUrlListFile();
         final String header = messageSource.getMessage("error.no.url.list.header", null, Locale.getDefault());
         final String content = messageSource.getMessage("error.no.url.list.content", null, Locale.getDefault());
         if (urlListFile == null) {
             alertService.error(header, content);
+            //TODO this probably needs to reset the UI state
         } else {
             final List<String> urlStrings = Unchecked.function(o -> FileUtils.readLines(urlListFile)).apply(null);
             progressService.updateSteps(urlStrings.size());
@@ -81,6 +88,7 @@ public class HybridUrlService implements UrlService {
             final String header = messageSource.getMessage("error.url.invalid.header", null, Locale.getDefault());
             final String content = messageSource.getMessage("error.url.invalid.content", null, Locale.getDefault());
             alertService.error(header, content);
+            //TODO this probably needs to reset the UI state
         }
     }
 

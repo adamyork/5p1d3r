@@ -12,6 +12,8 @@ import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.context.MessageSource;
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
  * Copyright 2017
  */
 public class RecursiveLinksFollower extends BaseObservableProcessor implements LinksFollower {
+
+    private static final Logger logger = LogManager.getLogger(RecursiveLinksFollower.class);
 
     private final ApplicationFormState applicationFormState;
     private final UrlServiceFactory urlServiceFactory;
@@ -71,6 +75,7 @@ public class RecursiveLinksFollower extends BaseObservableProcessor implements L
         progressService.updateProgress(ProgressType.LINKS);
         this.executorService = executorService;
         final List<URL> filtered = filterByRegex(urls);
+        logger.debug("Following linked documents " + filtered);
         final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(filtered, currentDepth,
                 maxDepth, threadPoolSize);
         concurrentUrlService.setOnSucceeded(this::onDocumentsRetrieved);
@@ -79,6 +84,7 @@ public class RecursiveLinksFollower extends BaseObservableProcessor implements L
 
     @SuppressWarnings("DuplicatedCode")
     public void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
+        logger.debug("Document retrieved from link follow");
         final DocumentListWithMemo memo = (DocumentListWithMemo) workerStateEvent.getSource().getValue();
         final List<Document> documents = memo.getDocuments().stream()
                 .filter(Objects::nonNull).collect(Collectors.toList());
@@ -87,6 +93,7 @@ public class RecursiveLinksFollower extends BaseObservableProcessor implements L
             final String header = messageSource.getMessage("alert.no.documents.header", null, Locale.getDefault());
             final String content = messageSource.getMessage("alert.no.documents.content", null, Locale.getDefault());
             alertService.warn(header, content);
+            logger.debug("No documents to process");
         }
         final List<List<URL>> allLinks = documents.stream().map(doc -> {
             parseQueries(domQueryObservableList, applicationFormState, jsonDocumentParser, csvDocumentParser, doc);
@@ -95,8 +102,10 @@ public class RecursiveLinksFollower extends BaseObservableProcessor implements L
         }).collect(Collectors.toList());
         final List<URL> flattened = allLinks.stream().flatMap(List::stream).collect(Collectors.toList());
         if (memo.getCurrentDepth() < memo.getMaxDepth()) {
+            logger.debug("current depth " + memo.getCurrentDepth() + " is not max depth " + memo.getMaxDepth() + "; recurse");
             traverse(flattened, executorService, memo.getCurrentDepth() + 1, memo.getMaxDepth(), memo.getThreadPoolSize());
         } else {
+            logger.debug("Document retrieved from link follow");
             progressService.updateProgress(ProgressType.COMPLETE);
         }
     }

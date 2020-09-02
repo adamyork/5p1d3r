@@ -6,6 +6,8 @@ import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.github.adamyork.fx5p1d3r.common.Validator;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.tuple.Tuple2;
 
@@ -20,6 +22,8 @@ import java.util.List;
  */
 public class CsvOutputService extends BaseOutputService {
 
+    private static final Logger logger = LogManager.getLogger(CsvOutputService.class);
+
 
     public CsvOutputService(final ApplicationFormState applicationFormState,
                             final Validator validator,
@@ -29,6 +33,7 @@ public class CsvOutputService extends BaseOutputService {
 
     @Override
     public void writeEntries(String[] object) {
+        logger.debug("writing csv output");
         final Tuple2<File, byte[]> fileAndBytes = getFileAndBytes();
         final CsvMapper mapper = new CsvMapper();
         mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);

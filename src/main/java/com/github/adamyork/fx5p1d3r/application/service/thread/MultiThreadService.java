@@ -1,15 +1,13 @@
 package com.github.adamyork.fx5p1d3r.application.service.thread;
 
 import com.github.adamyork.fx5p1d3r.application.service.io.DocumentParserService;
-import com.github.adamyork.fx5p1d3r.common.service.OutputService;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.DocumentListWithMemo;
-import com.github.adamyork.fx5p1d3r.common.service.AbortService;
-import com.github.adamyork.fx5p1d3r.common.service.AlertService;
-import com.github.adamyork.fx5p1d3r.common.service.ConcurrentUrlService;
-import com.github.adamyork.fx5p1d3r.common.service.UrlServiceFactory;
+import com.github.adamyork.fx5p1d3r.common.service.*;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import javafx.concurrent.WorkerStateEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.springframework.context.MessageSource;
 
@@ -24,6 +22,8 @@ import java.util.stream.Collectors;
  * Copyright 2017
  */
 public class MultiThreadService extends BaseThreadService {
+
+    private static final Logger logger = LogManager.getLogger(MultiThreadService.class);
 
     public MultiThreadService(final UrlServiceFactory urlServiceFactory,
                               final ApplicationFormState applicationFormState,
@@ -47,6 +47,7 @@ public class MultiThreadService extends BaseThreadService {
         final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(urls, 1,
                 applicationFormState.getFollowLinksDepth().getValue(), threadPoolSize - 1);
         concurrentUrlService.setOnSucceeded(this::onDocumentsRetrieved);
+        logger.info("Submitting url list work");
         executorService.submit(concurrentUrlService);
     }
 
@@ -54,6 +55,7 @@ public class MultiThreadService extends BaseThreadService {
         final DocumentListWithMemo memo = (DocumentListWithMemo) workerStateEvent.getSource().getValue();
         final List<Document> documents = memo.getDocuments().stream()
                 .filter(Objects::nonNull).collect(Collectors.toList());
+        logger.info(documents.size() + " documents retrieved");
         processDocuments(documents);
     }
 

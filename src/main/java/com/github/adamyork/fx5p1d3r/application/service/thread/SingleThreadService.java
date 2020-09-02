@@ -1,14 +1,12 @@
 package com.github.adamyork.fx5p1d3r.application.service.thread;
 
 import com.github.adamyork.fx5p1d3r.application.service.io.DocumentParserService;
-import com.github.adamyork.fx5p1d3r.common.service.OutputService;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.service.AbortService;
-import com.github.adamyork.fx5p1d3r.common.service.AlertService;
-import com.github.adamyork.fx5p1d3r.common.service.ThrottledUrlService;
-import com.github.adamyork.fx5p1d3r.common.service.UrlServiceFactory;
+import com.github.adamyork.fx5p1d3r.common.service.*;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
 import javafx.concurrent.WorkerStateEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.springframework.context.MessageSource;
 
@@ -21,6 +19,8 @@ import java.util.concurrent.Executors;
  * Copyright 2017
  */
 public class SingleThreadService extends BaseThreadService {
+
+    private static final Logger logger = LogManager.getLogger(SingleThreadService.class);
 
     public SingleThreadService(final UrlServiceFactory urlServiceFactory,
                                final ApplicationFormState applicationFormState,
@@ -43,12 +43,15 @@ public class SingleThreadService extends BaseThreadService {
         abortService.addObserver(this);
         final ThrottledUrlService throttledUrlService = urlServiceFactory.getThrottledServiceForUrls(urls);
         throttledUrlService.setOnSucceeded(this::onDocumentsRetrieved);
+        logger.debug("Submitting url work");
         executorService.submit(throttledUrlService);
     }
 
     @SuppressWarnings("unchecked")
     void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
-        processDocuments((List<Document>) workerStateEvent.getSource().getValue());
+        final List<Document> documentList = (List<Document>) workerStateEvent.getSource().getValue();
+        logger.debug(documentList.size() + " documents retrieved");
+        processDocuments(documentList);
     }
 
 }
