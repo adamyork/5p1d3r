@@ -50,10 +50,8 @@ public class BaseOutputService implements OutputService {
                 .map(element -> {
                     final String href = element.attr("href");
                     if (href.contains("http") || href.contains("https")) {
-                        final String baseUri = element.baseUri();
-                        final URI uri = Unchecked.function(t -> new URI(baseUri)).apply(null);
-                        final String baseUriTrimmed = uri.getScheme() + "://" + uri.getHost();
-                        return baseUriTrimmed + href;
+                        final URI uri = Unchecked.function(t -> new URI(href)).apply(null);
+                        return uri.toString();
                     } else if (href.contains("//")) {
                         return "https:" + href;
                     }

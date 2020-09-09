@@ -45,19 +45,27 @@ public class ThrottledUrlService extends Task<List<Document>> {
         //cleaned = cleaner.clean(dirty);
         //outputManager.outputToApplication("Document Cleaned...");
         final List<Document> documentList = new ArrayList<>();
-        urls.forEach(url -> {
-            logger.debug("Fetching url " + url);
-            progressService.updateProgress(ProgressType.FETCH);
-            final Document document = Unchecked.function(urlToCall -> Jsoup.connect(urlToCall.toString())
-                    .userAgent(USER_AGENT)
-                    .timeout(30000)
-                    .get()).apply(url);
-            documentList.add(document);
-            final long requestDelay = applicationFormState.getThrottleMs().getValue();
-            logger.debug("Document Fetched .. waiting " + requestDelay);
-            progressService.updateProgress(ProgressType.RETRIEVED);
-            Unchecked.consumer(o -> Thread.sleep(requestDelay)).accept(null);
-        });
+        try {
+            urls.forEach(url -> {
+                logger.debug("Fetching url " + url);
+                progressService.updateProgress(ProgressType.FETCH);
+                final Document document = Unchecked.function(urlToCall -> Jsoup.connect(urlToCall.toString())
+                        .userAgent(USER_AGENT)
+                        .timeout(30000)
+                        .get()).apply(url);
+                documentList.add(document);
+                if (progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
+                    throw new RuntimeException("Abort detected cancelling throttled request chain");
+                } else {
+                    final long requestDelay = applicationFormState.getThrottleMs().getValue();
+                    logger.debug("Document Fetched .. waiting " + requestDelay);
+                    progressService.updateProgress(ProgressType.RETRIEVED);
+                    Unchecked.consumer(o -> Thread.sleep(requestDelay)).accept(null);
+                }
+            });
+        } catch (final Exception exception) {
+            logger.debug("Abort detected cancelling, exception caught.");
+        }
         return documentList;
     }
 }

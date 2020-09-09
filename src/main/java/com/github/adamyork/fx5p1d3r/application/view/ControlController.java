@@ -2,6 +2,8 @@ package com.github.adamyork.fx5p1d3r.application.view;
 
 import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.application.service.url.UrlService;
+import com.github.adamyork.fx5p1d3r.application.view.method.MethodController;
+import com.github.adamyork.fx5p1d3r.application.view.query.QueryController;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.model.UrlMethod;
@@ -31,7 +33,7 @@ import java.util.*;
  * Copyright 2017
  */
 @Component
-public class ControlController implements Initializable, Observer {
+public class ControlController implements Initializable, Observer, ModalHandler {
 
     private static final Logger logger = LogManager.getLogger(ControlController.class);
 
@@ -41,6 +43,9 @@ public class ControlController implements Initializable, Observer {
     private final AbortService abortService;
     private final ApplicationFormState applicationFormState;
     private final UrlService urlService;
+    private final MethodController methodController;
+    private final TransformController transformController;
+    private final QueryController queryController;
 
     @FXML
     private Button startButton;
@@ -59,13 +64,19 @@ public class ControlController implements Initializable, Observer {
                              final AbortService abortService,
                              final MessageSource messageSource,
                              final ApplicationFormState applicationFormState,
-                             final UrlService urlService) {
+                             final UrlService urlService,
+                             final MethodController methodController,
+                             final TransformController transformController,
+                             final QueryController queryController) {
         this.globalStage = globalStage;
         this.progressService = progressService;
         this.abortService = abortService;
         this.messageSource = messageSource;
         this.applicationFormState = applicationFormState;
         this.urlService = urlService;
+        this.methodController = methodController;
+        this.transformController = transformController;
+        this.queryController = queryController;
     }
 
     @Override
@@ -76,8 +87,7 @@ public class ControlController implements Initializable, Observer {
         stopButton.setOnAction(this::handleStop);
         staticStatusLabel.setText(messageSource.getMessage("status.label", null, Locale.getDefault()));
         progressService.addObserver(this);
-        startButton.setDisable(false);
-        stopButton.setDisable(true);
+        modal(false);
     }
 
     private void handleStart(final ActionEvent actionEvent) {
@@ -107,19 +117,20 @@ public class ControlController implements Initializable, Observer {
             } else {
                 urlService.executeList();
             }
-            startButton.setDisable(true);
-            stopButton.setDisable(false);
-        } else {
-            startButton.setDisable(false);
-            stopButton.setDisable(true);
+            methodController.modal(true);
+            queryController.modal(true);
+            transformController.modal(true);
+            modal(true);
         }
     }
 
     private void handleStop(final ActionEvent actionEvent) {
         logger.debug("Cancelling Crawl");
         abortService.stopAllCalls();
-        startButton.setDisable(false);
-        stopButton.setDisable(true);
+        methodController.modal(false);
+        queryController.modal(false);
+        transformController.modal(false);
+        modal(false);
     }
 
     @Override
@@ -127,7 +138,20 @@ public class ControlController implements Initializable, Observer {
         final ProgressState progressState = progressService.getProgressState();
         statusLabel.setText(progressState.getMessage());
         progressBar.setProgress(progressState.getProgress());
-        startButton.setDisable(!progressService.getCurrentProgressType().equals(ProgressType.COMPLETE));
-        stopButton.setDisable(progressService.getCurrentProgressType().equals(ProgressType.COMPLETE));
+        logger.debug("Progress updated " + progressService.getCurrentProgressType());
+        if (progressService.getCurrentProgressType().equals(ProgressType.COMPLETE)) {
+            statusLabel.setText("Idle");
+            progressBar.setProgress(0.0);
+            methodController.modal(false);
+            queryController.modal(false);
+            transformController.modal(false);
+            modal(false);
+        }
+    }
+
+    @Override
+    public void modal(final boolean enable) {
+        startButton.setDisable(enable);
+        stopButton.setDisable(!enable);
     }
 }

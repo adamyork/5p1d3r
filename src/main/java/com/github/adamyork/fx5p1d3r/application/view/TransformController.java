@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
  * Copyright 2017
  */
 @Component
-public class TransformController implements Initializable {
+public class TransformController implements Initializable, ModalHandler {
 
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
@@ -101,4 +101,11 @@ public class TransformController implements Initializable {
         transformCount.setText(Integer.toString(resultTransformListView.getItems().size()));
     }
 
+    @Override
+    public void modal(final boolean enable) {
+        addResultTransform.setDisable(enable);
+        removeResultTransform.setDisable(enable);
+        addDefaultJsonTransformer.setDisable(enable);
+        addDefaultCsvTransformer.setDisable(enable);
+    }
 }

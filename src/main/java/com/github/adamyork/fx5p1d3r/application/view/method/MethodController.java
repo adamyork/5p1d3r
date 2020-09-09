@@ -1,6 +1,7 @@
 package com.github.adamyork.fx5p1d3r.application.view.method;
 
 import com.github.adamyork.fx5p1d3r.GlobalStage;
+import com.github.adamyork.fx5p1d3r.application.view.ModalHandler;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.FollowLinksChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.MultiThreadingChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.ThrottleChoice;
@@ -42,7 +43,7 @@ import java.util.ResourceBundle;
  * Copyright 2017
  */
 @Component
-public class MethodController implements Initializable, Observer {
+public class MethodController implements Initializable, Observer, ModalHandler {
 
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
@@ -89,6 +90,7 @@ public class MethodController implements Initializable, Observer {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+
         urlMethodChoiceBox.setItems(UrlMethodChoice.getUrlMethodChoices());
         urlMethodChoiceBox.getSelectionModel().selectedItemProperty().addListener(this::handleUrlMethodChange);
         urlMethodChoiceBox.setValue(urlMethodChoiceBox.getItems().get(0));
@@ -146,11 +148,11 @@ public class MethodController implements Initializable, Observer {
                                        final Choice oldChoice, final Choice newChoice) {
         final UrlMethodChoice methodChoice = (UrlMethodChoice) newChoice;
         final UrlMethod urlMethod = methodChoice.getUrlMethod();
-        startingUrlTextfield.setDisable(urlMethod.equals(UrlMethod.URL_LIST));
         applicationFormState.setUrlMethod(urlMethod);
         final String urlString = messageSource.getMessage("url.label", null, Locale.getDefault());
         final String urlListString = messageSource.getMessage("url.list.label", null, Locale.getDefault());
         urlLabel.setText(urlMethod.equals(UrlMethod.URL) ? urlString : urlListString);
+        startingUrlTextfield.setDisable(urlMethod.equals(UrlMethod.URL_LIST));
         urlListSelectionButton.setDisable(urlMethod.equals(UrlMethod.URL));
         final boolean isSingleUrl = urlMethodChoiceBox.getSelectionModel().getSelectedItem().getUrlMethod().equals(UrlMethod.URL);
         if (isSingleUrl) {
@@ -267,5 +269,36 @@ public class MethodController implements Initializable, Observer {
         linkUrlPatternTextfield.setText(applicationFormState.getLinkFollowPattern());
         linkUrlPatternTextfield.setDisable(!applicationFormState.followLinks());
         applicationFormState.clearNotify();
+    }
+
+    @Override
+    public void modal(final boolean enable) {
+        if (enable) {
+            urlMethodChoiceBox.setDisable(true);
+            startingUrlTextfield.setDisable(true);
+            urlListSelectionButton.setDisable(true);
+            requestThrottlingToggleSwitch.setDisable(true);
+            requestThrottlingChoiceBox.setDisable(true);
+            multiThreadingToggleSwitch.setDisable(true);
+            multiThreadingChoiceBox.setDisable(true);
+            followLinksToggleSwitch.setDisable(true);
+            followLinksChoiceBox.setDisable(true);
+            linkUrlPatternTextfield.setDisable(true);
+        } else {
+            final FilteredList<UrlMethodChoice> filteredMethodChoices = urlMethodChoiceBox.getItems()
+                    .filtered(urlMethodChoice -> urlMethodChoice.getUrlMethod().equals(applicationFormState.getUrlMethod()));
+            final UrlMethodChoice methodChoice = filteredMethodChoices.get(0);
+            startingUrlTextfield.setDisable(methodChoice.getUrlMethod().equals(UrlMethod.URL_LIST));
+            urlMethodChoiceBox.setDisable(false);
+            requestThrottlingToggleSwitch.setDisable(false);
+            multiThreadingToggleSwitch.setDisable(false);
+            followLinksToggleSwitch.setDisable(false);
+            urlListSelectionButton.setDisable(methodChoice.getUrlMethod().equals(UrlMethod.URL));
+            requestThrottlingChoiceBox.setDisable(!applicationFormState.throttling());
+            multiThreadingChoiceBox.setDisable(!applicationFormState.multithreading());
+            followLinksChoiceBox.setDisable(!applicationFormState.followLinks());
+            linkUrlPatternTextfield.setDisable(!applicationFormState.followLinks());
+        }
+
     }
 }

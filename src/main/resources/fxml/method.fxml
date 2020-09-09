@@ -40,15 +40,18 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
         </padding>
         <VBox spacing="10.0">
-            <ToggleSwitch fx:id="requestThrottlingToggleSwitch" prefWidth="150.0" text="Throttling"/>
+            <ToggleSwitch fx:id="requestThrottlingToggleSwitch" prefWidth="150.0" text="Throttling"
+                          styleClass="colored-toggle-switch"/>
             <ChoiceBox fx:id="requestThrottlingChoiceBox" prefWidth="150.0"/>
         </VBox>
         <VBox spacing="10.0">
-            <ToggleSwitch fx:id="multiThreadingToggleSwitch" prefWidth="150.0" text="Threading"/>
+            <ToggleSwitch fx:id="multiThreadingToggleSwitch" prefWidth="150.0" text="Threading"
+                          styleClass="colored-toggle-switch"/>
             <ChoiceBox fx:id="multiThreadingChoiceBox" prefWidth="150.0"/>
         </VBox>
         <VBox spacing="10.0">
-            <ToggleSwitch fx:id="followLinksToggleSwitch" prefWidth="150.0" text="Follow Links"/>
+            <ToggleSwitch fx:id="followLinksToggleSwitch" prefWidth="150.0" text="Follow Links"
+                          styleClass="colored-toggle-switch"/>
             <ChoiceBox fx:id="followLinksChoiceBox" prefWidth="150.0"/>
         </VBox>
     </HBox>

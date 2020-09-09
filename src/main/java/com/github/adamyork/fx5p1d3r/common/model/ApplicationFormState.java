@@ -1,6 +1,7 @@
 package com.github.adamyork.fx5p1d3r.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.Main;
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import javafx.collections.ObservableList;
@@ -9,6 +10,7 @@ import org.jooq.lambda.Unchecked;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Observable;
 
 /**
@@ -148,8 +150,9 @@ public class ApplicationFormState extends Observable {
     }
 
     public File getDefaultJsonTransform() {
+        final Path tempDirectoryPath = Path.of(LogDirectoryHelper.getTempDirectoryPath() + File.separator + "basicJsonTransform");
         final InputStream stream = Main.class.getClassLoader().getResourceAsStream("basicJsonTransform.groovy");
-        final File basicJsonTransform = new File("basicJsonTransform");
+        final File basicJsonTransform = new File(tempDirectoryPath.toUri());
         basicJsonTransform.deleteOnExit();
         Unchecked.consumer(consumer -> {
             assert stream != null;
@@ -159,8 +162,9 @@ public class ApplicationFormState extends Observable {
     }
 
     public File getDefaultCsvTransform() {
+        final Path tempDirectoryPath = Path.of(LogDirectoryHelper.getTempDirectoryPath() + File.separator + "basicCsvTransform");
         final InputStream stream = Main.class.getClassLoader().getResourceAsStream(("basicCsvTransform.groovy"));
-        final File basicCsvTransform = new File("basicCsvTransform");
+        final File basicCsvTransform = new File(tempDirectoryPath.toUri());
         basicCsvTransform.deleteOnExit();
         Unchecked.consumer(consumer -> {
             assert stream != null;

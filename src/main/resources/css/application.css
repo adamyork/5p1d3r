@@ -5,3 +5,7 @@
     -fx-base: whitesmoke;
     -fx-background: rgb(24, 25, 32);
 }
+
+.colored-toggle-switch .label {
+    -fx-text-fill: whitesmoke;
+}

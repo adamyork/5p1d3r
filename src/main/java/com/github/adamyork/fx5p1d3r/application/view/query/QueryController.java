@@ -1,5 +1,6 @@
 package com.github.adamyork.fx5p1d3r.application.view.query;
 
+import com.github.adamyork.fx5p1d3r.application.view.ModalHandler;
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQueryListCell;
 import com.github.adamyork.fx5p1d3r.common.GlobalDefaults;
@@ -26,7 +27,7 @@ import java.util.ResourceBundle;
  * Copyright 2017
  */
 @Component
-public class QueryController implements Initializable {
+public class QueryController implements Initializable, ModalHandler {
 
     private final ApplicationFormState applicationFormState;
     private final GlobalDefaults globalDefaults;
@@ -81,4 +82,10 @@ public class QueryController implements Initializable {
         queryCount.setText(Integer.toString(domQueryListView.getItems().size()));
     }
 
+    @Override
+    public void modal(final boolean enable) {
+        domQueryListView.setDisable(enable);
+        addDomQuery.setDisable(enable);
+        removeDomQuery.setDisable(enable);
+    }
 }

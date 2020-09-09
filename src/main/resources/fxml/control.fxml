@@ -25,7 +25,7 @@
             <Insets bottom="5.0"/>
         </padding>
         <Label fx:id="staticStatusLabel" text="Status :"/>
-        <Label fx:id="statusLabel" text="not running..."/>
+        <Label fx:id="statusLabel" text="Idle"/>
     </HBox>
     <ProgressBar fx:id="progressBar" prefWidth="400.0" progress="0.0"/>
 </VBox>

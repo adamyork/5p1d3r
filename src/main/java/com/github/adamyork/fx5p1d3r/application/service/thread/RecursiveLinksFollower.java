@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -79,7 +80,14 @@ public class RecursiveLinksFollower extends BaseObservableProcessor implements L
         final ConcurrentUrlService concurrentUrlService = urlServiceFactory.getConcurrentServiceForUrls(filtered, currentDepth,
                 maxDepth, threadPoolSize);
         concurrentUrlService.setOnSucceeded(this::onDocumentsRetrieved);
-        executorService.submit(concurrentUrlService);
+        try {
+            executorService.submit(concurrentUrlService);
+        } catch (final RejectedExecutionException exception) {
+            logger.debug("Link following in progress aborted.");
+            logger.debug("Crawl Complete");
+            progressService.updateProgress(ProgressType.COMPLETE);
+        }
+
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -102,10 +110,10 @@ public class RecursiveLinksFollower extends BaseObservableProcessor implements L
         }).collect(Collectors.toList());
         final List<URL> flattened = allLinks.stream().flatMap(List::stream).collect(Collectors.toList());
         if (memo.getCurrentDepth() < memo.getMaxDepth()) {
-            logger.debug("current depth " + memo.getCurrentDepth() + " is not max depth " + memo.getMaxDepth() + "; recurse");
+            logger.debug("Current depth " + memo.getCurrentDepth() + " is not max depth " + memo.getMaxDepth() + "; recurse");
             traverse(flattened, executorService, memo.getCurrentDepth() + 1, memo.getMaxDepth(), memo.getThreadPoolSize());
         } else {
-            logger.debug("Document retrieved from link follow");
+            logger.debug("Crawl Complete");
             progressService.updateProgress(ProgressType.COMPLETE);
         }
     }
@@ -121,6 +129,7 @@ public class RecursiveLinksFollower extends BaseObservableProcessor implements L
         } catch (final PatternSyntaxException exception) {
             alertService.warn(messageSource.getMessage("alert.invalid.regex.header", null, Locale.getDefault()),
                     messageSource.getMessage("alert.invalid.regex.content", null, Locale.getDefault()));
+            logger.debug("Invalid link following regular expression");
             return new ArrayList<>();
         }
     }

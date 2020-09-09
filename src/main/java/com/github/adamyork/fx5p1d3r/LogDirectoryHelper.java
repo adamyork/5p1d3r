@@ -12,11 +12,16 @@ import java.nio.file.Path;
  */
 public class LogDirectoryHelper {
 
-    public static void manage() {
+    public static Path getTempDirectoryPath() {
         final String systemTempDirectory = System.getProperty("java.io.tmpdir");
-        final Path tempDirectoryPath = Path.of(systemTempDirectory + File.separator + "51p3dr");
+        return Path.of(systemTempDirectory + File.separator + "51p3dr");
+    }
+
+    public static void manage() {
+        final Path tempDirectoryPath = LogDirectoryHelper.getTempDirectoryPath();
         if (Files.notExists(tempDirectoryPath)) {
-            final boolean tempDirectorySucceeded = new File(tempDirectoryPath.toUri()).mkdirs();
+            final File file = new File(tempDirectoryPath.toUri());
+            final boolean tempDirectorySucceeded = file.mkdirs();
             if (!tempDirectorySucceeded) {
                 throw new RuntimeException("Can create temporary directory.");
             }

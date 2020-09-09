@@ -80,6 +80,11 @@ public class BaseThreadService extends BaseObservableProcessor implements Thread
             parseQueries(domQueryObservableList, applicationFormState, jsonDocumentParser, csvDocumentParser, document);
             final Elements linksElementsList = document.select("a");
             final List<URL> linksList = outputService.getUrlListFromElements(linksElementsList);
+            if (progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
+                logger.debug("Link following Aborted.");
+                logger.debug("Crawl completed");
+                progressService.updateProgress(ProgressType.COMPLETE);
+            }
             if (applicationFormState.followLinks()) {
                 logger.debug("Link following enabled.");
                 linksFollower.traverse(linksList, executorService, 1,
