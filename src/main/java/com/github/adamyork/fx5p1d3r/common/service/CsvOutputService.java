@@ -5,7 +5,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.github.adamyork.fx5p1d3r.common.Validator;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
@@ -27,7 +27,7 @@ public class CsvOutputService extends BaseOutputService {
 
     public CsvOutputService(final ApplicationFormState applicationFormState,
                             final Validator validator,
-                            final ProgressService progressService) {
+                            final ApplicationProgressService progressService) {
         super(applicationFormState, validator, progressService);
     }
 

@@ -3,7 +3,9 @@ package com.github.adamyork.fx5p1d3r.application.view.menu;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.common.model.FormState;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -16,6 +18,7 @@ import org.jooq.lambda.Unchecked;
 import org.springframework.context.MessageSource;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -49,15 +52,23 @@ public class ApplicationMenuController {
         final MenuItem exitItem = new MenuItem(messageSource.getMessage("menu.exit.label",
                 null, Locale.getDefault()));
 
+        final Menu helpMenu = new Menu(messageSource.getMessage("menu.help.label",
+                null, Locale.getDefault()));
+        final MenuItem logsItem = new MenuItem(messageSource.getMessage("menu.logs.label",
+                null, Locale.getDefault()));
+        helpMenu.getItems().add(logsItem);
+
         menu.getItems().add(loadItem);
         menu.getItems().add(saveItem);
         menu.getItems().add(separator);
         menu.getItems().add(exitItem);
         menuBar.getMenus().add(menu);
+        menuBar.getMenus().add(helpMenu);
 
         exitItem.setOnAction(this::handleExitSelected);
         saveItem.setOnAction(this::handleSave);
         loadItem.setOnAction(this::handleLoad);
+        logsItem.setOnAction(this::handleLogs);
     }
 
     private void handleExitSelected(final ActionEvent actionEvent) {
@@ -93,8 +104,23 @@ public class ApplicationMenuController {
             final SimpleModule module = new SimpleModule();
             module.addDeserializer(ApplicationFormState.class, new FormStateDeserializer(applicationFormState));
             mapper.registerModule(module);
-            final ApplicationFormState state = Unchecked.function(func -> mapper.readValue(file, ApplicationFormState.class)).apply(null);
+            final FormState state = Unchecked.function(func -> mapper.readValue(file, ApplicationFormState.class)).apply(null);
             state.notifyChanged();
+        }
+    }
+
+    private void handleLogs(final ActionEvent actionEvent) {
+        try {
+            final String os = System.getProperty("os.name").toLowerCase();
+            if (os.contains("win")) {
+                final String file = LogDirectoryHelper.getTempDirectoryPath().toString() + "\\5p1d3r.log";
+                Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "cmd", "/k", "MORE " + file});
+            }
+            //TODO mac/linux tail file
+//            final String file = LogDirectoryHelper.getTempDirectoryPath().toString() + "\\5p1d3r.log";
+//            Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "cmd", "/k", "MORE " + file});
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

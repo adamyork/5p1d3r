@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.application.service.url;
 
 import com.github.adamyork.fx5p1d3r.common.Validator;
 import com.github.adamyork.fx5p1d3r.common.model.UrlValidationResult;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.jooq.lambda.Unchecked;
 
@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 public class UrlValidatorService implements ValidatorService {
 
     private final Validator validator;
-    private final ProgressService progressService;
+    private final ApplicationProgressService progressService;
 
     public UrlValidatorService(final Validator validator,
-                               final ProgressService progressService) {
+                               final ApplicationProgressService progressService) {
         this.validator = validator;
         this.progressService = progressService;
     }

@@ -8,7 +8,7 @@ import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.ConcurrentUrlService;
 import com.github.adamyork.fx5p1d3r.common.service.OutputService;
 import com.github.adamyork.fx5p1d3r.common.service.UrlServiceFactory;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -41,7 +41,7 @@ public class RecursiveLinksFollower extends BaseObservableProcessor implements L
     private final ApplicationFormState applicationFormState;
     private final UrlServiceFactory urlServiceFactory;
     private final OutputService outputService;
-    private final ProgressService progressService;
+    private final ApplicationProgressService progressService;
     private final AlertService alertService;
     private final MessageSource messageSource;
     private final DocumentParserService jsonDocumentParser;
@@ -52,7 +52,7 @@ public class RecursiveLinksFollower extends BaseObservableProcessor implements L
     public RecursiveLinksFollower(final ApplicationFormState applicationFormState,
                                   final UrlServiceFactory urlServiceFactory,
                                   final OutputService outputService,
-                                  final ProgressService progressService,
+                                  final ApplicationProgressService progressService,
                                   final AlertService alertService,
                                   final MessageSource messageSource,
                                   final DocumentParserService jsonDocumentParser,

@@ -3,7 +3,7 @@ package com.github.adamyork.fx5p1d3r.application.service.io;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
 import com.github.adamyork.fx5p1d3r.common.service.OutputService;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import groovy.lang.GroovyShell;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +30,7 @@ public class CsvDocumentParser extends BaseDocumentParser {
     private final OutputService outputService;
 
     public CsvDocumentParser(final ApplicationFormState applicationFormState,
-                             final ProgressService progressService,
+                             final ApplicationProgressService progressService,
                              final MessageSource messageSource,
                              final AlertService alertService,
                              final OutputService outputService) {

@@ -1,11 +1,12 @@
 package com.github.adamyork.fx5p1d3r.application.view.query;
 
-import com.github.adamyork.fx5p1d3r.application.view.ModalHandler;
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQuery;
 import com.github.adamyork.fx5p1d3r.application.view.query.cell.DomQueryListCell;
 import com.github.adamyork.fx5p1d3r.common.GlobalDefaults;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.GlobalDefault;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -27,11 +30,12 @@ import java.util.ResourceBundle;
  * Copyright 2017
  */
 @Component
-public class QueryController implements Initializable, ModalHandler {
+public class QueryController implements Initializable, PropertyChangeListener {
 
     private final ApplicationFormState applicationFormState;
     private final GlobalDefaults globalDefaults;
     private final MessageSource messageSource;
+    private final ProgressService progressService;
 
     @FXML
     private ListView<DomQuery> domQueryListView;
@@ -47,10 +51,12 @@ public class QueryController implements Initializable, ModalHandler {
     @Inject
     public QueryController(final ApplicationFormState applicationFormState,
                            final GlobalDefaults globalDefaults,
-                           final MessageSource messageSource) {
+                           final MessageSource messageSource,
+                           final ProgressService progressService) {
         this.applicationFormState = applicationFormState;
         this.globalDefaults = globalDefaults;
         this.messageSource = messageSource;
+        this.progressService = progressService;
     }
 
     @Override
@@ -64,6 +70,8 @@ public class QueryController implements Initializable, ModalHandler {
         FXCollections.observableArrayList(domQueryListView.getItems());
         applicationFormState.setDomQueryObservableList(domQueryListView.getItems());
         domQueriesLabel.setText(messageSource.getMessage("dom.queries.label", null, Locale.getDefault()));
+
+        progressService.addListener(this);
     }
 
     private void handleAddDomQuery(final ActionEvent actionEvent) {
@@ -83,9 +91,16 @@ public class QueryController implements Initializable, ModalHandler {
     }
 
     @Override
-    public void modal(final boolean enable) {
-        domQueryListView.setDisable(enable);
-        addDomQuery.setDisable(enable);
-        removeDomQuery.setDisable(enable);
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if (progressService.getCurrentProgressType().equals(ProgressType.COMPLETE) ||
+                progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
+            domQueryListView.setDisable(false);
+            addDomQuery.setDisable(false);
+            removeDomQuery.setDisable(false);
+        } else {
+            domQueryListView.setDisable(true);
+            addDomQuery.setDisable(true);
+            removeDomQuery.setDisable(true);
+        }
     }
 }

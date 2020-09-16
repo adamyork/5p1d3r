@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.common.service;
 
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.common.model.DocumentListWithMemo;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import org.apache.logging.log4j.LogManager;
@@ -26,7 +26,7 @@ public class ConcurrentUrlService extends Task<DocumentListWithMemo> {
     private static final Logger logger = LogManager.getLogger(ConcurrentUrlService.class);
 
     private final List<URL> urls;
-    private final ProgressService progressService;
+    private final ApplicationProgressService progressService;
     private final int threadPoolSize;
     private final int currentDepth;
     private final int maxDepth;
@@ -35,7 +35,7 @@ public class ConcurrentUrlService extends Task<DocumentListWithMemo> {
                                 final int threadPoolSize,
                                 final int currentDepth,
                                 final int maxDepth,
-                                final ProgressService progressService) {
+                                final ApplicationProgressService progressService) {
         this.urls = urls;
         this.threadPoolSize = threadPoolSize;
         this.currentDepth = currentDepth;

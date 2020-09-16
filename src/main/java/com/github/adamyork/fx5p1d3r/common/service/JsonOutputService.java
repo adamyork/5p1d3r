@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.adamyork.fx5p1d3r.common.Validator;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputJsonObject;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
@@ -24,7 +24,7 @@ public class JsonOutputService extends BaseOutputService {
 
     public JsonOutputService(final ApplicationFormState applicationFormState,
                              final Validator validator,
-                             final ProgressService progressService) {
+                             final ApplicationProgressService progressService) {
         super(applicationFormState, validator, progressService);
     }
 

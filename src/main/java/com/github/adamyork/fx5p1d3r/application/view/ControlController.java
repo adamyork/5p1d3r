@@ -2,13 +2,11 @@ package com.github.adamyork.fx5p1d3r.application.view;
 
 import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.application.service.url.UrlService;
-import com.github.adamyork.fx5p1d3r.application.view.method.MethodController;
-import com.github.adamyork.fx5p1d3r.application.view.query.QueryController;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.model.UrlMethod;
 import com.github.adamyork.fx5p1d3r.common.service.AbortService;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressState;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.event.ActionEvent;
@@ -24,28 +22,29 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * Created by Adam York on 3/24/2017.
  * Copyright 2017
  */
 @Component
-public class ControlController implements Initializable, Observer, ModalHandler {
+public class ControlController implements Initializable, PropertyChangeListener {
 
     private static final Logger logger = LogManager.getLogger(ControlController.class);
 
     private final MessageSource messageSource;
     private final GlobalStage globalStage;
-    private final ProgressService progressService;
+    private final ApplicationProgressService progressService;
     private final AbortService abortService;
     private final ApplicationFormState applicationFormState;
     private final UrlService urlService;
-    private final MethodController methodController;
-    private final TransformController transformController;
-    private final QueryController queryController;
 
     @FXML
     private Button startButton;
@@ -60,23 +59,17 @@ public class ControlController implements Initializable, Observer, ModalHandler 
 
     @Inject
     public ControlController(final GlobalStage globalStage,
-                             final ProgressService progressService,
+                             final ApplicationProgressService progressService,
                              final AbortService abortService,
                              final MessageSource messageSource,
                              final ApplicationFormState applicationFormState,
-                             final UrlService urlService,
-                             final MethodController methodController,
-                             final TransformController transformController,
-                             final QueryController queryController) {
+                             final UrlService urlService) {
         this.globalStage = globalStage;
         this.progressService = progressService;
         this.abortService = abortService;
         this.messageSource = messageSource;
         this.applicationFormState = applicationFormState;
         this.urlService = urlService;
-        this.methodController = methodController;
-        this.transformController = transformController;
-        this.queryController = queryController;
     }
 
     @Override
@@ -86,7 +79,7 @@ public class ControlController implements Initializable, Observer, ModalHandler 
         stopButton.setText(messageSource.getMessage("abort.label", null, Locale.getDefault()));
         stopButton.setOnAction(this::handleStop);
         staticStatusLabel.setText(messageSource.getMessage("status.label", null, Locale.getDefault()));
-        progressService.addObserver(this);
+        progressService.addListener(this);
         modal(false);
     }
 
@@ -117,24 +110,23 @@ public class ControlController implements Initializable, Observer, ModalHandler 
             } else {
                 urlService.executeList();
             }
-            methodController.modal(true);
-            queryController.modal(true);
-            transformController.modal(true);
             modal(true);
         }
     }
 
     private void handleStop(final ActionEvent actionEvent) {
         logger.debug("Cancelling Crawl");
-        abortService.stopAllCalls();
-        methodController.modal(false);
-        queryController.modal(false);
-        transformController.modal(false);
+        abortService.abort();
         modal(false);
     }
 
+    private void modal(final boolean enable) {
+        startButton.setDisable(enable);
+        stopButton.setDisable(!enable);
+    }
+
     @Override
-    public void update(final Observable observable, final Object changed) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         final ProgressState progressState = progressService.getProgressState();
         statusLabel.setText(progressState.getMessage());
         progressBar.setProgress(progressState.getProgress());
@@ -142,16 +134,7 @@ public class ControlController implements Initializable, Observer, ModalHandler 
         if (progressService.getCurrentProgressType().equals(ProgressType.COMPLETE)) {
             statusLabel.setText("Idle");
             progressBar.setProgress(0.0);
-            methodController.modal(false);
-            queryController.modal(false);
-            transformController.modal(false);
             modal(false);
         }
-    }
-
-    @Override
-    public void modal(final boolean enable) {
-        startButton.setDisable(enable);
-        stopButton.setDisable(!enable);
     }
 }

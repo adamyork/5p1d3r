@@ -2,6 +2,8 @@ package com.github.adamyork.fx5p1d3r.application.view;
 
 import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,6 +15,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.URL;
 import java.util.Locale;
@@ -23,11 +27,12 @@ import java.util.ResourceBundle;
  * Copyright 2017
  */
 @Component
-public class TransformController implements Initializable, ModalHandler {
+public class TransformController implements Initializable, PropertyChangeListener {
 
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
     private final MessageSource messageSource;
+    private final ProgressService progressService;
 
     @FXML
     private ListView<File> resultTransformListView;
@@ -47,10 +52,12 @@ public class TransformController implements Initializable, ModalHandler {
     @Inject
     public TransformController(final ApplicationFormState applicationFormState,
                                final GlobalStage globalStage,
-                               final MessageSource messageSource) {
+                               final MessageSource messageSource,
+                               final ProgressService progressService) {
         this.applicationFormState = applicationFormState;
         this.globalStage = globalStage;
         this.messageSource = messageSource;
+        this.progressService = progressService;
     }
 
     @Override
@@ -64,6 +71,8 @@ public class TransformController implements Initializable, ModalHandler {
         resultTransformListView.getItems().add(applicationFormState.getDefaultJsonTransform());
         applicationFormState.setResultTransformObservableList(resultTransformListView.getItems());
         transformsLabel.setText(messageSource.getMessage("transforms.label", null, Locale.getDefault()));
+
+        progressService.addListener(this);
     }
 
     private void handleAddResultTransform(final ActionEvent actionEvent) {
@@ -102,10 +111,18 @@ public class TransformController implements Initializable, ModalHandler {
     }
 
     @Override
-    public void modal(final boolean enable) {
-        addResultTransform.setDisable(enable);
-        removeResultTransform.setDisable(enable);
-        addDefaultJsonTransformer.setDisable(enable);
-        addDefaultCsvTransformer.setDisable(enable);
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if (progressService.getCurrentProgressType().equals(ProgressType.COMPLETE) ||
+                progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
+            addResultTransform.setDisable(false);
+            removeResultTransform.setDisable(false);
+            addDefaultJsonTransformer.setDisable(false);
+            addDefaultCsvTransformer.setDisable(false);
+        } else {
+            addResultTransform.setDisable(true);
+            removeResultTransform.setDisable(true);
+            addDefaultJsonTransformer.setDisable(true);
+            addDefaultCsvTransformer.setDisable(true);
+        }
     }
 }

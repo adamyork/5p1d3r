@@ -72,4 +72,3 @@ public class Main extends Application {
 }
 
 //TODO finish native packaging
-//TODO replace observer pattern

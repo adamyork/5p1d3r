@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.application.service.io;
 
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
@@ -26,12 +26,12 @@ import java.util.Locale;
 public class BaseDocumentParser implements DocumentParserService {
 
     protected final ApplicationFormState applicationFormState;
-    protected final ProgressService progressService;
+    protected final ApplicationProgressService progressService;
     protected final MessageSource messageSource;
     protected final AlertService alertService;
 
     public BaseDocumentParser(final ApplicationFormState applicationFormState,
-                              final ProgressService progressService,
+                              final ApplicationProgressService progressService,
                               final MessageSource messageSource,
                               final AlertService alertService) {
         this.applicationFormState = applicationFormState;

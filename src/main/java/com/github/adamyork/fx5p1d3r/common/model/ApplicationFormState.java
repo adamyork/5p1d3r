@@ -8,16 +8,19 @@ import javafx.collections.ObservableList;
 import org.apache.commons.io.FileUtils;
 import org.jooq.lambda.Unchecked;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.Observable;
 
 /**
  * Created by Adam York on 2/27/2017.
  * Copyright 2017
  */
-public class ApplicationFormState extends Observable {
+public class ApplicationFormState implements FormState {
+
+    private final PropertyChangeSupport support;
 
     private UrlMethod urlMethod;
     private String startingUrl;
@@ -36,6 +39,10 @@ public class ApplicationFormState extends Observable {
     private String outputFile;
     private OutputFileType outputFileType;
     private File urlListFile;
+
+    public ApplicationFormState() {
+        support = new PropertyChangeSupport(this);
+    }
 
     public UrlMethod getUrlMethod() {
         return urlMethod;
@@ -173,13 +180,19 @@ public class ApplicationFormState extends Observable {
         return basicCsvTransform;
     }
 
-    public void notifyChanged() {
-        setChanged();
-        notifyObservers();
+    @Override
+    public void addListener(final PropertyChangeListener pcl) {
+        support.addPropertyChangeListener(pcl);
     }
 
-    public void clearNotify() {
-        clearChanged();
+    @Override
+    public void removeListener(final PropertyChangeListener pcl) {
+        support.removePropertyChangeListener(pcl);
+    }
+
+    @Override
+    public void notifyChanged() {
+        support.firePropertyChange("form", null, this);
     }
 
 }

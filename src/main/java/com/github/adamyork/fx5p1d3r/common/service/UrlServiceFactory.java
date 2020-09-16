@@ -1,7 +1,7 @@
 package com.github.adamyork.fx5p1d3r.common.service;
 
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -16,10 +16,10 @@ import java.util.List;
 public class UrlServiceFactory {
 
     private final ApplicationFormState applicationFormState;
-    private final ProgressService progressService;
+    private final ApplicationProgressService progressService;
 
     @Inject
-    public UrlServiceFactory(final ApplicationFormState applicationFormState, final ProgressService progressService) {
+    public UrlServiceFactory(final ApplicationFormState applicationFormState, final ApplicationProgressService progressService) {
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;
     }

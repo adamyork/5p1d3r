@@ -10,7 +10,7 @@ import com.github.adamyork.fx5p1d3r.application.service.url.UrlValidatorService;
 import com.github.adamyork.fx5p1d3r.common.Validator;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.service.*;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -46,14 +46,14 @@ public class ApplicationConfiguration {
 
     @Bean
     public UrlValidatorService urlValidatorService(final Validator validator,
-                                                   final ProgressService progressService) {
+                                                   final ApplicationProgressService progressService) {
         return new UrlValidatorService(validator, progressService);
     }
 
     @Bean
     public OutputService jsonOutputService(final ApplicationFormState applicationFormState,
                                            final Validator validator,
-                                           final ProgressService progressService) {
+                                           final ApplicationProgressService progressService) {
         return new JsonOutputService(applicationFormState,
                 validator, progressService);
     }
@@ -61,14 +61,14 @@ public class ApplicationConfiguration {
     @Bean
     public OutputService csvOutputService(final ApplicationFormState applicationFormState,
                                           final Validator validator,
-                                          final ProgressService progressService) {
+                                          final ApplicationProgressService progressService) {
         return new CsvOutputService(applicationFormState,
                 validator, progressService);
     }
 
     @Bean
     public DocumentParserService jsonDocumentParser(final ApplicationFormState applicationFormState,
-                                                    final ProgressService progressService,
+                                                    final ApplicationProgressService progressService,
                                                     final MessageSource messageSource,
                                                     final AlertService alertService,
                                                     final OutputService jsonOutputService) {
@@ -78,7 +78,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public DocumentParserService csvDocumentParser(final ApplicationFormState applicationFormState,
-                                                   final ProgressService progressService,
+                                                   final ApplicationProgressService progressService,
                                                    final MessageSource messageSource,
                                                    final AlertService alertService,
                                                    final OutputService csvOutputService) {
@@ -90,7 +90,7 @@ public class ApplicationConfiguration {
     public LinksFollower recursiveLinksFollower(final ApplicationFormState applicationFormState,
                                                 final UrlServiceFactory urlServiceFactory,
                                                 final OutputService jsonOutputService,
-                                                final ProgressService progressService,
+                                                final ApplicationProgressService progressService,
                                                 final AlertService alertService,
                                                 final MessageSource messageSource,
                                                 final DocumentParserService jsonDocumentParser,
@@ -103,15 +103,14 @@ public class ApplicationConfiguration {
     public ThreadService singleThreadService(final UrlServiceFactory urlServiceFactory,
                                              final ApplicationFormState applicationFormState,
                                              final OutputService jsonOutputService,
-                                             final AbortService abortService,
                                              final MessageSource messageSource,
                                              final AlertService alertService,
                                              final DocumentParserService jsonDocumentParser,
                                              final DocumentParserService csvDocumentParser,
-                                             final ProgressService progressService,
+                                             final ApplicationProgressService progressService,
                                              final LinksFollower recursiveLinksFollower) {
         return new SingleThreadService(urlServiceFactory,
-                applicationFormState, jsonOutputService, abortService, messageSource, alertService,
+                applicationFormState, jsonOutputService, messageSource, alertService,
                 jsonDocumentParser, csvDocumentParser, progressService, recursiveLinksFollower);
     }
 
@@ -119,22 +118,21 @@ public class ApplicationConfiguration {
     public ThreadService multiThreadService(final UrlServiceFactory urlServiceFactory,
                                             final ApplicationFormState applicationFormState,
                                             final OutputService jsonOutputService,
-                                            final AbortService abortService,
                                             final MessageSource messageSource,
                                             final AlertService alertService,
                                             final DocumentParserService jsonDocumentParser,
                                             final DocumentParserService csvDocumentParser,
-                                            final ProgressService progressService,
+                                            final ApplicationProgressService progressService,
                                             final LinksFollower recursiveLinksFollower) {
         return new MultiThreadService(urlServiceFactory,
-                applicationFormState, jsonOutputService, abortService, messageSource, alertService,
+                applicationFormState, jsonOutputService, messageSource, alertService,
                 jsonDocumentParser, csvDocumentParser, progressService, recursiveLinksFollower);
     }
 
     @Bean
     public UrlService urlService(final ApplicationFormState applicationFormState,
                                  final UrlValidatorService urlValidatorService,
-                                 final ProgressService progressService,
+                                 final ApplicationProgressService progressService,
                                  final MessageSource messageSource,
                                  final AlertService alertService,
                                  final ThreadService singleThreadService,

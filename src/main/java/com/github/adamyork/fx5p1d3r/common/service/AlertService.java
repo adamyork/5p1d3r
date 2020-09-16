@@ -1,6 +1,6 @@
 package com.github.adamyork.fx5p1d3r.common.service;
 
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogEvent;
@@ -18,12 +18,12 @@ import java.util.function.Function;
 @Component
 public class AlertService {
 
-    private final ProgressService progressService;
+    private final ApplicationProgressService progressService;
     private final MessageSource messageSource;
     private boolean warningShown = false;
 
     @Inject
-    public AlertService(final ProgressService progressService,
+    public AlertService(final ApplicationProgressService progressService,
                         final MessageSource messageSource) {
         this.progressService = progressService;
         this.messageSource = messageSource;

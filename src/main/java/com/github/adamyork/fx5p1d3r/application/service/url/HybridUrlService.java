@@ -4,7 +4,7 @@ import com.github.adamyork.fx5p1d3r.application.service.thread.ThreadService;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.UrlValidationResult;
 import com.github.adamyork.fx5p1d3r.common.service.AlertService;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +27,7 @@ public class HybridUrlService implements UrlService {
 
     private final ApplicationFormState applicationFormState;
     private final ValidatorService urlValidatorService;
-    private final ProgressService progressService;
+    private final ApplicationProgressService progressService;
     private final MessageSource messageSource;
     private final AlertService alertService;
     private final ThreadService singleThreadService;
@@ -35,7 +35,7 @@ public class HybridUrlService implements UrlService {
 
     public HybridUrlService(final ApplicationFormState applicationFormState,
                             final ValidatorService urlValidatorService,
-                            final ProgressService progressService,
+                            final ApplicationProgressService progressService,
                             final MessageSource messageSource,
                             final AlertService alertService,
                             final ThreadService singleThreadService,

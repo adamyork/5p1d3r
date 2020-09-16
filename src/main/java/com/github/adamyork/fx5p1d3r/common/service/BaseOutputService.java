@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.common.service;
 
 import com.github.adamyork.fx5p1d3r.common.Validator;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.tuple.Tuple;
@@ -22,11 +22,11 @@ public class BaseOutputService implements OutputService {
 
     protected final Validator validator;
     protected final ApplicationFormState applicationFormState;
-    protected final ProgressService progressService;
+    protected final ApplicationProgressService progressService;
 
     public BaseOutputService(final ApplicationFormState applicationFormState,
                              final Validator validator,
-                             final ProgressService progressService) {
+                             final ApplicationProgressService progressService) {
         this.validator = validator;
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;

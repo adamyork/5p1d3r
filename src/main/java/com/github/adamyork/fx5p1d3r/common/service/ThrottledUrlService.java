@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.common.service;
 
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.concurrent.Task;
 import org.apache.logging.log4j.LogManager;
@@ -27,11 +27,11 @@ public class ThrottledUrlService extends Task<List<Document>> {
 
     private final List<URL> urls;
     private final ApplicationFormState applicationFormState;
-    private final ProgressService progressService;
+    private final ApplicationProgressService progressService;
 
     public ThrottledUrlService(final List<URL> urls,
                                final ApplicationFormState applicationFormState,
-                               final ProgressService progressService) {
+                               final ApplicationProgressService progressService) {
         this.urls = urls;
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;

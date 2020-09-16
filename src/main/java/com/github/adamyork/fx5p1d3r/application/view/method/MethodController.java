@@ -1,7 +1,6 @@
 package com.github.adamyork.fx5p1d3r.application.view.method;
 
 import com.github.adamyork.fx5p1d3r.GlobalStage;
-import com.github.adamyork.fx5p1d3r.application.view.ModalHandler;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.FollowLinksChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.MultiThreadingChoice;
 import com.github.adamyork.fx5p1d3r.application.view.method.choice.ThrottleChoice;
@@ -11,6 +10,8 @@ import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.model.GlobalDefault;
 import com.github.adamyork.fx5p1d3r.common.model.OutputFileType;
 import com.github.adamyork.fx5p1d3r.common.model.UrlMethod;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressType;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -31,10 +32,11 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.URL;
 import java.util.Locale;
-import java.util.Observer;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -43,12 +45,13 @@ import java.util.ResourceBundle;
  * Copyright 2017
  */
 @Component
-public class MethodController implements Initializable, Observer, ModalHandler {
+public class MethodController implements Initializable, PropertyChangeListener {
 
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
     private final GlobalDefaults globalDefaults;
     private final MessageSource messageSource;
+    private final ProgressService progressService;
 
     @FXML
     private ChoiceBox<UrlMethodChoice> urlMethodChoiceBox;
@@ -81,11 +84,13 @@ public class MethodController implements Initializable, Observer, ModalHandler {
     public MethodController(final ApplicationFormState applicationFormState,
                             final GlobalStage globalStage,
                             final GlobalDefaults globalDefaults,
-                            final MessageSource messageSource) {
+                            final MessageSource messageSource,
+                            final ProgressService progressService) {
         this.applicationFormState = applicationFormState;
         this.globalStage = globalStage;
         this.globalDefaults = globalDefaults;
         this.messageSource = messageSource;
+        this.progressService = progressService;
     }
 
     @Override
@@ -135,7 +140,9 @@ public class MethodController implements Initializable, Observer, ModalHandler {
         applicationFormState.setLinkFollowPattern(linkUrlPatternTextfield.getText());
 
         applicationFormState.setOutputFileType(OutputFileType.JSON);
-        applicationFormState.addObserver(this);
+        applicationFormState.addListener(this);
+
+        progressService.addListener(this);
 
         urlLabel.setText(messageSource.getMessage("url.label", null, Locale.getDefault()));
         urlMethodLabel.setText(messageSource.getMessage("url.method.label", null, Locale.getDefault()));
@@ -237,68 +244,66 @@ public class MethodController implements Initializable, Observer, ModalHandler {
     }
 
     @Override
-    public void update(final java.util.Observable observable, final Object observed) {
-        final FilteredList<UrlMethodChoice> filteredMethodChoices = urlMethodChoiceBox.getItems()
-                .filtered(urlMethodChoice -> urlMethodChoice.getUrlMethod().equals(applicationFormState.getUrlMethod()));
-        final UrlMethodChoice methodChoice = filteredMethodChoices.get(0);
-        urlMethodChoiceBox.setValue(methodChoice);
-        urlListSelectionButton.setDisable(methodChoice.getUrlMethod().equals(UrlMethod.URL));
-        startingUrlTextfield.setText(applicationFormState.getStartingUrl());
-
-        final FilteredList<ThrottleChoice> filteredThrottlingChoices = requestThrottlingChoiceBox.getItems()
-                .filtered(throttleChoice -> throttleChoice.getThrottleMs().equals(applicationFormState.getThrottleMs()));
-        final ThrottleChoice throttleChoice = filteredThrottlingChoices.get(0);
-        requestThrottlingToggleSwitch.setSelected(applicationFormState.throttling());
-        requestThrottlingChoiceBox.setDisable(!applicationFormState.throttling());
-        requestThrottlingChoiceBox.setValue(throttleChoice);
-
-        final FilteredList<MultiThreadingChoice> filteredMultiThreadingChoices = multiThreadingChoiceBox.getItems()
-                .filtered(multiThreadingChoice -> multiThreadingChoice.getMultiThreadMax().equals(applicationFormState.getMultiThreadMax()));
-        final MultiThreadingChoice multiThreadingChoice = filteredMultiThreadingChoices.get(0);
-        multiThreadingToggleSwitch.setSelected(applicationFormState.multithreading());
-        multiThreadingChoiceBox.setDisable(!applicationFormState.multithreading());
-        multiThreadingChoiceBox.setValue(multiThreadingChoice);
-
-        final FilteredList<FollowLinksChoice> filteredFollowLinksChoices = followLinksChoiceBox.getItems()
-                .filtered(followLinksChoice -> followLinksChoice.getFollowLinksDepth().equals(applicationFormState.getFollowLinksDepth()));
-        final FollowLinksChoice followLinksChoice = filteredFollowLinksChoices.get(0);
-        followLinksToggleSwitch.setSelected(applicationFormState.followLinks());
-        followLinksChoiceBox.setDisable(!applicationFormState.followLinks());
-        followLinksChoiceBox.setValue(followLinksChoice);
-
-        linkUrlPatternTextfield.setText(applicationFormState.getLinkFollowPattern());
-        linkUrlPatternTextfield.setDisable(!applicationFormState.followLinks());
-        applicationFormState.clearNotify();
-    }
-
-    @Override
-    public void modal(final boolean enable) {
-        if (enable) {
-            urlMethodChoiceBox.setDisable(true);
-            startingUrlTextfield.setDisable(true);
-            urlListSelectionButton.setDisable(true);
-            requestThrottlingToggleSwitch.setDisable(true);
-            requestThrottlingChoiceBox.setDisable(true);
-            multiThreadingToggleSwitch.setDisable(true);
-            multiThreadingChoiceBox.setDisable(true);
-            followLinksToggleSwitch.setDisable(true);
-            followLinksChoiceBox.setDisable(true);
-            linkUrlPatternTextfield.setDisable(true);
-        } else {
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("form")) {
             final FilteredList<UrlMethodChoice> filteredMethodChoices = urlMethodChoiceBox.getItems()
                     .filtered(urlMethodChoice -> urlMethodChoice.getUrlMethod().equals(applicationFormState.getUrlMethod()));
             final UrlMethodChoice methodChoice = filteredMethodChoices.get(0);
-            startingUrlTextfield.setDisable(methodChoice.getUrlMethod().equals(UrlMethod.URL_LIST));
-            urlMethodChoiceBox.setDisable(false);
-            requestThrottlingToggleSwitch.setDisable(false);
-            multiThreadingToggleSwitch.setDisable(false);
-            followLinksToggleSwitch.setDisable(false);
+            urlMethodChoiceBox.setValue(methodChoice);
             urlListSelectionButton.setDisable(methodChoice.getUrlMethod().equals(UrlMethod.URL));
-            requestThrottlingChoiceBox.setDisable(!applicationFormState.throttling());
-            multiThreadingChoiceBox.setDisable(!applicationFormState.multithreading());
-            followLinksChoiceBox.setDisable(!applicationFormState.followLinks());
-            linkUrlPatternTextfield.setDisable(!applicationFormState.followLinks());
-        }
+            startingUrlTextfield.setText(applicationFormState.getStartingUrl());
 
+            final FilteredList<ThrottleChoice> filteredThrottlingChoices = requestThrottlingChoiceBox.getItems()
+                    .filtered(throttleChoice -> throttleChoice.getThrottleMs().equals(applicationFormState.getThrottleMs()));
+            final ThrottleChoice throttleChoice = filteredThrottlingChoices.get(0);
+            requestThrottlingToggleSwitch.setSelected(applicationFormState.throttling());
+            requestThrottlingChoiceBox.setDisable(!applicationFormState.throttling());
+            requestThrottlingChoiceBox.setValue(throttleChoice);
+
+            final FilteredList<MultiThreadingChoice> filteredMultiThreadingChoices = multiThreadingChoiceBox.getItems()
+                    .filtered(multiThreadingChoice -> multiThreadingChoice.getMultiThreadMax().equals(applicationFormState.getMultiThreadMax()));
+            final MultiThreadingChoice multiThreadingChoice = filteredMultiThreadingChoices.get(0);
+            multiThreadingToggleSwitch.setSelected(applicationFormState.multithreading());
+            multiThreadingChoiceBox.setDisable(!applicationFormState.multithreading());
+            multiThreadingChoiceBox.setValue(multiThreadingChoice);
+
+            final FilteredList<FollowLinksChoice> filteredFollowLinksChoices = followLinksChoiceBox.getItems()
+                    .filtered(followLinksChoice -> followLinksChoice.getFollowLinksDepth().equals(applicationFormState.getFollowLinksDepth()));
+            final FollowLinksChoice followLinksChoice = filteredFollowLinksChoices.get(0);
+            followLinksToggleSwitch.setSelected(applicationFormState.followLinks());
+            followLinksChoiceBox.setDisable(!applicationFormState.followLinks());
+            followLinksChoiceBox.setValue(followLinksChoice);
+
+            linkUrlPatternTextfield.setText(applicationFormState.getLinkFollowPattern());
+            linkUrlPatternTextfield.setDisable(!applicationFormState.followLinks());
+        } else {
+            if (progressService.getCurrentProgressType().equals(ProgressType.COMPLETE) ||
+                    progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
+                final FilteredList<UrlMethodChoice> filteredMethodChoices = urlMethodChoiceBox.getItems()
+                        .filtered(urlMethodChoice -> urlMethodChoice.getUrlMethod().equals(applicationFormState.getUrlMethod()));
+                final UrlMethodChoice methodChoice = filteredMethodChoices.get(0);
+                startingUrlTextfield.setDisable(methodChoice.getUrlMethod().equals(UrlMethod.URL_LIST));
+                urlMethodChoiceBox.setDisable(false);
+                requestThrottlingToggleSwitch.setDisable(false);
+                multiThreadingToggleSwitch.setDisable(false);
+                followLinksToggleSwitch.setDisable(false);
+                urlListSelectionButton.setDisable(methodChoice.getUrlMethod().equals(UrlMethod.URL));
+                requestThrottlingChoiceBox.setDisable(!applicationFormState.throttling());
+                multiThreadingChoiceBox.setDisable(!applicationFormState.multithreading());
+                followLinksChoiceBox.setDisable(!applicationFormState.followLinks());
+                linkUrlPatternTextfield.setDisable(!applicationFormState.followLinks());
+            } else {
+                urlMethodChoiceBox.setDisable(true);
+                startingUrlTextfield.setDisable(true);
+                urlListSelectionButton.setDisable(true);
+                requestThrottlingToggleSwitch.setDisable(true);
+                requestThrottlingChoiceBox.setDisable(true);
+                multiThreadingToggleSwitch.setDisable(true);
+                multiThreadingChoiceBox.setDisable(true);
+                followLinksToggleSwitch.setDisable(true);
+                followLinksChoiceBox.setDisable(true);
+                linkUrlPatternTextfield.setDisable(true);
+            }
+        }
     }
 }

@@ -3,7 +3,7 @@ package com.github.adamyork.fx5p1d3r.application.service.thread;
 import com.github.adamyork.fx5p1d3r.application.service.io.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.common.service.*;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
 import javafx.concurrent.WorkerStateEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,22 +25,21 @@ public class SingleThreadService extends BaseThreadService {
     public SingleThreadService(final UrlServiceFactory urlServiceFactory,
                                final ApplicationFormState applicationFormState,
                                final OutputService outputService,
-                               final AbortService abortService,
                                final MessageSource messageSource,
                                final AlertService alertService,
                                final DocumentParserService jsonDocumentParser,
                                final DocumentParserService csvDocumentParser,
-                               final ProgressService progressService,
+                               final ApplicationProgressService progressService,
                                final LinksFollower linksFollower) {
         super(urlServiceFactory, applicationFormState,
-                outputService, abortService, messageSource, alertService,
+                outputService, messageSource, alertService,
                 jsonDocumentParser, csvDocumentParser, progressService, linksFollower);
     }
 
     @Override
     public void execute(final List<URL> urls) {
         executorService = Executors.newFixedThreadPool(1);
-        abortService.addObserver(this);
+        progressService.addListener(this);
         final ThrottledUrlService throttledUrlService = urlServiceFactory.getThrottledServiceForUrls(urls);
         throttledUrlService.setOnSucceeded(this::onDocumentsRetrieved);
         logger.debug("Submitting url work");
