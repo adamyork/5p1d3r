@@ -1,16 +1,13 @@
 package com.github.adamyork.fx5p1d3r;
 
-import com.github.adamyork.fx5p1d3r.application.service.io.CsvDocumentParser;
-import com.github.adamyork.fx5p1d3r.application.service.io.DocumentParserService;
-import com.github.adamyork.fx5p1d3r.application.service.io.JsonDocumentParser;
-import com.github.adamyork.fx5p1d3r.application.service.thread.*;
-import com.github.adamyork.fx5p1d3r.application.service.url.HybridUrlService;
-import com.github.adamyork.fx5p1d3r.application.service.url.UrlService;
-import com.github.adamyork.fx5p1d3r.application.service.url.UrlValidatorService;
-import com.github.adamyork.fx5p1d3r.common.Validator;
-import com.github.adamyork.fx5p1d3r.common.model.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.common.service.*;
-import com.github.adamyork.fx5p1d3r.common.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
+import com.github.adamyork.fx5p1d3r.service.parse.JSoupDocumentParser;
+import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
+import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.transform.CsvTransform;
+import com.github.adamyork.fx5p1d3r.service.transform.JsonTransform;
+import com.github.adamyork.fx5p1d3r.service.transform.TransformService;
+import com.github.adamyork.fx5p1d3r.service.url.*;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -45,100 +42,93 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public UrlValidatorService urlValidatorService(final Validator validator,
-                                                   final ApplicationProgressService progressService) {
-        return new UrlValidatorService(validator, progressService);
+    public DefaultUrlService urlValidatorService(final UrlValidator urlValidator,
+                                                 final ApplicationProgressService progressService) {
+        return new DefaultUrlService(urlValidator, progressService);
     }
 
     @Bean
-    public OutputService jsonOutputService(final ApplicationFormState applicationFormState,
-                                           final Validator validator,
-                                           final ApplicationProgressService progressService) {
-        return new JsonOutputService(applicationFormState,
-                validator, progressService);
+    public TransformService jsonTransformer(final ApplicationFormState applicationFormState,
+                                            final ApplicationProgressService progressService,
+                                            final MessageSource messageSource,
+                                            final AlertService alertService) {
+        return new JsonTransform(applicationFormState, progressService,
+                messageSource, alertService);
     }
 
     @Bean
-    public OutputService csvOutputService(final ApplicationFormState applicationFormState,
-                                          final Validator validator,
-                                          final ApplicationProgressService progressService) {
-        return new CsvOutputService(applicationFormState,
-                validator, progressService);
-    }
-
-    @Bean
-    public DocumentParserService jsonDocumentParser(final ApplicationFormState applicationFormState,
-                                                    final ApplicationProgressService progressService,
-                                                    final MessageSource messageSource,
-                                                    final AlertService alertService,
-                                                    final OutputService jsonOutputService) {
-        return new JsonDocumentParser(applicationFormState, progressService,
-                messageSource, alertService, jsonOutputService);
-    }
-
-    @Bean
-    public DocumentParserService csvDocumentParser(final ApplicationFormState applicationFormState,
-                                                   final ApplicationProgressService progressService,
-                                                   final MessageSource messageSource,
-                                                   final AlertService alertService,
-                                                   final OutputService csvOutputService) {
-        return new CsvDocumentParser(applicationFormState, progressService,
-                messageSource, alertService, csvOutputService);
+    public TransformService csvTransformer(final ApplicationFormState applicationFormState,
+                                           final ApplicationProgressService progressService,
+                                           final MessageSource messageSource,
+                                           final AlertService alertService) {
+        return new CsvTransform(applicationFormState, progressService,
+                messageSource, alertService);
     }
 
     @Bean
     public LinksFollower recursiveLinksFollower(final ApplicationFormState applicationFormState,
                                                 final UrlServiceFactory urlServiceFactory,
-                                                final OutputService jsonOutputService,
+                                                final UrlService urlService,
                                                 final ApplicationProgressService progressService,
                                                 final AlertService alertService,
                                                 final MessageSource messageSource,
-                                                final DocumentParserService jsonDocumentParser,
-                                                final DocumentParserService csvDocumentParser) {
-        return new RecursiveLinksFollower(applicationFormState, urlServiceFactory,
-                jsonOutputService, progressService, alertService, messageSource, jsonDocumentParser, csvDocumentParser);
+                                                final TransformService jsonTransformer,
+                                                final TransformService csvTransformer,
+                                                final DocumentParserService parserService) {
+        return new RecursiveLinksFollower(urlServiceFactory,
+                applicationFormState, urlService, messageSource, alertService,
+                jsonTransformer, csvTransformer, progressService, null, parserService);
     }
 
     @Bean
     public ThreadService singleThreadService(final UrlServiceFactory urlServiceFactory,
                                              final ApplicationFormState applicationFormState,
-                                             final OutputService jsonOutputService,
+                                             final UrlService urlService,
                                              final MessageSource messageSource,
                                              final AlertService alertService,
-                                             final DocumentParserService jsonDocumentParser,
-                                             final DocumentParserService csvDocumentParser,
+                                             final TransformService jsonTransformer,
+                                             final TransformService csvTransformer,
                                              final ApplicationProgressService progressService,
-                                             final LinksFollower recursiveLinksFollower) {
+                                             final LinksFollower recursiveLinksFollower,
+                                             final DocumentParserService parserService) {
         return new SingleThreadService(urlServiceFactory,
-                applicationFormState, jsonOutputService, messageSource, alertService,
-                jsonDocumentParser, csvDocumentParser, progressService, recursiveLinksFollower);
+                applicationFormState, urlService, messageSource, alertService,
+                jsonTransformer, csvTransformer, progressService, recursiveLinksFollower, parserService);
     }
 
     @Bean
     public ThreadService multiThreadService(final UrlServiceFactory urlServiceFactory,
                                             final ApplicationFormState applicationFormState,
-                                            final OutputService jsonOutputService,
+                                            final UrlService urlService,
                                             final MessageSource messageSource,
                                             final AlertService alertService,
-                                            final DocumentParserService jsonDocumentParser,
-                                            final DocumentParserService csvDocumentParser,
+                                            final TransformService jsonTransformer,
+                                            final TransformService csvTransformer,
                                             final ApplicationProgressService progressService,
-                                            final LinksFollower recursiveLinksFollower) {
+                                            final LinksFollower recursiveLinksFollower,
+                                            final DocumentParserService parserService) {
         return new MultiThreadService(urlServiceFactory,
-                applicationFormState, jsonOutputService, messageSource, alertService,
-                jsonDocumentParser, csvDocumentParser, progressService, recursiveLinksFollower);
+                applicationFormState, urlService, messageSource, alertService,
+                jsonTransformer, csvTransformer, progressService, recursiveLinksFollower, parserService);
     }
 
     @Bean
-    public UrlService urlService(final ApplicationFormState applicationFormState,
-                                 final UrlValidatorService urlValidatorService,
-                                 final ApplicationProgressService progressService,
-                                 final MessageSource messageSource,
-                                 final AlertService alertService,
-                                 final ThreadService singleThreadService,
-                                 final ThreadService multiThreadService) {
-        return new HybridUrlService(applicationFormState, urlValidatorService,
+    public DataService urlService(final ApplicationFormState applicationFormState,
+                                  final DefaultUrlService urlValidatorService,
+                                  final ApplicationProgressService progressService,
+                                  final MessageSource messageSource,
+                                  final AlertService alertService,
+                                  final ThreadService singleThreadService,
+                                  final ThreadService multiThreadService) {
+        return new HybridDataService(applicationFormState, urlValidatorService,
                 progressService, messageSource, alertService, singleThreadService, multiThreadService);
+    }
+
+    @Bean
+    public DocumentParserService jsoupDocumentParser(final ApplicationProgressService progressService,
+                                                     final MessageSource messageSource,
+                                                     final AlertService alertService) {
+        return new JSoupDocumentParser(progressService, messageSource, alertService);
     }
 
 }

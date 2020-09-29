@@ -2,7 +2,7 @@
 
 <?import javafx.scene.layout.FlowPane?>
 <FlowPane xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.github.adamyork.fx5p1d3r.application.ApplicationController"
+          fx:controller="com.github.adamyork.fx5p1d3r.ApplicationController"
           fx:id="applicationFlowPane"
           maxHeight="-Infinity" maxWidth="-Infinity"
           minHeight="-Infinity"
