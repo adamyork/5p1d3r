@@ -1,6 +1,8 @@
 package com.github.adamyork.fx5p1d3r.service.url;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.service.output.CsvOutputTask;
+import com.github.adamyork.fx5p1d3r.service.output.JsonOutputTask;
 import com.github.adamyork.fx5p1d3r.service.output.data.OutputFileType;
 import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
@@ -30,9 +32,9 @@ import java.util.stream.Collectors;
  * Created by Adam York on 8/28/2020.
  * Copyright 2020
  */
-public class BaseThreadService implements PropertyChangeListener {
+public class BaseCrawler implements PropertyChangeListener {
 
-    private static final Logger logger = LogManager.getLogger(BaseThreadService.class);
+    private static final Logger logger = LogManager.getLogger(BaseCrawler.class);
 
     protected final ApplicationFormState applicationFormState;
     protected final UrlService urlService;
@@ -47,16 +49,20 @@ public class BaseThreadService implements PropertyChangeListener {
 
     protected ExecutorService executorService;
 
-    public BaseThreadService(final UrlServiceFactory urlServiceFactory,
-                             final ApplicationFormState applicationFormState,
-                             final UrlService urlService,
-                             final MessageSource messageSource,
-                             final AlertService alertService,
-                             final TransformService jsonTransformer,
-                             final TransformService csvTransformer,
-                             final ApplicationProgressService progressService,
-                             final LinksFollower linksFollower,
-                             final DocumentParserService documentParser) {
+    private int total;
+    private int count;
+    private List<URL> linksList;
+
+    public BaseCrawler(final UrlServiceFactory urlServiceFactory,
+                       final ApplicationFormState applicationFormState,
+                       final UrlService urlService,
+                       final MessageSource messageSource,
+                       final AlertService alertService,
+                       final TransformService jsonTransformer,
+                       final TransformService csvTransformer,
+                       final ApplicationProgressService progressService,
+                       final LinksFollower linksFollower,
+                       final DocumentParserService documentParser) {
         this.urlServiceFactory = urlServiceFactory;
         this.applicationFormState = applicationFormState;
         this.urlService = urlService;
@@ -72,12 +78,7 @@ public class BaseThreadService implements PropertyChangeListener {
     protected List<Tuple3<List<Elements>, Document, List<URL>>> process(final List<Document> documents) {
         logger.debug("Processing documents");
         final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
-        if (documents.size() == 0) {
-            final String header = messageSource.getMessage("alert.no.documents.header", null, Locale.getDefault());
-            final String content = messageSource.getMessage("alert.no.documents.content", null, Locale.getDefault());
-            alertService.warn(header, content);
-            logger.debug("No documents to process");
-        }
+        assertDocumentsSize(documents);
         return documents.stream()
                 .map(document -> {
                     final Elements linksElementsList = document.select("a");
@@ -92,6 +93,36 @@ public class BaseThreadService implements PropertyChangeListener {
                     return Tuple.tuple(parsed, document, linksList);
                 })
                 .collect(Collectors.toList());
+    }
+
+    protected void assertDocumentsSize(final List<Document> documents) {
+        if (documents.size() == 0) {
+            final String header = messageSource.getMessage("alert.no.documents.header", null, Locale.getDefault());
+            final String content = messageSource.getMessage("alert.no.documents.content", null, Locale.getDefault());
+            alertService.warn(header, content);
+            logger.debug("No documents to process");
+        }
+    }
+
+    protected final List<Tuple3<List<Elements>, Document, List<URL>>> processAllDocuments(final List<Document> documents) {
+        final List<Tuple3<List<Elements>, Document, List<URL>>> processed = process(documents);
+        final List<Object> transformed = processed.stream()
+                .flatMap(object -> transform(object.v1, object.v2).stream())
+                .collect(Collectors.toList());
+        count = 0;
+        total = transformed.size();
+        transformed.forEach(result -> {
+            if (applicationFormState.getOutputFileType().equals(OutputFileType.JSON)) {
+                final JsonOutputTask outputTask = new JsonOutputTask(applicationFormState, progressService, result);
+                outputTask.setOnSucceeded(this::onResultWritten);
+                executorService.submit(outputTask);
+            } else {
+                final CsvOutputTask outputTask = new CsvOutputTask(applicationFormState, progressService, (String[]) result);
+                outputTask.setOnSucceeded(this::onResultWritten);
+                executorService.submit(outputTask);
+            }
+        });
+        return processed;
     }
 
     protected List<Object> transform(final List<Elements> allElements, final Document document) {
@@ -110,7 +141,24 @@ public class BaseThreadService implements PropertyChangeListener {
     }
 
     void onResultWritten(final WorkerStateEvent workerStateEvent) {
-
+        count++;
+        if (total == count) {
+            if (progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
+                logger.debug("Link following Aborted.");
+                logger.debug("Crawl completed");
+                progressService.updateProgress(ProgressType.COMPLETE);
+            }
+            if (applicationFormState.followLinks()) {
+                logger.debug("Link following enabled.");
+                linksFollower.traverse(linksList, executorService, 1,
+                        applicationFormState.getFollowLinksDepth().getValue(),
+                        Integer.parseInt(applicationFormState.getMultiThreadMax().toString()) - 1);
+            } else {
+                logger.debug("Link following disabled.");
+                logger.debug("Crawl completed");
+                progressService.updateProgress(ProgressType.COMPLETE);
+            }
+        }
     }
 
     @Override

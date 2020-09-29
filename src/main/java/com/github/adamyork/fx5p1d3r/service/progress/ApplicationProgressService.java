@@ -23,7 +23,6 @@ public class ApplicationProgressService implements ProgressService {
     private final MessageSource messageSource;
 
     private ProgressState progressState;
-    @SuppressWarnings("FieldCanBeLocal")
     private ProgressState previousState;
     private Map<ProgressType, String> messageMap;
     private Map<ProgressType, StepCommand> stepCommandMap;

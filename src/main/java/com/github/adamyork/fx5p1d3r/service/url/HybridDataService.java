@@ -1,10 +1,10 @@
 package com.github.adamyork.fx5p1d3r.service.url;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.service.url.data.UrlValidationResult;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
+import com.github.adamyork.fx5p1d3r.service.url.data.UrlValidationResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +12,7 @@ import org.jooq.lambda.Unchecked;
 import org.springframework.context.MessageSource;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -68,7 +69,8 @@ public class HybridDataService implements DataService {
             alertService.error(header, content);
             //TODO this probably needs to reset the UI state
         } else {
-            final List<String> urlStrings = Unchecked.function(o -> FileUtils.readLines(urlListFile)).apply(null);
+            final List<String> urlStrings = Unchecked.function(o -> FileUtils.readLines(urlListFile, StandardCharsets.UTF_8))
+                    .apply(null);
             progressService.updateSteps(urlStrings.size());
             progressService.updateProgress(ProgressType.START);
             validateUrlsAndExecute(urlStrings);

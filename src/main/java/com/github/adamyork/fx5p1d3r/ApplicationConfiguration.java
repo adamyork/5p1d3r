@@ -91,7 +91,7 @@ public class ApplicationConfiguration {
                                              final ApplicationProgressService progressService,
                                              final LinksFollower recursiveLinksFollower,
                                              final DocumentParserService parserService) {
-        return new SingleThreadService(urlServiceFactory,
+        return new SingleThreadCrawler(urlServiceFactory,
                 applicationFormState, urlService, messageSource, alertService,
                 jsonTransformer, csvTransformer, progressService, recursiveLinksFollower, parserService);
     }
@@ -107,7 +107,7 @@ public class ApplicationConfiguration {
                                             final ApplicationProgressService progressService,
                                             final LinksFollower recursiveLinksFollower,
                                             final DocumentParserService parserService) {
-        return new MultiThreadService(urlServiceFactory,
+        return new MultiThreadCrawler(urlServiceFactory,
                 applicationFormState, urlService, messageSource, alertService,
                 jsonTransformer, csvTransformer, progressService, recursiveLinksFollower, parserService);
     }

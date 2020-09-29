@@ -14,6 +14,7 @@ import org.jsoup.nodes.Element;
 import org.springframework.context.MessageSource;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by Adam York on 8/28/2020.
@@ -38,7 +39,8 @@ public class BaseResultTransform {
 
     protected Tuple2<String, GroovyShell> initGroovy(final File file, final Element element, final Document document) {
         final Binding binding = new Binding();
-        final String script = Unchecked.function(o -> FileUtils.readFileToString(file)).apply(null);
+        final String script = Unchecked.function(o -> FileUtils.readFileToString(file, StandardCharsets.UTF_8))
+                .apply(null);
         final GroovyShell shell = new GroovyShell(binding);
         binding.setProperty("element", element);
         binding.setProperty("document", document);

@@ -1,17 +1,12 @@
 package com.github.adamyork.fx5p1d3r.service.url;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.service.output.CsvOutputTask;
-import com.github.adamyork.fx5p1d3r.service.output.JsonOutputTask;
-import com.github.adamyork.fx5p1d3r.service.output.data.OutputFileType;
 import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import com.github.adamyork.fx5p1d3r.service.transform.TransformService;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
-import com.github.adamyork.fx5p1d3r.view.query.cell.DomQuery;
-import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,13 +31,10 @@ import java.util.stream.Collectors;
  * Created by Adam York on 2/28/2017.
  * Copyright 2017
  */
-public class RecursiveLinksFollower extends BaseThreadService implements LinksFollower {
+public class RecursiveLinksFollower extends BaseCrawler implements LinksFollower {
 
     private static final Logger logger = LogManager.getLogger(RecursiveLinksFollower.class);
 
-    private int total;
-    private int count;
-    private List<URL> linksList;
     private ExecutorService executorService;
 
     public RecursiveLinksFollower(final UrlServiceFactory urlServiceFactory,
@@ -88,28 +80,8 @@ public class RecursiveLinksFollower extends BaseThreadService implements LinksFo
         final DocumentListWithMemo memo = (DocumentListWithMemo) workerStateEvent.getSource().getValue();
         final List<Document> documents = memo.getDocuments().stream()
                 .filter(Objects::nonNull).collect(Collectors.toList());
-        final ObservableList<DomQuery> domQueryObservableList = applicationFormState.getDomQueryObservableList();
-        if (documents.size() == 0) {
-            final String header = messageSource.getMessage("alert.no.documents.header", null, Locale.getDefault());
-            final String content = messageSource.getMessage("alert.no.documents.content", null, Locale.getDefault());
-            alertService.warn(header, content);
-            logger.debug("No documents to process");
-        }
-        final List<Tuple3<List<Elements>, Document, List<URL>>> processed = process(documents);
-        final List<Object> transformed = processed.stream()
-                .flatMap(object -> transform(object.v1, object.v2).stream())
-                .collect(Collectors.toList());
-        transformed.forEach(result -> {
-            if (applicationFormState.getOutputFileType().equals(OutputFileType.JSON)) {
-                final JsonOutputTask outputTask = new JsonOutputTask(applicationFormState, progressService, result);
-                outputTask.setOnSucceeded(this::onResultWritten);
-                executorService.submit(outputTask);
-            } else {
-                final CsvOutputTask outputTask = new CsvOutputTask(applicationFormState, progressService, (String[]) result);
-                outputTask.setOnSucceeded(this::onResultWritten);
-                executorService.submit(outputTask);
-            }
-        });
+        assertDocumentsSize(documents);
+        final List<Tuple3<List<Elements>, Document, List<URL>>> processed = processAllDocuments(documents);
         final List<URL> flattened = processed.stream()
                 .flatMap(objects -> objects.v3.stream())
                 .collect(Collectors.toList());
@@ -139,24 +111,4 @@ public class RecursiveLinksFollower extends BaseThreadService implements LinksFo
         }
     }
 
-    void onResultWritten(final WorkerStateEvent workerStateEvent) {
-        count++;
-        if (total == count) {
-            if (progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
-                logger.debug("Link following Aborted.");
-                logger.debug("Crawl completed");
-                progressService.updateProgress(ProgressType.COMPLETE);
-            }
-            if (applicationFormState.followLinks()) {
-                logger.debug("Link following enabled.");
-                linksFollower.traverse(linksList, executorService, 1,
-                        applicationFormState.getFollowLinksDepth().getValue(),
-                        Integer.parseInt(applicationFormState.getMultiThreadMax().toString()) - 1);
-            } else {
-                logger.debug("Link following disabled.");
-                logger.debug("Crawl completed");
-                progressService.updateProgress(ProgressType.COMPLETE);
-            }
-        }
-    }
 }

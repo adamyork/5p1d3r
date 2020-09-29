@@ -38,7 +38,7 @@ public class BaseOutputTask extends Task<Boolean> {
     }
 
     @Override
-    protected Boolean call() throws Exception {
+    protected Boolean call() {
         return null;
     }
 }
