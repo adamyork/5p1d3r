@@ -20,4 +20,6 @@ public interface ProgressService {
 
     void updateProgress(final ProgressType progressType);
 
+    void forceComplete();
+
 }

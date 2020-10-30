@@ -1,10 +1,11 @@
 package com.github.adamyork.fx5p1d3r.service.url;
 
+import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
-import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
+import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
@@ -12,9 +13,10 @@ import org.jsoup.nodes.Document;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -30,35 +32,48 @@ public class ConcurrentUrlTask extends Task<DocumentListWithMemo> {
     private final int threadPoolSize;
     private final int currentDepth;
     private final int maxDepth;
+    private final ApplicationFormState applicationFormState;
 
     public ConcurrentUrlTask(final List<URL> urls,
                              final int threadPoolSize,
                              final int currentDepth,
                              final int maxDepth,
-                             final ApplicationProgressService progressService) {
+                             final ApplicationProgressService progressService,
+                             final ApplicationFormState applicationFormState) {
         this.urls = urls;
         this.threadPoolSize = threadPoolSize;
         this.currentDepth = currentDepth;
         this.maxDepth = maxDepth;
         this.progressService = progressService;
+        this.applicationFormState = applicationFormState;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected DocumentListWithMemo call() {
         LogDirectoryHelper.manage();
+        if (applicationFormState.throttling()) {
+            final long requestDelay = applicationFormState.getThrottleMs().getValue();
+            logger.debug("Waiting before batch fetch " + requestDelay);
+            progressService.updateProgress(ProgressType.RETRIEVED);
+            Unchecked.consumer(o -> Thread.sleep(requestDelay)).accept(null);
+        }
         logger.debug("Calling all urls");
-        final List<UrlServiceCallable> tasks = urls.stream().map(url -> {
-            final UrlServiceCallable task = new UrlServiceCallable(url, progressService);
-            task.setOnSucceeded(this::onMultiDocumentsRetrieved);
-            return task;
-        }).collect(Collectors.toList());
-        final ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
-        final List<Future<Document>> futures = tasks.parallelStream()
-                .map(documentTask -> (Future<Document>) executorService.submit(documentTask))
+        final List<UrlServiceCallable> tasks = urls.stream()
+                .map(url -> new UrlServiceCallable(url, progressService))
                 .collect(Collectors.toList());
-        final List<Document> documents = futures.stream()
-                .map(future -> Unchecked.function(a -> future.get()).apply(null))
+        final ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
+        final List<Document> documents = tasks.parallelStream()
+                .map(documentTask -> {
+                    try {
+                        executorService.submit(documentTask).get();
+                        return documentTask.get();
+                    } catch (final InterruptedException | ExecutionException e) {
+                        logger.warn("Error in async document retrieval " + documentTask.getUrl());
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         final DocumentListWithMemo memo = new DocumentListWithMemo();
         memo.setDocuments(documents);
@@ -66,12 +81,6 @@ public class ConcurrentUrlTask extends Task<DocumentListWithMemo> {
         memo.setCurrentDepth(currentDepth);
         memo.setMaxDepth(maxDepth);
         return memo;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    void onMultiDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
-        logger.debug("Multi documents retrieved");
-        Unchecked.supplier(() -> this.get().getDocuments().add((Document) workerStateEvent.getSource().getValue())).get();
     }
 
 }

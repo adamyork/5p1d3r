@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.context.MessageSource;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class JSoupDocumentParser implements DocumentParserService {
@@ -26,12 +27,18 @@ public class JSoupDocumentParser implements DocumentParserService {
     @Override
     public Elements parse(final Document document, final String query) {
         progressService.updateProgress(ProgressType.SELECTOR);
-        final Elements elements = document.select(query);
-        if (elements.size() == 0) {
+        try {
+            final Elements elements = document.select(query);
+            if (elements.size() == 0) {
+                alertService.warn(messageSource.getMessage("alert.no.elements.header", null, Locale.getDefault()),
+                        messageSource.getMessage("alert.no.elements.content", null, Locale.getDefault()));
+            }
+            return elements;
+        } catch (final Exception exception) {
             alertService.warn(messageSource.getMessage("alert.no.elements.header", null, Locale.getDefault()),
                     messageSource.getMessage("alert.no.elements.content", null, Locale.getDefault()));
+            return new Elements(new ArrayList<>());
         }
-        return elements;
     }
 
 }

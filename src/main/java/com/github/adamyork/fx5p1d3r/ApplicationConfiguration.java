@@ -4,9 +4,6 @@ import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.parse.JSoupDocumentParser;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
-import com.github.adamyork.fx5p1d3r.service.transform.CsvTransform;
-import com.github.adamyork.fx5p1d3r.service.transform.JsonTransform;
-import com.github.adamyork.fx5p1d3r.service.transform.TransformService;
 import com.github.adamyork.fx5p1d3r.service.url.*;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.context.MessageSource;
@@ -47,23 +44,6 @@ public class ApplicationConfiguration {
         return new DefaultUrlService(urlValidator, progressService);
     }
 
-    @Bean
-    public TransformService jsonTransformer(final ApplicationFormState applicationFormState,
-                                            final ApplicationProgressService progressService,
-                                            final MessageSource messageSource,
-                                            final AlertService alertService) {
-        return new JsonTransform(applicationFormState, progressService,
-                messageSource, alertService);
-    }
-
-    @Bean
-    public TransformService csvTransformer(final ApplicationFormState applicationFormState,
-                                           final ApplicationProgressService progressService,
-                                           final MessageSource messageSource,
-                                           final AlertService alertService) {
-        return new CsvTransform(applicationFormState, progressService,
-                messageSource, alertService);
-    }
 
     @Bean
     public LinksFollower recursiveLinksFollower(final ApplicationFormState applicationFormState,
@@ -72,56 +52,62 @@ public class ApplicationConfiguration {
                                                 final ApplicationProgressService progressService,
                                                 final AlertService alertService,
                                                 final MessageSource messageSource,
-                                                final TransformService jsonTransformer,
-                                                final TransformService csvTransformer,
                                                 final DocumentParserService parserService) {
-        return new RecursiveLinksFollower(urlServiceFactory,
-                applicationFormState, urlService, messageSource, alertService,
-                jsonTransformer, csvTransformer, progressService, null, parserService);
+        return new DefaultLinksFollower(urlServiceFactory,
+                applicationFormState, urlService, messageSource, alertService, progressService,
+                null, parserService);
     }
 
     @Bean
-    public ThreadService singleThreadService(final UrlServiceFactory urlServiceFactory,
-                                             final ApplicationFormState applicationFormState,
-                                             final UrlService urlService,
-                                             final MessageSource messageSource,
-                                             final AlertService alertService,
-                                             final TransformService jsonTransformer,
-                                             final TransformService csvTransformer,
-                                             final ApplicationProgressService progressService,
-                                             final LinksFollower recursiveLinksFollower,
-                                             final DocumentParserService parserService) {
-        return new SingleThreadCrawler(urlServiceFactory,
-                applicationFormState, urlService, messageSource, alertService,
-                jsonTransformer, csvTransformer, progressService, recursiveLinksFollower, parserService);
+    public CrawlerService singleThreadedCrawler(final UrlServiceFactory urlServiceFactory,
+                                                final ApplicationFormState applicationFormState,
+                                                final UrlService urlService,
+                                                final MessageSource messageSource,
+                                                final AlertService alertService,
+                                                final ApplicationProgressService progressService,
+                                                final LinksFollower recursiveLinksFollower,
+                                                final DocumentParserService parserService) {
+        return new SingleThreadedCrawler(urlServiceFactory,
+                applicationFormState, urlService, messageSource, alertService, progressService,
+                recursiveLinksFollower, parserService);
     }
 
     @Bean
-    public ThreadService multiThreadService(final UrlServiceFactory urlServiceFactory,
-                                            final ApplicationFormState applicationFormState,
-                                            final UrlService urlService,
-                                            final MessageSource messageSource,
-                                            final AlertService alertService,
-                                            final TransformService jsonTransformer,
-                                            final TransformService csvTransformer,
-                                            final ApplicationProgressService progressService,
-                                            final LinksFollower recursiveLinksFollower,
-                                            final DocumentParserService parserService) {
-        return new MultiThreadCrawler(urlServiceFactory,
-                applicationFormState, urlService, messageSource, alertService,
-                jsonTransformer, csvTransformer, progressService, recursiveLinksFollower, parserService);
+    public CrawlerService multiThreadedCrawler(final UrlServiceFactory urlServiceFactory,
+                                               final ApplicationFormState applicationFormState,
+                                               final UrlService urlService,
+                                               final MessageSource messageSource,
+                                               final AlertService alertService,
+                                               final ApplicationProgressService progressService,
+                                               final LinksFollower recursiveLinksFollower,
+                                               final DocumentParserService parserService) {
+        return new MultiThreadedCrawler(urlServiceFactory,
+                applicationFormState, urlService, messageSource, alertService, progressService,
+                recursiveLinksFollower, parserService);
     }
 
     @Bean
-    public DataService urlService(final ApplicationFormState applicationFormState,
-                                  final DefaultUrlService urlValidatorService,
-                                  final ApplicationProgressService progressService,
-                                  final MessageSource messageSource,
-                                  final AlertService alertService,
-                                  final ThreadService singleThreadService,
-                                  final ThreadService multiThreadService) {
-        return new HybridDataService(applicationFormState, urlValidatorService,
-                progressService, messageSource, alertService, singleThreadService, multiThreadService);
+    public SpiderService singleUrlSpiderService(final ApplicationFormState applicationFormState,
+                                                final DefaultUrlService urlValidatorService,
+                                                final ApplicationProgressService progressService,
+                                                final MessageSource messageSource,
+                                                final AlertService alertService,
+                                                final CrawlerService singleThreadedCrawler,
+                                                final CrawlerService multiThreadedCrawler) {
+        return new SingleUrlSpiderService(applicationFormState, urlValidatorService,
+                progressService, messageSource, alertService, singleThreadedCrawler, multiThreadedCrawler);
+    }
+
+    @Bean
+    public SpiderService urlListSpiderService(final ApplicationFormState applicationFormState,
+                                              final DefaultUrlService urlValidatorService,
+                                              final ApplicationProgressService progressService,
+                                              final MessageSource messageSource,
+                                              final AlertService alertService,
+                                              final CrawlerService singleThreadedCrawler,
+                                              final CrawlerService multiThreadedCrawler) {
+        return new UrlListSpiderService(applicationFormState, urlValidatorService,
+                progressService, messageSource, alertService, singleThreadedCrawler, multiThreadedCrawler);
     }
 
     @Bean

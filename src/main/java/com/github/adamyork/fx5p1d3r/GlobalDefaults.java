@@ -1,6 +1,5 @@
 package com.github.adamyork.fx5p1d3r;
 
-import com.github.adamyork.fx5p1d3r.GlobalDefault;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,8 +17,8 @@ public class GlobalDefaults {
 
     @PostConstruct
     public void init() {
-        defaultsMap.put(GlobalDefault.STARTING_URL, "http://www.someurl.org");
-        defaultsMap.put(GlobalDefault.ENDING_URL, "http://www.someurl.org");
+        defaultsMap.put(GlobalDefault.STARTING_URL, "http://www.someurl12312312.org");
+        defaultsMap.put(GlobalDefault.ENDING_URL, "http://www.someurl123123123.org");
         defaultsMap.put(GlobalDefault.LINKS_FOLLOW_DEPTH, "2");
         defaultsMap.put(GlobalDefault.LINK_PATTERN, ".*");
         defaultsMap.put(GlobalDefault.REQUEST_DELAY, "2000");

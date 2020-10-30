@@ -8,9 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Adam York on 10/5/2017.
@@ -77,10 +75,27 @@ public class ApplicationProgressService implements ProgressService {
 
     @Override
     public void updateProgress(final ProgressType progressType) {
+        if (progressState == null) {
+            progressState = stepCommandMap.get(ProgressType.START)
+                    .execute(progressType, messageMap.get(progressType), previousState);
+        }
         previousState = progressState;
         currentProgressType = progressType;
         progressState = stepCommandMap.get(progressType).execute(progressType, messageMap.get(progressType), previousState);
-        Platform.runLater(() -> support.firePropertyChange("state", this.previousState, this.progressState));
+        if (previousState != null && !previousState.equals(progressState)) {
+            Platform.runLater(() -> support.firePropertyChange("state", this.previousState, this.progressState));
+        }
+    }
+
+    @Override
+    public void forceComplete() {
+        final Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                updateProgress(ProgressType.COMPLETE);
+            }
+        }, 1000);
     }
 
     @Override

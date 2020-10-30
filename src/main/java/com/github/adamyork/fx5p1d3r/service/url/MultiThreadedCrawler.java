@@ -4,7 +4,6 @@ import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
-import com.github.adamyork.fx5p1d3r.service.transform.TransformService;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import javafx.concurrent.WorkerStateEvent;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +14,7 @@ import org.springframework.context.MessageSource;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
@@ -22,23 +22,20 @@ import java.util.stream.Collectors;
  * Created by Adam York on 2/28/2017.
  * Copyright 2017
  */
-public class MultiThreadCrawler extends BaseCrawler implements ThreadService {
+public class MultiThreadedCrawler extends BaseCrawler implements CrawlerService {
 
-    private static final Logger logger = LogManager.getLogger(MultiThreadCrawler.class);
+    private static final Logger logger = LogManager.getLogger(MultiThreadedCrawler.class);
 
-    public MultiThreadCrawler(final UrlServiceFactory urlServiceFactory,
-                              final ApplicationFormState applicationFormState,
-                              final UrlService urlService,
-                              final MessageSource messageSource,
-                              final AlertService alertService,
-                              final TransformService jsonTransformer,
-                              final TransformService csvTransformer,
-                              final ApplicationProgressService progressService,
-                              final LinksFollower linksFollower,
-                              final DocumentParserService documentParserService) {
+    public MultiThreadedCrawler(final UrlServiceFactory urlServiceFactory,
+                                final ApplicationFormState applicationFormState,
+                                final UrlService urlService,
+                                final MessageSource messageSource,
+                                final AlertService alertService,
+                                final ApplicationProgressService progressService,
+                                final LinksFollower linksFollower,
+                                final DocumentParserService documentParserService) {
         super(urlServiceFactory, applicationFormState,
-                urlService, messageSource, alertService,
-                jsonTransformer, csvTransformer, progressService, linksFollower, documentParserService);
+                urlService, messageSource, alertService, progressService, linksFollower, documentParserService);
     }
 
     @Override
@@ -59,7 +56,7 @@ public class MultiThreadCrawler extends BaseCrawler implements ThreadService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         logger.info(documents.size() + " documents retrieved");
-        processAllDocuments(documents);
+        processAllDocuments(documents, Optional.empty());
     }
 
 }

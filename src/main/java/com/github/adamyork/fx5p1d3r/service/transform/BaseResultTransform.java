@@ -3,24 +3,30 @@ package com.github.adamyork.fx5p1d3r.service.transform;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+import javafx.concurrent.Task;
 import org.apache.commons.io.FileUtils;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
+import org.jooq.lambda.tuple.Tuple4;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.context.MessageSource;
 
 import java.io.File;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Adam York on 8/28/2020.
  * Copyright 2020
  */
-public class BaseResultTransform {
+public class BaseResultTransform extends Task<List<Tuple4<List<Object>, Document, List<URL>, Optional<DocumentListWithMemo>>>> {
 
     protected final ApplicationFormState applicationFormState;
     protected final ApplicationProgressService progressService;
@@ -45,6 +51,11 @@ public class BaseResultTransform {
         binding.setProperty("element", element);
         binding.setProperty("document", document);
         return Tuple.tuple(script, shell);
+    }
+
+    @Override
+    protected List<Tuple4<List<Object>, Document, List<URL>, Optional<DocumentListWithMemo>>> call() {
+        return null;
     }
 
 }

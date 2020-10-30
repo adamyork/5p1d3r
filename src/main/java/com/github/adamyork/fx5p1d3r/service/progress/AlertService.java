@@ -16,20 +16,15 @@ import java.util.function.Function;
 @Component
 public class AlertService {
 
-    private final ApplicationProgressService progressService;
     private final MessageSource messageSource;
     private boolean warningShown = false;
 
     @Inject
-    public AlertService(final ApplicationProgressService progressService,
-                        final MessageSource messageSource) {
-        this.progressService = progressService;
+    public AlertService(final MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
     public void error(final String header, final String content) {
-        progressService.updateSteps(0);
-        progressService.updateProgress(ProgressType.ABORT);
         final Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(messageSource.getMessage("alert.service.error.label", null, Locale.getDefault()));
         alert.setHeaderText(header);

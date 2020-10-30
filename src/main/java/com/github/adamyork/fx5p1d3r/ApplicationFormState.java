@@ -42,6 +42,7 @@ public class ApplicationFormState implements FormState {
     private String outputFile;
     private OutputFileType outputFileType;
     private File urlListFile;
+    private boolean transformFailed;
 
     public ApplicationFormState() {
         support = new PropertyChangeSupport(this);
@@ -196,6 +197,14 @@ public class ApplicationFormState implements FormState {
     @Override
     public void notifyChanged() {
         support.firePropertyChange("form", null, this);
+    }
+
+    public boolean transformFailed() {
+        return transformFailed;
+    }
+
+    public void setTransformFailed(boolean transformFailed) {
+        this.transformFailed = transformFailed;
     }
 
 }

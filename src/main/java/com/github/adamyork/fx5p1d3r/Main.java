@@ -71,4 +71,5 @@ public class Main extends Application {
     }
 }
 
+//TODO Test scenarios
 //TODO finish native packaging

@@ -35,11 +35,15 @@ class UrlServiceCallable extends Task<Document> {
         progressService.updateProgress(ProgressType.FETCH);
         logger.debug("Fetching " + url);
         final Document document = Unchecked.function(urlToCall -> Jsoup.connect(urlToCall.toString())
-                .userAgent(ThrottledUrlTask.USER_AGENT)
+                .userAgent(SequentialUrlTask.USER_AGENT)
                 .timeout(30000)
                 .get()).apply(url);
         progressService.updateProgress(ProgressType.RETRIEVED);
         logger.debug("Document Fetched .. ");
         return document;
+    }
+
+    public URL getUrl() {
+        return url;
     }
 }

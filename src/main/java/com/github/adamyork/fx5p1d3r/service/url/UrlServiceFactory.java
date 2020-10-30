@@ -28,10 +28,10 @@ public class UrlServiceFactory {
                                                          final int currentDepth,
                                                          final int maxDepth,
                                                          final int threadPoolSize) {
-        return new ConcurrentUrlTask(urls, threadPoolSize, currentDepth, maxDepth, progressService);
+        return new ConcurrentUrlTask(urls, threadPoolSize, currentDepth, maxDepth, progressService, applicationFormState);
     }
 
-    public ThrottledUrlTask getThrottledServiceForUrls(final List<URL> urls) {
-        return new ThrottledUrlTask(urls, applicationFormState, progressService);
+    public SequentialUrlTask getSequentialServiceForUrls(final List<URL> urls) {
+        return new SequentialUrlTask(urls, applicationFormState, progressService);
     }
 }

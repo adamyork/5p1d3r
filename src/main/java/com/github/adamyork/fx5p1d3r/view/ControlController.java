@@ -1,14 +1,14 @@
 package com.github.adamyork.fx5p1d3r.view;
 
-import com.github.adamyork.fx5p1d3r.GlobalStage;
-import com.github.adamyork.fx5p1d3r.service.url.DataService;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.service.output.data.OutputFileType;
-import com.github.adamyork.fx5p1d3r.service.url.data.UrlMethod;
 import com.github.adamyork.fx5p1d3r.service.progress.AbortService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressState;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
+import com.github.adamyork.fx5p1d3r.service.url.SpiderService;
+import com.github.adamyork.fx5p1d3r.service.url.data.UrlMethod;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,7 +44,8 @@ public class ControlController implements Initializable, PropertyChangeListener 
     private final ApplicationProgressService progressService;
     private final AbortService abortService;
     private final ApplicationFormState applicationFormState;
-    private final DataService dataService;
+    private final SpiderService singleUrlSpiderService;
+    private final SpiderService urlListSpiderService;
 
     @FXML
     private Button startButton;
@@ -63,13 +64,15 @@ public class ControlController implements Initializable, PropertyChangeListener 
                              final AbortService abortService,
                              final MessageSource messageSource,
                              final ApplicationFormState applicationFormState,
-                             final DataService dataService) {
+                             final SpiderService singleUrlSpiderService,
+                             final SpiderService urlListSpiderService) {
         this.globalStage = globalStage;
         this.progressService = progressService;
         this.abortService = abortService;
         this.messageSource = messageSource;
         this.applicationFormState = applicationFormState;
-        this.dataService = dataService;
+        this.singleUrlSpiderService = singleUrlSpiderService;
+        this.urlListSpiderService = urlListSpiderService;
     }
 
     @Override
@@ -106,9 +109,9 @@ public class ControlController implements Initializable, PropertyChangeListener 
             }
             applicationFormState.setOutputFile(nullSafeFileString);
             if (applicationFormState.getUrlMethod().equals(UrlMethod.URL)) {
-                dataService.executeSingle();
+                singleUrlSpiderService.execute();
             } else {
-                dataService.executeList();
+                urlListSpiderService.execute();
             }
             modal(true);
         }
@@ -131,6 +134,10 @@ public class ControlController implements Initializable, PropertyChangeListener 
         statusLabel.setText(progressState.getMessage());
         progressBar.setProgress(progressState.getProgress());
         logger.debug("Progress updated " + progressService.getCurrentProgressType());
+        if (progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
+            logger.debug("Forcing Progress Completion ");
+            progressService.forceComplete();
+        }
         if (progressService.getCurrentProgressType().equals(ProgressType.COMPLETE)) {
             statusLabel.setText("Idle");
             progressBar.setProgress(0.0);

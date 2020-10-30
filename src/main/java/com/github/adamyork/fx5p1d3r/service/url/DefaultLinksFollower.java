@@ -5,21 +5,15 @@ import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
-import com.github.adamyork.fx5p1d3r.service.transform.TransformService;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import javafx.concurrent.WorkerStateEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.lambda.tuple.Tuple3;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.context.MessageSource;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.regex.Matcher;
@@ -31,25 +25,23 @@ import java.util.stream.Collectors;
  * Created by Adam York on 2/28/2017.
  * Copyright 2017
  */
-public class RecursiveLinksFollower extends BaseCrawler implements LinksFollower {
+public class DefaultLinksFollower extends BaseCrawler implements LinksFollower {
 
-    private static final Logger logger = LogManager.getLogger(RecursiveLinksFollower.class);
+    private static final Logger logger = LogManager.getLogger(DefaultLinksFollower.class);
 
     private ExecutorService executorService;
 
-    public RecursiveLinksFollower(final UrlServiceFactory urlServiceFactory,
-                                  final ApplicationFormState applicationFormState,
-                                  final UrlService urlService,
-                                  final MessageSource messageSource,
-                                  final AlertService alertService,
-                                  final TransformService jsonTransformer,
-                                  final TransformService csvTransformer,
-                                  final ApplicationProgressService progressService,
-                                  final LinksFollower linksFollower,
-                                  final DocumentParserService documentParserService) {
+    public DefaultLinksFollower(final UrlServiceFactory urlServiceFactory,
+                                final ApplicationFormState applicationFormState,
+                                final UrlService urlService,
+                                final MessageSource messageSource,
+                                final AlertService alertService,
+                                final ApplicationProgressService progressService,
+                                final LinksFollower linksFollower,
+                                final DocumentParserService documentParserService) {
         super(urlServiceFactory, applicationFormState,
-                urlService, messageSource, alertService,
-                jsonTransformer, csvTransformer, progressService, linksFollower, documentParserService);
+                urlService, messageSource, alertService, progressService, linksFollower, documentParserService);
+        setLinksFollower(this);
     }
 
     @Override
@@ -81,17 +73,7 @@ public class RecursiveLinksFollower extends BaseCrawler implements LinksFollower
         final List<Document> documents = memo.getDocuments().stream()
                 .filter(Objects::nonNull).collect(Collectors.toList());
         assertDocumentsSize(documents);
-        final List<Tuple3<List<Elements>, Document, List<URL>>> processed = processAllDocuments(documents);
-        final List<URL> flattened = processed.stream()
-                .flatMap(objects -> objects.v3.stream())
-                .collect(Collectors.toList());
-        if (memo.getCurrentDepth() < memo.getMaxDepth()) {
-            logger.debug("Current depth " + memo.getCurrentDepth() + " is not max depth " + memo.getMaxDepth() + "; recurse");
-            traverse(flattened, executorService, memo.getCurrentDepth() + 1, memo.getMaxDepth(), memo.getThreadPoolSize());
-        } else {
-            logger.debug("Crawl Complete");
-            progressService.updateProgress(ProgressType.COMPLETE);
-        }
+        processAllDocuments(documents, Optional.of(memo));
     }
 
     private List<URL> filterByRegex(final List<URL> urls) {

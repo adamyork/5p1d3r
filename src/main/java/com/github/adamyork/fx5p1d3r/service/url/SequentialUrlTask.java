@@ -1,7 +1,7 @@
 package com.github.adamyork.fx5p1d3r.service.url;
 
-import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import javafx.concurrent.Task;
@@ -20,18 +20,18 @@ import java.util.List;
  * Created by Adam York on 4/4/2017.
  * Copyright 2017
  */
-public class ThrottledUrlTask extends Task<List<Document>> {
+public class SequentialUrlTask extends Task<List<Document>> {
 
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36";
-    private static final Logger logger = LogManager.getLogger(ThrottledUrlTask.class);
+    private static final Logger logger = LogManager.getLogger(SequentialUrlTask.class);
 
     private final List<URL> urls;
     private final ApplicationFormState applicationFormState;
     private final ApplicationProgressService progressService;
 
-    public ThrottledUrlTask(final List<URL> urls,
-                            final ApplicationFormState applicationFormState,
-                            final ApplicationProgressService progressService) {
+    public SequentialUrlTask(final List<URL> urls,
+                             final ApplicationFormState applicationFormState,
+                             final ApplicationProgressService progressService) {
         this.urls = urls;
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;
@@ -57,10 +57,15 @@ public class ThrottledUrlTask extends Task<List<Document>> {
                 if (progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
                     throw new RuntimeException("Abort detected cancelling throttled request chain");
                 } else {
-                    final long requestDelay = applicationFormState.getThrottleMs().getValue();
-                    logger.debug("Document Fetched .. waiting " + requestDelay);
-                    progressService.updateProgress(ProgressType.RETRIEVED);
-                    Unchecked.consumer(o -> Thread.sleep(requestDelay)).accept(null);
+                    if (applicationFormState.throttling()) {
+                        final long requestDelay = applicationFormState.getThrottleMs().getValue();
+                        logger.debug("Document Fetched .. waiting " + requestDelay);
+                        progressService.updateProgress(ProgressType.RETRIEVED);
+                        Unchecked.consumer(o -> Thread.sleep(requestDelay)).accept(null);
+                    } else {
+                        logger.debug("Document Fetched");
+                        progressService.updateProgress(ProgressType.RETRIEVED);
+                    }
                 }
             });
         } catch (final Exception exception) {
