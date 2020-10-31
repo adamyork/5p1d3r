@@ -1,19 +1,19 @@
 package com.github.adamyork.fx5p1d3r.service.url;
 
-import com.github.adamyork.fx5p1d3r.service.url.data.UrlValidationResult;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
+import com.github.adamyork.fx5p1d3r.service.url.data.UrlValidationResult;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
 import org.jsoup.select.Elements;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,12 +36,13 @@ public class DefaultUrlService implements UrlService {
     @Override
     public UrlValidationResult validateUrls(final List<String> urlStrings) {
         progressService.updateProgress(ProgressType.VALIDATE);
-        final List<Map<String, Boolean>> validityMap = urlStrings.stream().map(urlString -> {
-            final Map<String, Boolean> map = new HashMap<>();
-            final Boolean valid = validateUrlString(urlString);
-            map.put(urlString, valid);
-            return map;
-        }).collect(Collectors.toList());
+        final List<Map<String, Boolean>> validityMap = urlStrings.stream()
+                .map(urlString -> {
+                    final Map<String, Boolean> map = new HashMap<>();
+                    final Boolean valid = validateUrlString(urlString);
+                    map.put(urlString, valid);
+                    return map;
+                }).collect(Collectors.toList());
         final boolean isValid = validityMap.stream()
                 .allMatch(stringBooleanMap -> stringBooleanMap.values()
                         .stream()
@@ -59,12 +60,30 @@ public class DefaultUrlService implements UrlService {
         return elements.stream()
                 .map(element -> {
                     final String href = element.attr("href");
-                    if (href.contains("http") || href.contains("https")) {
-                        return href;
-                    } else if (href.contains("//")) {
-                        return "https:" + href;
+                    try {
+                        final URL baseUrl = new URI(element.baseUri()).toURL();
+                        if (href.contains("http") || href.contains("https")) {
+                            return href;
+                        } else {
+                            final boolean startsWithSlash = String.valueOf(href.charAt(0)).equals("/");
+                            final String port = Optional.of(baseUrl.getPort())
+                                    .filter(integer -> integer != -1)
+                                    .map(integer -> ":" + integer.toString())
+                                    .orElse("");
+                            if (href.length() >= 2 &&
+                                    startsWithSlash &&
+                                    String.valueOf(href.charAt(1)).equals("/")) {
+                                return baseUrl.getProtocol() + "://" + baseUrl.getHost() + port + "/" + href.substring(2);
+                            } else if (startsWithSlash) {
+                                return baseUrl.getProtocol() + "://" + baseUrl.getHost() + port + "/" + href.substring(1);
+                            }
+                        }
+                        logger.warn("Url format not handled " + href);
+                        return "";
+                    } catch (final MalformedURLException | URISyntaxException exception) {
+                        logger.warn("Url format not handled {}", href);
+                        return "";
                     }
-                    return "";
                 })
                 .filter(this::validateUrlString)
                 .map(Unchecked.function(URL::new))
@@ -75,6 +94,9 @@ public class DefaultUrlService implements UrlService {
         final boolean isValid = urlValidator.isValid(urlString);
         if (!isValid) {
             logger.warn("Invalid url detected from crawl, filtering " + urlString);
+        }
+        if (urlString.contains("https://web.archive.org/")) {
+            return true;
         }
         return isValid;
     }

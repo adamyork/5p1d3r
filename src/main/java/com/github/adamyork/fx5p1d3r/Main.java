@@ -71,5 +71,6 @@ public class Main extends Application {
     }
 }
 
-//TODO Test scenarios
+//TODO Check out bottleneck on output
+//TODO Add menu to clear log
 //TODO finish native packaging

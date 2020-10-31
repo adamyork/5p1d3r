@@ -78,7 +78,7 @@ public class ConcurrentUrlTask extends Task<DocumentListWithMemo> {
         final DocumentListWithMemo memo = new DocumentListWithMemo();
         memo.setDocuments(documents);
         memo.setThreadPoolSize(threadPoolSize);
-        memo.setCurrentDepth(currentDepth);
+        memo.setCurrentDepth(currentDepth + 1);
         memo.setMaxDepth(maxDepth);
         return memo;
     }

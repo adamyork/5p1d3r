@@ -59,11 +59,11 @@ public class SequentialUrlTask extends Task<List<Document>> {
                 } else {
                     if (applicationFormState.throttling()) {
                         final long requestDelay = applicationFormState.getThrottleMs().getValue();
-                        logger.debug("Document Fetched .. waiting " + requestDelay);
+                        logger.debug("Document fetched .. waiting " + requestDelay);
                         progressService.updateProgress(ProgressType.RETRIEVED);
                         Unchecked.consumer(o -> Thread.sleep(requestDelay)).accept(null);
                     } else {
-                        logger.debug("Document Fetched");
+                        logger.debug("Document fetched");
                         progressService.updateProgress(ProgressType.RETRIEVED);
                     }
                 }

@@ -194,8 +194,8 @@ public class BaseCrawler implements PropertyChangeListener {
                         return stubbed;
                     });
             if (memo.getCurrentDepth() < memo.getMaxDepth()) {
-                logger.debug("Current depth " + memo.getCurrentDepth() + " is not max depth " + memo.getMaxDepth() + "; recurse");
-                linksFollower.traverse(links, executorService, 1,
+                logger.debug("Current depth " + memo.getCurrentDepth() + " is not max depth " + memo.getMaxDepth() + "; traverse");
+                linksFollower.traverse(links, executorService, memo.getCurrentDepth(),
                         applicationFormState.getFollowLinksDepth().getValue(),
                         Integer.parseInt(applicationFormState.getMultiThreadMax().toString()) - 1);
             } else {

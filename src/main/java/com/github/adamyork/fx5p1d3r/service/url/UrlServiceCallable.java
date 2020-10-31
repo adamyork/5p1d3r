@@ -39,7 +39,7 @@ class UrlServiceCallable extends Task<Document> {
                 .timeout(30000)
                 .get()).apply(url);
         progressService.updateProgress(ProgressType.RETRIEVED);
-        logger.debug("Document Fetched .. ");
+        logger.debug("Document fetched");
         return document;
     }
 
