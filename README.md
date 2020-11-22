@@ -23,12 +23,13 @@ I love data analysis. I often find my self creating graph and charts of various 
 
 - Download the source and build the jar
 - Download a pre-build binary
-    - windows: [5p1d3r-0.1.zip](https://github.com/adamyork/5p1d3r/releases/download/0.1/5p1d3r-0.1.zip.windows.zip) 
+    - download the far jar:
+        - run: ```java -jar 5p1d3r-1.0.exe``` (requires jdk11+)
+    - windows installer: [5p1d3r-1.0.exe](https://github.com/adamyork/5p1d3r/releases/download/1.0/5p1d3r-1.0.exe.zip) 
     - mac: TBD
 - run the app
 
 ![application preview](/app.png?raw=true "Application Preview")
-
 
 - Select a URL method:
     - URL: a single starting url to fetch data from
