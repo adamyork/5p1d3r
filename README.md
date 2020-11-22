@@ -17,15 +17,15 @@ I love data analysis. I often find my self creating graph and charts of various 
 - link following
 - url lists
 - save and load configurations
-- data transformation
+- data transformation 
 
 ## How to
 
 - Download the source and build the jar
 - Download a pre-build binary
-    - download the far jar:
+    - download the far jar: [5p1d3r-1.0.jar](https://github.com/adamyork/5p1d3r/releases/download/1.0/5p1d3r-1.0.jar) 
         - run: ```java -jar 5p1d3r-1.0.exe``` (requires jdk11+)
-    - windows installer: [5p1d3r-1.0.exe](https://github.com/adamyork/5p1d3r/releases/download/1.0/5p1d3r-1.0.exe.zip) 
+    - windows installer: [5p1d3r-1.0.exe](https://github.com/adamyork/5p1d3r/releases/download/1.0/5p1d3r-1.0.exe) 
     - mac: TBD
 - run the app
 
