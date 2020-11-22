@@ -59,4 +59,7 @@ I love data analysis. I often find my self creating graph and charts of various 
 
 
 **Note this is effectively beta software. I am sure there are issues. Please file a bug report if you find anything**
-    
+
+## TODO
+- Finish native packaging in build file
+- Mac/linux tail file

@@ -3,9 +3,9 @@ package com.github.adamyork.fx5p1d3r.view.menu;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.FormState;
+import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -65,6 +65,9 @@ public class ApplicationMenuController {
         final MenuItem openLogsItem = new MenuItem(messageSource.getMessage("menu.logs.open.label",
                 null, Locale.getDefault()));
         helpMenu.getItems().add(openLogsItem);
+        final MenuItem purgeLogsItems = new MenuItem(messageSource.getMessage("menu.logs.purge.label",
+                null, Locale.getDefault()));
+        helpMenu.getItems().add(purgeLogsItems);
 
         menu.getItems().add(loadItem);
         menu.getItems().add(saveItem);
@@ -78,6 +81,7 @@ public class ApplicationMenuController {
         loadItem.setOnAction(this::handleLoad);
         logsItem.setOnAction(this::handleLogs);
         openLogsItem.setOnAction(this::handleOpenLogsDir);
+        purgeLogsItems.setOnAction(this::purgeLogs);
     }
 
     private void handleExitSelected(final ActionEvent actionEvent) {
@@ -125,7 +129,6 @@ public class ApplicationMenuController {
                 final String file = LogDirectoryHelper.getTempDirectoryPath().toString() + "\\5p1d3r.log";
                 Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "cmd", "/k", "MORE " + file});
             }
-            //TODO mac/linux tail file
 //            final String file = LogDirectoryHelper.getTempDirectoryPath().toString() + "\\5p1d3r.log";
 //            Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "cmd", "/k", "MORE " + file});
         } catch (final IOException e) {
@@ -138,6 +141,20 @@ public class ApplicationMenuController {
             Desktop.getDesktop().open(new File(LogDirectoryHelper.getTempDirectoryPath().toString()));
         } catch (final IOException e) {
             logger.error("Cant open log directory", e);
+        }
+    }
+
+    private void purgeLogs(final ActionEvent actionEvent) {
+        final String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            final String file = LogDirectoryHelper.getTempDirectoryPath().toString() + "\\5p1d3r.log";
+            final File logs = new File(file);
+            final boolean deleted = logs.delete();
+            if (deleted) {
+                logger.info("Logs purged");
+            } else {
+                logger.warn("Logs cannot be purged");
+            }
         }
     }
 }

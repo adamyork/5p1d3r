@@ -65,6 +65,7 @@ public class ConcurrentUrlTask extends Task<DocumentListWithMemo> {
         final ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
         final List<Document> documents = tasks.parallelStream()
                 .map(documentTask -> {
+                    LogDirectoryHelper.manage();
                     try {
                         executorService.submit(documentTask).get();
                         return documentTask.get();

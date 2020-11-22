@@ -70,7 +70,3 @@ public class Main extends Application {
         applicationContext.close();
     }
 }
-
-//TODO Check out bottleneck on output
-//TODO Add menu to clear log
-//TODO finish native packaging

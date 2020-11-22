@@ -18,9 +18,10 @@ repositories {
     jcenter()
 }
 
-//jdeps -R --multi-release 14 --ignore-missing-deps --class-path "build\libs\*" --print-module-deps build\classes\java\main\com\github\adamyork\fx5p1d3r\Main.class > temp.txt
-//jpackage --type exe --dest build/installer --input build/libs --name 5p1d3r --main-class com.github.adamyork.fx5p1d3r.AppLauncher --main-jar 5p1d3r-1.0.jar --java-options -Xmx2048m --runtime-image build/java-runtime --app-version 1.0 --vendor "ACME Inc." --copyright "Copyright © 2019-20 ACME Inc." --win-dir-chooser
-//jlink --no-header-files --no-man-pages --compress=2 --strip-debug --add-modules "java.base,jdk.localedata" --include-locales=en --output build/java-runtime
+//jdeps -R --multi-release 14 --ignore-missing-deps --class-path "build\libs\BOOT-INF\lib" --print-module-deps build\classes\java\main\com\github\adamyork\fx5p1d3r\Main.class > temp.txt
+//jdeps -R build\libs\5p1d3r-1.0.jar > temp.txt
+//jpackage --type exe --dest build/installer --input build/libs --name 5p1d3r --main-class org.springframework.boot.loader.JarLauncher --main-jar 5p1d3r-1.0.jar --java-options -Xmx2048m --runtime-image build/java-runtime --app-version 1.0 --win-dir-chooser
+//jlink --no-header-files --no-man-pages --compress=2 --strip-debug --add-modules "java.base,java.desktop,java.logging" --output build/java-runtime
 
 dependencies {
     compile group: "org.springframework.boot", name: "spring-boot-starter", version: "2.3.3.RELEASE"
@@ -46,8 +47,13 @@ processResources {
 compileJava.dependsOn(processResources)
 
 javafx {
-    mainClassName = "com.github.adamyork.fx5p1d3r.AppLauncher"
+    mainClassName = "com.github.adamyork.fx5p1d3r.Main"
     version = "14"
     modules = ["javafx.controls", "javafx.fxml"]
     //jvmArgs = ["-agentlib:jdwp=transport=dt_socket,address=8004,server=y,suspend=y"]
+}
+
+task buildWindowsInstaller(type: Exec) {
+    workingDir "${projectDir}"
+    commandLine "jpackage", "--type", "exe", "--dest", "${projectDir}\\build\\installer", "--input", "${projectDir}\\build\\libs", "--name", "5p1d3r", "--main-class", "org.springframework.boot.loader.JarLauncher", "--main-jar", "5p1d3r-1.0.jar", "--java-options", "-Xmx2048m", "--app-version", "${version}", "--win-dir-chooser"
 }

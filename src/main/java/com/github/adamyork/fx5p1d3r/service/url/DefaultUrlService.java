@@ -65,6 +65,9 @@ public class DefaultUrlService implements UrlService {
                         if (href.contains("http") || href.contains("https")) {
                             return href;
                         } else {
+                            if (href.length() == 0) {
+                                return "";
+                            }
                             final boolean startsWithSlash = String.valueOf(href.charAt(0)).equals("/");
                             final String port = Optional.of(baseUrl.getPort())
                                     .filter(integer -> integer != -1)
