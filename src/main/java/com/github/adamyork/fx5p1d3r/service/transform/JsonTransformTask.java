@@ -52,6 +52,8 @@ public class JsonTransformTask extends BaseResultTransform {
 
     @Override
     public List<Tuple4<List<Object>, Document, List<URL>, Optional<DocumentListWithMemo>>> call() {
+        LogDirectoryHelper.manage();
+        logger.debug("processing selections");
         final ObservableList<File> resultTransforms = applicationFormState.getResultTransformObservableList();
         return processed.stream()
                 .map(object -> {
@@ -69,14 +71,14 @@ public class JsonTransformTask extends BaseResultTransform {
                                         .flatMap(element -> resultTransforms.stream()
                                                 .map(transform -> {
                                                     LogDirectoryHelper.manage();
-                                                    final Tuple2<String, GroovyShell> groovyObjects = initGroovy(transform, element, document);
                                                     Object result = null;
                                                     try {
+                                                        final Tuple2<String, GroovyShell> groovyObjects = initGroovy(transform, element, document);
                                                         logger.debug("Transforming " + element.tagName());
                                                         result = groovyObjects.v2.evaluate(groovyObjects.v1);
                                                     } catch (final Exception exception) {
                                                         applicationFormState.setTransformFailed(true);
-                                                        logger.debug("Transform failed");
+                                                        logger.debug("Transform failed", exception);
                                                     }
                                                     return result;
                                                 })

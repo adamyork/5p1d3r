@@ -65,15 +65,15 @@ public class CsvTransformTask extends BaseResultTransform {
                                         .flatMap(element -> resultTransforms.stream()
                                                 .map(transform -> {
                                                     LogDirectoryHelper.manage();
-                                                    final Tuple2<String, GroovyShell> groovyObjects = initGroovy(transform, element, document);
                                                     Object result = null;
                                                     try {
+                                                        final Tuple2<String, GroovyShell> groovyObjects = initGroovy(transform, element, document);
                                                         logger.debug("Transforming " + element.tagName());
                                                         final Object[] objectArray = (Object[]) groovyObjects.v2.evaluate(groovyObjects.v1);
                                                         result = Arrays.copyOf(objectArray, objectArray.length, String[].class);
                                                     } catch (final Exception exception) {
                                                         applicationFormState.setTransformFailed(true);
-                                                        logger.debug("Transform failed");
+                                                        logger.debug("Transform failed", exception);
                                                     }
                                                     return result;
                                                 })
