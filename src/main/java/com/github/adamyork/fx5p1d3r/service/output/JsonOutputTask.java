@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class JsonOutputTask extends BaseOutputTask {
 
-    private static final Logger logger = LogManager.getLogger(CsvOutputTask.class);
+    private static final Logger logger = LogManager.getLogger(JsonOutputTask.class);
 
     private final List<Tuple4<List<Object>, Document, List<URL>, Optional<DocumentListWithMemo>>> transformed;
 
@@ -55,12 +55,16 @@ public class JsonOutputTask extends BaseOutputTask {
                         try {
                             final OutputJsonObject jsonObject = mapper.readValue(fileAndBytes.v2, OutputJsonObject.class);
                             jsonObject.getObjectList().add(entry);
-                            Unchecked.consumer(o -> mapper.writeValue(fileAndBytes.v1, jsonObject)).accept(null);
+                            mapper.writeValue(fileAndBytes.v1, jsonObject);
                             return true;
-                        } catch (final IOException e) {
+                        } catch (final Exception exception) {
                             final OutputJsonObject outputObject = new OutputJsonObject.Builder(new ArrayList<>()).build();
                             outputObject.getObjectList().add(entry);
-                            Unchecked.consumer(o -> mapper.writeValue(fileAndBytes.v1, outputObject)).accept(null);
+                            try {
+                                mapper.writeValue(fileAndBytes.v1, outputObject);
+                            } catch (final Exception exception1) {
+                                logger.error("cant write json output",exception1);
+                            }
                             return false;
                         }
                     }).collect(Collectors.toList()), document, urls, maybeMemo);

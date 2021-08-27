@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.safety.Whitelist;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class SequentialUrlTask extends Task<List<Document>> {
     @Override
     protected List<Document> call() {
         LogDirectoryHelper.manage();
-        final Whitelist whitelist = Whitelist.relaxed();
+        //final Whitelist whitelist = Whitelist.relaxed();
         //final Cleaner cleaner = new Cleaner(whitelist);
         //cleaned = cleaner.clean(dirty);
         //outputManager.outputToApplication("Document Cleaned...");

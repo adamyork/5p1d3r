@@ -6,7 +6,7 @@ plugins {
 }
 
 group "com.github.adamyork"
-version "1.0"
+version "1.1"
 project.ext.set("buildDate", getDate())
 
 static def getDate() {
@@ -15,27 +15,23 @@ static def getDate() {
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
-//jdeps -R --multi-release 14 --ignore-missing-deps --class-path "build\libs\BOOT-INF\lib" --print-module-deps build\classes\java\main\com\github\adamyork\fx5p1d3r\Main.class > temp.txt
-//jdeps -R build\libs\5p1d3r-1.0.jar > temp.txt
-//jpackage --type exe --dest build/installer --input build/libs --name 5p1d3r --main-class org.springframework.boot.loader.JarLauncher --main-jar 5p1d3r-1.0.jar --java-options -Xmx2048m --runtime-image build/java-runtime --app-version 1.0 --win-dir-chooser
-//jlink --no-header-files --no-man-pages --compress=2 --strip-debug --add-modules "java.base,java.desktop,java.logging" --output build/java-runtime
-
 dependencies {
-    compile group: "org.springframework.boot", name: "spring-boot-starter", version: "2.3.3.RELEASE"
-    compile group: "org.jsoup", name: "jsoup", version: "1.13.1"
-    compile group: "commons-validator", name: "commons-validator", version: "1.7"
-    compile group: "commons-io", name: "commons-io", version: "2.7"
-    compile group: "org.codehaus.groovy", name: "groovy-all", version: "3.0.5"
-    compile group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.11.2"
-    compile group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-csv", version: "2.11.2"
-    compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
-    compile group: "org.controlsfx", name: "controlsfx", version: "11.0.2"
-    compile group: "org.jooq", name: "jool", version: "0.9.14"
-    compile group: "javax.inject", name: "javax.inject", version: "1"
-    testCompile group: "junit", name: "junit", version: "4.11"
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.4'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.4'
+    implementation 'org.springframework.boot:spring-boot-starter:2.5.4'
+    implementation 'org.jsoup:jsoup:1.14.2'
+    implementation 'commons-validator:commons-validator:1.7'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.8'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.12.4'
+    implementation 'commons-configuration:commons-configuration:1.10'
+    implementation 'org.controlsfx:controlsfx:11.1.0'
+    implementation 'org.jooq:jool:0.9.14'
+    implementation 'javax.inject:javax.inject:1'
+    testCompile 'junit:junit:4.13.2'
 }
 
 processResources {
@@ -55,5 +51,5 @@ javafx {
 
 task buildWindowsInstaller(type: Exec) {
     workingDir "${projectDir}"
-    commandLine "jpackage", "--type", "exe", "--dest", "${projectDir}\\build\\installer", "--input", "${projectDir}\\build\\libs", "--name", "5p1d3r", "--main-class", "org.springframework.boot.loader.JarLauncher", "--main-jar", "5p1d3r-1.0.jar", "--java-options", "-Xmx2048m", "--app-version", "${version}", "--win-dir-chooser"
+    commandLine "jpackage", "--type", "exe", "--dest", "${projectDir}\\build\\installer", "--input", "${projectDir}\\build\\libs", "--name", "5p1d3r", "--main-class", "org.springframework.boot.loader.JarLauncher", "--main-jar", "5p1d3r-1.1.jar", "--java-options", "-Xmx2048m", "--app-version", "${version}", "--win-dir-chooser"
 }
