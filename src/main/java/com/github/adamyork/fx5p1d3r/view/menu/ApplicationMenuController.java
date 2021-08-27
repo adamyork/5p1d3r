@@ -14,6 +14,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
@@ -22,6 +23,7 @@ import org.springframework.context.MessageSource;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Locale;
 
 /**
@@ -99,7 +101,7 @@ public class ApplicationMenuController {
         final File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
             Unchecked.consumer(consumer -> mapper.writerWithDefaultPrettyPrinter()
-                    .writeValue(file, applicationFormState))
+                            .writeValue(file, applicationFormState))
                     .accept(null);
         }
     }
@@ -126,34 +128,32 @@ public class ApplicationMenuController {
         try {
             final String os = System.getProperty("os.name").toLowerCase();
             if (os.contains("win")) {
-                final String file = LogDirectoryHelper.getTempDirectoryPath().toString() + "\\5p1d3r.log";
+                final String file = LogDirectoryHelper.getTempDirectoryPath() + "\\5p1d3r.log";
                 Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "cmd", "/k", "MORE " + file});
             }
-//            final String file = LogDirectoryHelper.getTempDirectoryPath().toString() + "\\5p1d3r.log";
-//            Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "cmd", "/k", "MORE " + file});
-        } catch (final IOException e) {
-            logger.error("Cant open log file", e);
+        } catch (final IOException exception) {
+            logger.error("Cant open log file", exception);
         }
     }
 
     private void handleOpenLogsDir(final ActionEvent actionEvent) {
         try {
             Desktop.getDesktop().open(new File(LogDirectoryHelper.getTempDirectoryPath().toString()));
-        } catch (final IOException e) {
-            logger.error("Cant open log directory", e);
+        } catch (final IOException exception) {
+            logger.error("Cant open log directory", exception);
         }
     }
 
     private void purgeLogs(final ActionEvent actionEvent) {
         final String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) {
-            final String file = LogDirectoryHelper.getTempDirectoryPath().toString() + "\\5p1d3r.log";
+            final String file = LogDirectoryHelper.getTempDirectoryPath() + "\\5p1d3r.log";
             final File logs = new File(file);
-            final boolean deleted = logs.delete();
-            if (deleted) {
+            try {
+                FileUtils.write(logs, "", Charset.defaultCharset());
                 logger.info("Logs purged");
-            } else {
-                logger.warn("Logs cannot be purged");
+            } catch (final Exception exception) {
+                logger.error("Logs cannot be purged", exception);
             }
         }
     }
