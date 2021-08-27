@@ -25,7 +25,7 @@ I love data analysis. I often find my self creating graph and charts of various 
 - Download a pre-build binary
     - download the far jar:
         - run: ```java -jar 5p1d3r-1.1.exe``` (requires jdk14+)
-    - windows installer: [5p1d3r-1.1.exe](https://github.com/adamyork/5p1d3r/releases/download/1.1/5p1d3r-1.1.exe.zip) 
+    - windows installer: [5p1d3r-1.1.exe](https://github.com/adamyork/5p1d3r/releases/download/1.1/5p1d3r-1.1.exe) 
     - mac: TBD
 - run the app
 
