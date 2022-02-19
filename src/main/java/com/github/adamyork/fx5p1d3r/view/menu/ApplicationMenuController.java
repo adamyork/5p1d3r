@@ -183,7 +183,7 @@ public class ApplicationMenuController {
         }
     }
 
-    private void handleLaunchDownloader(final ActionEvent actionEvent){
+    private void handleLaunchDownloader(final ActionEvent actionEvent) {
         final FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getClassLoader().getResource("fxml/download.fxml"));
         fxmlLoader.setControllerFactory(applicationContext::getBean);
         final Parent parent = (Parent) Unchecked.function(o -> fxmlLoader.load()).apply(null);

@@ -20,15 +20,6 @@ public class MultiThreadingChoice extends Choice {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return Integer.toString(value);
-    }
-
-    public MultiThreadMax getMultiThreadMax() {
-        return multiThreadMax;
-    }
-
     public static ObservableList<MultiThreadingChoice> getMultiThreadingChoices() {
         return FXCollections.observableArrayList(new MultiThreadingChoice(MultiThreadMax.FIVE, 5),
                 new MultiThreadingChoice(MultiThreadMax.TEN, 10),
@@ -37,6 +28,15 @@ public class MultiThreadingChoice extends Choice {
                 new MultiThreadingChoice(MultiThreadMax.TWO_HUNDRED, 200),
                 new MultiThreadingChoice(MultiThreadMax.FIVE_HUNDRED, 500),
                 new MultiThreadingChoice(MultiThreadMax.THOUSAND, 1000));
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(value);
+    }
+
+    public MultiThreadMax getMultiThreadMax() {
+        return multiThreadMax;
     }
 
 }

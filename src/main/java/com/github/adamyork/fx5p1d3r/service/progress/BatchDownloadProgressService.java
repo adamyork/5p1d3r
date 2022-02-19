@@ -5,11 +5,10 @@ import org.springframework.context.MessageSource;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class BatchDownloadProgressService extends ApplicationProgressService{
+public class BatchDownloadProgressService extends ApplicationProgressService {
 
     public BatchDownloadProgressService(MessageSource messageSource) {
         super(messageSource);
-
     }
 
     @SuppressWarnings("DuplicatedCode")

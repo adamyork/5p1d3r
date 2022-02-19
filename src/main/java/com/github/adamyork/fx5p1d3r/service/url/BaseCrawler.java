@@ -6,7 +6,6 @@ import com.github.adamyork.fx5p1d3r.service.output.JsonOutputTask;
 import com.github.adamyork.fx5p1d3r.service.output.data.OutputFileType;
 import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import com.github.adamyork.fx5p1d3r.service.transform.CsvTransformTask;

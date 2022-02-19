@@ -181,7 +181,7 @@ public class DownloadController implements Initializable, PropertyChangeListener
         if (evt.getPropertyName().equals("form")) {
             final FilteredList<ThrottleChoice> filteredThrottlingChoices = requestThrottlingChoiceBox.getItems()
                     .filtered(throttleChoice -> throttleChoice.getThrottleMs().equals(applicationFormState.getDownloadThrottleMs()));
-            if(!filteredThrottlingChoices.isEmpty()){
+            if (!filteredThrottlingChoices.isEmpty()) {
                 final ThrottleChoice throttleChoice = filteredThrottlingChoices.get(0);
                 requestThrottlingToggleSwitch.setSelected(applicationFormState.downloadThrottling());
                 requestThrottlingChoiceBox.setDisable(!applicationFormState.downloadThrottling());
@@ -189,7 +189,7 @@ public class DownloadController implements Initializable, PropertyChangeListener
             }
             final FilteredList<MultiThreadingChoice> filteredMultiThreadingChoices = multiThreadingChoiceBox.getItems()
                     .filtered(multiThreadingChoice -> multiThreadingChoice.getMultiThreadMax().equals(applicationFormState.getDownloadMultiThreadMax()));
-            if(!filteredMultiThreadingChoices.isEmpty()){
+            if (!filteredMultiThreadingChoices.isEmpty()) {
                 final MultiThreadingChoice multiThreadingChoice = filteredMultiThreadingChoices.get(0);
                 multiThreadingToggleSwitch.setSelected(applicationFormState.downloadMultithreading());
                 multiThreadingChoiceBox.setDisable(!applicationFormState.downloadMultithreading());

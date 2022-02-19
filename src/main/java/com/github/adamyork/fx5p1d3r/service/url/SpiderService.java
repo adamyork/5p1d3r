@@ -8,8 +8,10 @@ import java.io.File;
  */
 public interface SpiderService {
 
-    default void execute(){};
+    default void execute() {
+    }
 
-    default void execute(final File urlListFile){};
+    default void execute(final File urlListFile) {
+    }
 
 }

@@ -1,7 +1,7 @@
 package com.github.adamyork.fx5p1d3r.view;
 
-import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import javafx.event.ActionEvent;

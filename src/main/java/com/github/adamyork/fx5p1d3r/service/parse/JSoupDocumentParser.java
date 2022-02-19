@@ -1,7 +1,6 @@
 package com.github.adamyork.fx5p1d3r.service.parse;
 
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import org.jsoup.nodes.Document;

@@ -2,7 +2,6 @@ package com.github.adamyork.fx5p1d3r;
 
 import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.BatchDownloadProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.url.*;
@@ -15,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class BatchDownloadConfiguration {
 
     @Bean("downloadProgressService")
-    public ProgressService downloadProgressService(final MessageSource messageSource){
+    public ProgressService downloadProgressService(final MessageSource messageSource) {
         final BatchDownloadProgressService batchDownloadProgressService = new BatchDownloadProgressService(messageSource);
         batchDownloadProgressService.initialize();
         return batchDownloadProgressService;
@@ -23,14 +22,14 @@ public class BatchDownloadConfiguration {
 
     @Bean("downloadUrlService")
     public UrlService downloadUrlValidatorService(final UrlValidator urlValidator,
-                                                 final ProgressService downloadProgressService) {
+                                                  final ProgressService downloadProgressService) {
         return new DefaultUrlService(urlValidator, downloadProgressService);
     }
 
     @Bean("downloadUrlServiceFactory")
     public UrlServiceFactory downloadUrlServiceFactory(final ApplicationFormState applicationFormState,
-                                               final ProgressService downloadProgressService){
-        return new UrlServiceFactory(applicationFormState,downloadProgressService);
+                                                       final ProgressService downloadProgressService) {
+        return new UrlServiceFactory(applicationFormState, downloadProgressService);
     }
 
     @Bean("singleThreadedDownloader")

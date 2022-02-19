@@ -46,7 +46,7 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public ProgressService progressService(final MessageSource messageSource){
+    public ProgressService progressService(final MessageSource messageSource) {
         final ApplicationProgressService applicationProgressService = new ApplicationProgressService(messageSource);
         applicationProgressService.initialize();
         return applicationProgressService;
@@ -54,8 +54,8 @@ public class ApplicationConfiguration {
 
     @Bean
     public UrlServiceFactory urlServiceFactory(final ApplicationFormState applicationFormState,
-                                               final ProgressService progressService){
-        return new UrlServiceFactory(applicationFormState,progressService);
+                                               final ProgressService progressService) {
+        return new UrlServiceFactory(applicationFormState, progressService);
     }
 
     @Bean

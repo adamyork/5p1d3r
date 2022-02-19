@@ -15,7 +15,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.nio.file.Path;
 
 /**
@@ -246,11 +245,6 @@ public class ApplicationFormState implements FormState {
     @Override
     public void addListener(final PropertyChangeListener pcl) {
         support.addPropertyChangeListener(pcl);
-    }
-
-    @Override
-    public void removeListener(final PropertyChangeListener pcl) {
-        support.removePropertyChangeListener(pcl);
     }
 
     @Override

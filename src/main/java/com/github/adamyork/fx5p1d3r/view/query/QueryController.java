@@ -1,12 +1,12 @@
 package com.github.adamyork.fx5p1d3r.view.query;
 
-import com.github.adamyork.fx5p1d3r.view.query.cell.DomQuery;
-import com.github.adamyork.fx5p1d3r.view.query.cell.DomQueryListCell;
-import com.github.adamyork.fx5p1d3r.GlobalDefaults;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.GlobalDefault;
+import com.github.adamyork.fx5p1d3r.GlobalDefaults;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
+import com.github.adamyork.fx5p1d3r.view.query.cell.DomQuery;
+import com.github.adamyork.fx5p1d3r.view.query.cell.DomQueryListCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

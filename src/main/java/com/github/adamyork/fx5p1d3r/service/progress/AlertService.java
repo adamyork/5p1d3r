@@ -1,15 +1,11 @@
 package com.github.adamyork.fx5p1d3r.service.progress;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
-import javafx.scene.control.DialogEvent;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Locale;
-import java.util.function.Function;
 
 /**
  * Created by Adam York on 10/18/2017.

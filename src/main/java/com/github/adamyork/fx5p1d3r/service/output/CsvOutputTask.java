@@ -5,7 +5,6 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import org.apache.logging.log4j.LogManager;

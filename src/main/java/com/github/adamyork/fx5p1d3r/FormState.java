@@ -10,8 +10,6 @@ public interface FormState {
 
     void addListener(final PropertyChangeListener pcl);
 
-    void removeListener(final PropertyChangeListener pcl);
-
     void notifyChanged();
 
 }

@@ -20,6 +20,11 @@ public class UrlMethodChoice extends Choice {
         this.displayString = displayString;
     }
 
+    public static ObservableList<UrlMethodChoice> getUrlMethodChoices() {
+        return FXCollections.observableArrayList(new UrlMethodChoice(UrlMethod.URL, "URL"),
+                new UrlMethodChoice(UrlMethod.URL_LIST, "URL List"));
+    }
+
     @Override
     public String toString() {
         return displayString;
@@ -27,11 +32,6 @@ public class UrlMethodChoice extends Choice {
 
     public UrlMethod getUrlMethod() {
         return urlMethod;
-    }
-
-    public static ObservableList<UrlMethodChoice> getUrlMethodChoices() {
-        return FXCollections.observableArrayList(new UrlMethodChoice(UrlMethod.URL, "URL"),
-                new UrlMethodChoice(UrlMethod.URL_LIST, "URL List"));
     }
 
 }

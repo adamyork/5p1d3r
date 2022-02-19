@@ -17,6 +17,8 @@ public class GlobalStage {
     }
 
     void setStage(final Stage stage) {
-        this.stage = (this.stage == null) ? this.stage = stage : this.stage;
+        if (this.stage == null) {
+            this.stage = stage;
+        }
     }
 }
