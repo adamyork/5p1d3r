@@ -74,7 +74,7 @@ public class LandingController implements Initializable, ApplicationContextAware
         final Scene basicScene = new Scene(basicRoot, 400, 832);
         final URL url = getClass().getClassLoader().getResource("css/application.css");
         final URL nullSafeURL = Optional.ofNullable(url)
-                .orElse(Unchecked.function(o -> new URL("http://www.123456789010101.com"))
+                .orElse(Unchecked.function(o -> new URL("https://www.123456789010101.com"))
                         .apply(null));
         basicScene.getStylesheets().addAll(nullSafeURL.toExternalForm());
         globalStage.getStage().setScene(basicScene);
@@ -109,7 +109,7 @@ public class LandingController implements Initializable, ApplicationContextAware
                 "\n" +
                 messageSource.getMessage("about.repository.label", null, Locale.getDefault()) +
                 ": " +
-                "http://www.github.com/adamyork/5p1d3r" +
+                "https://www.github.com/adamyork/5p1d3r" +
                 "\n" +
                 "\n" +
                 messageSource.getMessage("about.disclaimer", null, Locale.getDefault());

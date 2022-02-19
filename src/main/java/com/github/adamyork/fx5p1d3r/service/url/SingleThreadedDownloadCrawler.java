@@ -1,13 +1,10 @@
 package com.github.adamyork.fx5p1d3r.service.url;
 
-import com.github.adamyork.fx5p1d3r.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import javafx.concurrent.WorkerStateEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.MessageSource;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -25,24 +22,12 @@ public class SingleThreadedDownloadCrawler implements CrawlerService, PropertyCh
     private static final Logger logger = LogManager.getLogger(SequentialUrlTask.class);
 
     private final UrlServiceFactory urlServiceFactory;
-    private final ApplicationFormState applicationFormState;
-    private final UrlService urlService;
-    private final MessageSource messageSource;
-    private final AlertService alertService;
     private final ProgressService progressService;
     private ExecutorService executorService;
 
     public SingleThreadedDownloadCrawler(final UrlServiceFactory urlServiceFactory,
-                                         final ApplicationFormState applicationFormState,
-                                         final UrlService urlService,
-                                         final MessageSource messageSource,
-                                         final AlertService alertService,
                                          final ProgressService progressService) {
         this.urlServiceFactory = urlServiceFactory;
-        this.applicationFormState = applicationFormState;
-        this.urlService = urlService;
-        this.messageSource = messageSource;
-        this.alertService = alertService;
         this.progressService = progressService;
     }
 

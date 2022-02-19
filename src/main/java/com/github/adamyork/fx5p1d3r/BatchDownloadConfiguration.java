@@ -34,13 +34,8 @@ public class BatchDownloadConfiguration {
 
     @Bean("singleThreadedDownloader")
     public CrawlerService singleThreadedDownloader(final UrlServiceFactory downloadUrlServiceFactory,
-                                                   final ApplicationFormState applicationFormState,
-                                                   final UrlService urlService,
-                                                   final MessageSource messageSource,
-                                                   final AlertService alertService,
                                                    final ProgressService downloadProgressService) {
-        return new SingleThreadedDownloadCrawler(downloadUrlServiceFactory,
-                applicationFormState, urlService, messageSource, alertService, downloadProgressService);
+        return new SingleThreadedDownloadCrawler(downloadUrlServiceFactory, downloadProgressService);
     }
 
     @Bean("multiThreadedDownloader")

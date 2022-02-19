@@ -10,6 +10,7 @@ import org.springframework.context.MessageSource;
 import java.util.ArrayList;
 import java.util.Locale;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class JSoupDocumentParser implements DocumentParserService {
 
     private final ProgressService progressService;

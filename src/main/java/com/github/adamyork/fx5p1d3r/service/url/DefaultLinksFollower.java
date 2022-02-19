@@ -29,8 +29,6 @@ public class DefaultLinksFollower extends BaseCrawler implements LinksFollower {
 
     private static final Logger logger = LogManager.getLogger(DefaultLinksFollower.class);
 
-    private ExecutorService executorService;
-
     public DefaultLinksFollower(final UrlServiceFactory urlServiceFactory,
                                 final ApplicationFormState applicationFormState,
                                 final UrlService urlService,

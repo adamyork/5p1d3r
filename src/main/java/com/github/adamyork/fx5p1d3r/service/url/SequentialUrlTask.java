@@ -39,7 +39,7 @@ public class SequentialUrlTask extends Task<List<Document>> {
     @Override
     protected List<Document> call() {
         LogDirectoryHelper.manage();
-        //final Whitelist whitelist = Whitelist.relaxed();
+        //final Whitelist wl = Whitelist.relaxed();
         //final Cleaner cleaner = new Cleaner(whitelist);
         //cleaned = cleaner.clean(dirty);
         //outputManager.outputToApplication("Document Cleaned...");

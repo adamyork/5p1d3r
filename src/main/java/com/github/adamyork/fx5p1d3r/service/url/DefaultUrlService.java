@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * Created by Adam York on 3/23/2017.
  * Copyright 2017
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class DefaultUrlService implements UrlService {
 
     private static final Logger logger = LogManager.getLogger(DefaultUrlService.class);

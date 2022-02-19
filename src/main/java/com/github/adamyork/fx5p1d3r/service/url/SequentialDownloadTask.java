@@ -39,7 +39,7 @@ public class SequentialDownloadTask extends Task<List<Boolean>> {
     }
 
     @Override
-    protected List<Boolean> call() throws Exception {
+    protected List<Boolean> call() {
         LogDirectoryHelper.manage();
         final List<Boolean> downloaded = new ArrayList<>();
         try {

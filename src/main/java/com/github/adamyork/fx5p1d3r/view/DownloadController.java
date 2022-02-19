@@ -175,7 +175,7 @@ public class DownloadController implements Initializable, PropertyChangeListener
         applicationFormState.setMultiThreadMax(multiThreadingChoice.getMultiThreadMax());
     }
 
-    @SuppressWarnings("DuplicatedCode")
+    @SuppressWarnings({"DuplicatedCode", "RedundantSuppression"})
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("form")) {

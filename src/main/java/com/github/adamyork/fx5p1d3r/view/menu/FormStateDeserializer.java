@@ -49,7 +49,7 @@ public class FormStateDeserializer extends StdDeserializer<ApplicationFormState>
                     IntStream.range(0, queryNodes.size()).mapToObj(i -> {
                         final JsonNode queryNode = queryNodes.get(i);
                         return new DomQuery.Builder().id(i).query(queryNode.get("query").asText()).build();
-                    }).collect(Collectors.toList()));
+                    }).toList());
         }
         final JsonNode transFormNodes = node.get("resultTransformObservableList");
         if (transFormNodes.size() > 0) {
@@ -58,7 +58,7 @@ public class FormStateDeserializer extends StdDeserializer<ApplicationFormState>
                     IntStream.range(0, transFormNodes.size()).mapToObj(i -> {
                         final JsonNode transFormNode = transFormNodes.get(i);
                         return new File(transFormNode.asText());
-                    }).collect(Collectors.toList()));
+                    }).toList());
         }
         applicationFormState.setOutputFile(node.get("outputFile").asText());
         final OutputFileType outputFileType = OutputFileType.valueOf(node.get("outputFileType").asText());
