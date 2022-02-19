@@ -8,6 +8,8 @@ import java.beans.PropertyChangeListener;
  */
 public interface ProgressService {
 
+    void initialize();
+
     void addListener(final PropertyChangeListener pcl);
 
     ProgressType getCurrentProgressType();

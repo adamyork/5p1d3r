@@ -48,8 +48,6 @@ import java.util.ResourceBundle;
 @Component
 public class MethodController implements Initializable, PropertyChangeListener {
 
-    private static final Logger logger = LogManager.getLogger(MethodController.class);
-
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
     private final GlobalDefaults globalDefaults;
@@ -96,6 +94,7 @@ public class MethodController implements Initializable, PropertyChangeListener {
         this.progressService = progressService;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
 
@@ -225,6 +224,7 @@ public class MethodController implements Initializable, PropertyChangeListener {
         applicationFormState.setFollowLinksDepth(followLinksChoice.getFollowLinksDepth());
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void handleAddUrlList(final ActionEvent actionEvent) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(messageSource.getMessage("select.url.list.label", null, Locale.getDefault()));

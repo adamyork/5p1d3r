@@ -2,6 +2,7 @@ package com.github.adamyork.fx5p1d3r.service.url;
 
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import javafx.concurrent.Task;
 import org.apache.logging.log4j.LogManager;
@@ -21,10 +22,10 @@ class UrlServiceCallable extends Task<Document> {
     private static final Logger logger = LogManager.getLogger(UrlServiceCallable.class);
 
     private final URL url;
-    private final ApplicationProgressService progressService;
+    private final ProgressService progressService;
 
     UrlServiceCallable(final URL url,
-                       final ApplicationProgressService progressService) {
+                       final ProgressService progressService) {
         this.url = url;
         this.progressService = progressService;
     }

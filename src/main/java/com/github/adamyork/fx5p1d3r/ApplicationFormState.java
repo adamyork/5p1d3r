@@ -15,6 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 
 /**
@@ -43,6 +44,15 @@ public class ApplicationFormState implements FormState {
     private OutputFileType outputFileType;
     private File urlListFile;
     private boolean transformFailed;
+    //Download state
+    @JsonProperty("downloadThrottling")
+    private boolean downloadThrottling;
+    @JsonProperty("downloadMultithreading")
+    private boolean downloadMultithreading;
+    private MultiThreadMax downloadMultiThreadMax;
+    private ThrottleMs downloadThrottleMs;
+    private File urlDownloadListFile;
+    private File downloadOutputFile;
 
     public ApplicationFormState() {
         support = new PropertyChangeSupport(this);
@@ -88,6 +98,22 @@ public class ApplicationFormState implements FormState {
         this.throttling = throttling;
     }
 
+    public boolean downloadMultithreading() {
+        return downloadMultithreading;
+    }
+
+    public void setDownloadMultithreading(final boolean downloadMultithreading) {
+        this.downloadMultithreading = downloadMultithreading;
+    }
+
+    public boolean downloadThrottling() {
+        return downloadThrottling;
+    }
+
+    public void setDownloadThrottling(final boolean downloadThrottling) {
+        this.downloadThrottling = downloadThrottling;
+    }
+
     public MultiThreadMax getMultiThreadMax() {
         return multiThreadMax;
     }
@@ -102,6 +128,23 @@ public class ApplicationFormState implements FormState {
 
     public void setThrottleMs(final ThrottleMs throttleMs) {
         this.throttleMs = throttleMs;
+    }
+
+
+    public MultiThreadMax getDownloadMultiThreadMax() {
+        return downloadMultiThreadMax;
+    }
+
+    public void setDownloadMultiThreadMax(final MultiThreadMax downloadMultiThreadMax) {
+        this.downloadMultiThreadMax = downloadMultiThreadMax;
+    }
+
+    public ThrottleMs getDownloadThrottleMs() {
+        return downloadThrottleMs;
+    }
+
+    public void setDownloadThrottleMs(final ThrottleMs downloadThrottleMs) {
+        this.downloadThrottleMs = downloadThrottleMs;
     }
 
     public FollowLinksDepth getFollowLinksDepth() {
@@ -152,12 +195,28 @@ public class ApplicationFormState implements FormState {
         this.outputFileType = outputFileType;
     }
 
+    public File getDownloadOutputFile() {
+        return downloadOutputFile;
+    }
+
+    public void setDownloadOutputFile(final File downloadOutputFile) {
+        this.downloadOutputFile = downloadOutputFile;
+    }
+
     public File getUrlListFile() {
         return urlListFile;
     }
 
     public void setUrlListFile(final File urlListFile) {
         this.urlListFile = urlListFile;
+    }
+
+    public File getDownloadUrlListFile() {
+        return urlDownloadListFile;
+    }
+
+    public void setDownloadUrlListFile(final File urlDownloadListFile) {
+        this.urlDownloadListFile = urlDownloadListFile;
     }
 
     public File getDefaultJsonTransform() {

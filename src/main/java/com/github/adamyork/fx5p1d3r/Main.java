@@ -55,7 +55,7 @@ public class Main extends Application {
         final Scene landingScene = new Scene(landingRoot, 400, 832);
         final URL url = getClass().getClassLoader().getResource("css/landing.css");
         final URL nullSafeUrl = Optional.ofNullable(url)
-                .orElse(Unchecked.function(o -> new URL("http://www.123456789010101.com"))
+                .orElse(Unchecked.function(o -> new URL("https://www.123456789010101.com"))
                         .apply(null));
 
         landingScene.getStylesheets().addAll(nullSafeUrl.toExternalForm());

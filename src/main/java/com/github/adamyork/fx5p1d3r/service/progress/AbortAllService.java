@@ -11,10 +11,10 @@ import javax.inject.Inject;
 @Component
 public class AbortAllService implements AbortService {
 
-    private final ApplicationProgressService progressService;
+    private final ProgressService progressService;
 
     @Inject
-    public AbortAllService(final ApplicationProgressService progressService) {
+    public AbortAllService(final ProgressService progressService) {
         this.progressService = progressService;
     }
 

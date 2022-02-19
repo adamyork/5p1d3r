@@ -5,6 +5,7 @@ import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.service.output.data.OutputJsonObject;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +34,7 @@ public class JsonOutputTask extends BaseOutputTask {
     private final List<Tuple4<List<Object>, Document, List<URL>, Optional<DocumentListWithMemo>>> transformed;
 
     public JsonOutputTask(final ApplicationFormState applicationFormState,
-                          final ApplicationProgressService progressService,
+                          final ProgressService progressService,
                           final List<Tuple4<List<Object>, Document, List<URL>, Optional<DocumentListWithMemo>>> transformed) {
         super(applicationFormState, progressService);
         this.transformed = transformed;

@@ -4,6 +4,7 @@ import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import groovy.lang.GroovyShell;
 import javafx.collections.ObservableList;
@@ -39,7 +40,7 @@ public class JsonTransformTask extends BaseResultTransform {
 
 
     public JsonTransformTask(final ApplicationFormState applicationFormState,
-                             final ApplicationProgressService progressService,
+                             final ProgressService progressService,
                              final MessageSource messageSource,
                              final AlertService alertService,
                              final List<Tuple3<List<Elements>, Document, List<URL>>> processed,

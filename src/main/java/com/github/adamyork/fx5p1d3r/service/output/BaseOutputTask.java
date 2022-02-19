@@ -2,6 +2,7 @@ package com.github.adamyork.fx5p1d3r.service.output;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import javafx.concurrent.Task;
@@ -27,10 +28,10 @@ public class BaseOutputTask extends Task<List<Tuple4<List<Boolean>, Document, Li
     private static final Logger logger = LogManager.getLogger(BaseOutputTask.class);
 
     protected final ApplicationFormState applicationFormState;
-    protected final ApplicationProgressService progressService;
+    protected final ProgressService progressService;
 
     public BaseOutputTask(final ApplicationFormState applicationFormState,
-                          final ApplicationProgressService progressService) {
+                          final ProgressService progressService) {
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;
     }

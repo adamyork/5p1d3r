@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.service.url;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import javafx.concurrent.Task;
@@ -28,7 +28,7 @@ public class ConcurrentUrlTask extends Task<DocumentListWithMemo> {
     private static final Logger logger = LogManager.getLogger(ConcurrentUrlTask.class);
 
     private final List<URL> urls;
-    private final ApplicationProgressService progressService;
+    private final ProgressService progressService;
     private final int threadPoolSize;
     private final int currentDepth;
     private final int maxDepth;
@@ -38,7 +38,7 @@ public class ConcurrentUrlTask extends Task<DocumentListWithMemo> {
                              final int threadPoolSize,
                              final int currentDepth,
                              final int maxDepth,
-                             final ApplicationProgressService progressService,
+                             final ProgressService progressService,
                              final ApplicationFormState applicationFormState) {
         this.urls = urls;
         this.threadPoolSize = threadPoolSize;
@@ -49,7 +49,6 @@ public class ConcurrentUrlTask extends Task<DocumentListWithMemo> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected DocumentListWithMemo call() {
         LogDirectoryHelper.manage();
         if (applicationFormState.throttling()) {
@@ -60,8 +59,7 @@ public class ConcurrentUrlTask extends Task<DocumentListWithMemo> {
         }
         logger.debug("Calling all urls");
         final List<UrlServiceCallable> tasks = urls.stream()
-                .map(url -> new UrlServiceCallable(url, progressService))
-                .collect(Collectors.toList());
+                .map(url -> new UrlServiceCallable(url, progressService)).toList();
         final ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
         final List<Document> documents = tasks.parallelStream()
                 .map(documentTask -> {

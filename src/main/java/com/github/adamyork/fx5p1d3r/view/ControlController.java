@@ -3,10 +3,7 @@ package com.github.adamyork.fx5p1d3r.view;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.GlobalStage;
 import com.github.adamyork.fx5p1d3r.service.output.data.OutputFileType;
-import com.github.adamyork.fx5p1d3r.service.progress.AbortService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
-import com.github.adamyork.fx5p1d3r.service.progress.ProgressState;
-import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
+import com.github.adamyork.fx5p1d3r.service.progress.*;
 import com.github.adamyork.fx5p1d3r.service.url.SpiderService;
 import com.github.adamyork.fx5p1d3r.service.url.data.UrlMethod;
 import javafx.event.ActionEvent;
@@ -41,7 +38,7 @@ public class ControlController implements Initializable, PropertyChangeListener 
 
     private final MessageSource messageSource;
     private final GlobalStage globalStage;
-    private final ApplicationProgressService progressService;
+    private final ProgressService progressService;
     private final AbortService abortService;
     private final ApplicationFormState applicationFormState;
     private final SpiderService singleUrlSpiderService;
@@ -60,7 +57,7 @@ public class ControlController implements Initializable, PropertyChangeListener 
 
     @Inject
     public ControlController(final GlobalStage globalStage,
-                             final ApplicationProgressService progressService,
+                             final ProgressService progressService,
                              final AbortService abortService,
                              final MessageSource messageSource,
                              final ApplicationFormState applicationFormState,
@@ -111,7 +108,7 @@ public class ControlController implements Initializable, PropertyChangeListener 
             if (applicationFormState.getUrlMethod().equals(UrlMethod.URL)) {
                 singleUrlSpiderService.execute();
             } else {
-                urlListSpiderService.execute();
+                urlListSpiderService.execute(applicationFormState.getUrlListFile());
             }
             modal(true);
         }

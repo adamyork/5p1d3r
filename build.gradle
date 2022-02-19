@@ -1,16 +1,18 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id "application"
-    id "org.openjfx.javafxplugin" version "0.0.8"
-    id "org.springframework.boot" version "2.3.3.RELEASE"
-    id "io.spring.dependency-management" version "1.0.10.RELEASE"
+    id "org.openjfx.javafxplugin" version "0.0.12"
+    id "org.springframework.boot" version "2.6.3"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
 }
 
 group "com.github.adamyork"
-version "1.1"
-project.ext.set("buildDate", getDate())
+version "2.0"
+project.ext["buildDate"] = getDate()
 
 static def getDate() {
-    new Date().format('yyyy-MM-dd')
+    new SimpleDateFormat('yyyy-MM-dd').format(new Date())
 }
 
 repositories {
@@ -18,20 +20,20 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.4'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.4'
-    implementation 'org.springframework.boot:spring-boot-starter:2.5.4'
-    implementation 'org.jsoup:jsoup:1.14.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.1'
+    implementation 'org.springframework.boot:spring-boot-starter:2.6.3'
+    implementation 'org.jsoup:jsoup:1.14.3'
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.codehaus.groovy:groovy-all:3.0.8'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.12.4'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.1'
     implementation 'commons-configuration:commons-configuration:1.10'
-    implementation 'org.controlsfx:controlsfx:11.1.0'
+    implementation 'org.controlsfx:controlsfx:11.1.1'
     implementation 'org.jooq:jool:0.9.14'
     implementation 'javax.inject:javax.inject:1'
-    testCompile 'junit:junit:4.13.2'
+    testImplementation  'junit:junit:4.13.2'
 }
 
 processResources {
@@ -44,12 +46,12 @@ compileJava.dependsOn(processResources)
 
 javafx {
     mainClassName = "com.github.adamyork.fx5p1d3r.Main"
-    version = "14"
+    version = "17"
     modules = ["javafx.controls", "javafx.fxml"]
     //jvmArgs = ["-agentlib:jdwp=transport=dt_socket,address=8004,server=y,suspend=y"]
 }
 
 task buildWindowsInstaller(type: Exec) {
     workingDir "${projectDir}"
-    commandLine "jpackage", "--type", "exe", "--dest", "${projectDir}\\build\\installer", "--input", "${projectDir}\\build\\libs", "--name", "5p1d3r", "--main-class", "org.springframework.boot.loader.JarLauncher", "--main-jar", "5p1d3r-1.1.jar", "--java-options", "-Xmx2048m", "--app-version", "${version}", "--win-dir-chooser"
+    commandLine "jpackage", "--type", "exe", "--dest", "${projectDir}\\build\\installer", "--input", "${projectDir}\\build\\libs", "--name", "5p1d3r", "--main-class", "org.springframework.boot.loader.JarLauncher", "--main-jar", "5p1d3r-2.0.jar", "--java-options", "-Xmx2048m", "--app-version", "${version}", "--win-dir-chooser", "--icon", "${projectDir}\\build\\resources\\main\\image\\icon32.ico"
 }

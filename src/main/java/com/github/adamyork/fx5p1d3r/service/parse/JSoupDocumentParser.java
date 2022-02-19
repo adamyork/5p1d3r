@@ -2,6 +2,7 @@ package com.github.adamyork.fx5p1d3r.service.parse;
 
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -12,11 +13,11 @@ import java.util.Locale;
 
 public class JSoupDocumentParser implements DocumentParserService {
 
-    private final ApplicationProgressService progressService;
+    private final ProgressService progressService;
     private final MessageSource messageSource;
     private final AlertService alertService;
 
-    public JSoupDocumentParser(final ApplicationProgressService progressService,
+    public JSoupDocumentParser(final ProgressService progressService,
                                final MessageSource messageSource,
                                final AlertService alertService) {
         this.progressService = progressService;

@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.service.url;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import javafx.concurrent.Task;
 import org.apache.logging.log4j.LogManager;
@@ -26,11 +26,11 @@ public class SequentialUrlTask extends Task<List<Document>> {
 
     private final List<URL> urls;
     private final ApplicationFormState applicationFormState;
-    private final ApplicationProgressService progressService;
+    private final ProgressService progressService;
 
     public SequentialUrlTask(final List<URL> urls,
                              final ApplicationFormState applicationFormState,
-                             final ApplicationProgressService progressService) {
+                             final ProgressService progressService) {
         this.urls = urls;
         this.applicationFormState = applicationFormState;
         this.progressService = progressService;

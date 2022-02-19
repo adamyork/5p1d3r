@@ -1,5 +1,6 @@
 /*noinspection CssUnusedSymbol*/
-.root {
+.root,
+.panel-body{
     -fx-font-size: 10pt;
     -fx-font-family: "Garamond";
     -fx-base: whitesmoke;

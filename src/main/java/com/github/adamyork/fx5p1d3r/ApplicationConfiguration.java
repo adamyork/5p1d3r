@@ -4,6 +4,7 @@ import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.parse.JSoupDocumentParser;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.url.*;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.context.MessageSource;
@@ -31,6 +32,12 @@ public class ApplicationConfiguration {
     }
 
     @Bean
+    public UrlService urlService(final UrlValidator urlValidator,
+                                 final ProgressService progressService) {
+        return new DefaultUrlService(urlValidator, progressService);
+    }
+
+    @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames("messages");
@@ -39,17 +46,23 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public DefaultUrlService urlValidatorService(final UrlValidator urlValidator,
-                                                 final ApplicationProgressService progressService) {
-        return new DefaultUrlService(urlValidator, progressService);
+    public ProgressService progressService(final MessageSource messageSource){
+        final ApplicationProgressService applicationProgressService = new ApplicationProgressService(messageSource);
+        applicationProgressService.initialize();
+        return applicationProgressService;
     }
 
+    @Bean
+    public UrlServiceFactory urlServiceFactory(final ApplicationFormState applicationFormState,
+                                               final ProgressService progressService){
+        return new UrlServiceFactory(applicationFormState,progressService);
+    }
 
     @Bean
     public LinksFollower recursiveLinksFollower(final ApplicationFormState applicationFormState,
                                                 final UrlServiceFactory urlServiceFactory,
                                                 final UrlService urlService,
-                                                final ApplicationProgressService progressService,
+                                                final ProgressService progressService,
                                                 final AlertService alertService,
                                                 final MessageSource messageSource,
                                                 final DocumentParserService parserService) {
@@ -64,7 +77,7 @@ public class ApplicationConfiguration {
                                                 final UrlService urlService,
                                                 final MessageSource messageSource,
                                                 final AlertService alertService,
-                                                final ApplicationProgressService progressService,
+                                                final ProgressService progressService,
                                                 final LinksFollower recursiveLinksFollower,
                                                 final DocumentParserService parserService) {
         return new SingleThreadedCrawler(urlServiceFactory,
@@ -78,7 +91,7 @@ public class ApplicationConfiguration {
                                                final UrlService urlService,
                                                final MessageSource messageSource,
                                                final AlertService alertService,
-                                               final ApplicationProgressService progressService,
+                                               final ProgressService progressService,
                                                final LinksFollower recursiveLinksFollower,
                                                final DocumentParserService parserService) {
         return new MultiThreadedCrawler(urlServiceFactory,
@@ -88,30 +101,30 @@ public class ApplicationConfiguration {
 
     @Bean
     public SpiderService singleUrlSpiderService(final ApplicationFormState applicationFormState,
-                                                final DefaultUrlService urlValidatorService,
-                                                final ApplicationProgressService progressService,
+                                                final UrlService urlService,
+                                                final ProgressService progressService,
                                                 final MessageSource messageSource,
                                                 final AlertService alertService,
                                                 final CrawlerService singleThreadedCrawler,
                                                 final CrawlerService multiThreadedCrawler) {
-        return new SingleUrlSpiderService(applicationFormState, urlValidatorService,
+        return new SingleUrlSpiderService(applicationFormState, urlService,
                 progressService, messageSource, alertService, singleThreadedCrawler, multiThreadedCrawler);
     }
 
     @Bean
     public SpiderService urlListSpiderService(final ApplicationFormState applicationFormState,
-                                              final DefaultUrlService urlValidatorService,
-                                              final ApplicationProgressService progressService,
+                                              final UrlService urlService,
+                                              final ProgressService progressService,
                                               final MessageSource messageSource,
                                               final AlertService alertService,
                                               final CrawlerService singleThreadedCrawler,
                                               final CrawlerService multiThreadedCrawler) {
-        return new UrlListSpiderService(applicationFormState, urlValidatorService,
+        return new UrlListSpiderService(applicationFormState, urlService,
                 progressService, messageSource, alertService, singleThreadedCrawler, multiThreadedCrawler);
     }
 
     @Bean
-    public DocumentParserService jsoupDocumentParser(final ApplicationProgressService progressService,
+    public DocumentParserService jsoupDocumentParser(final ProgressService progressService,
                                                      final MessageSource messageSource,
                                                      final AlertService alertService) {
         return new JSoupDocumentParser(progressService, messageSource, alertService);
