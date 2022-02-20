@@ -38,6 +38,7 @@ public class MultiThreadedCrawler extends BaseCrawler implements CrawlerService 
                 urlService, messageSource, alertService, progressService, linksFollower, documentParserService);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void execute(final List<URL> urls) {
         executorService = Executors.newFixedThreadPool(1);

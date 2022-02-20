@@ -2,6 +2,8 @@ package com.github.adamyork.fx5p1d3r.service.url;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.service.url.download.ConcurrentDownloadTask;
+import com.github.adamyork.fx5p1d3r.service.url.download.SequentialDownloadTask;
 
 import java.net.URL;
 import java.util.List;
@@ -33,5 +35,10 @@ public class UrlServiceFactory {
 
     public SequentialDownloadTask getSequentialDownloadServiceForUrls(final List<URL> urls) {
         return new SequentialDownloadTask(urls, applicationFormState, progressService);
+    }
+
+    public ConcurrentDownloadTask getConcurrentDownloadServiceForUrls(final List<URL> urls,
+                                                                      final int threadPoolSize) {
+        return new ConcurrentDownloadTask(urls, threadPoolSize, progressService, applicationFormState);
     }
 }

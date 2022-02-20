@@ -106,7 +106,7 @@ public class DownloadController implements Initializable, PropertyChangeListener
         requestThrottlingChoiceBox.setItems(ThrottleChoice.getThrottleChoices());
         requestThrottlingChoiceBox.getSelectionModel().selectedItemProperty().addListener(this::handleThrottlingOptionChanged);
         requestThrottlingChoiceBox.setValue(requestThrottlingChoiceBox.getItems().get(3));
-        applicationFormState.setThrottleMs(requestThrottlingChoiceBox.getItems().get(3).getThrottleMs());
+        applicationFormState.setDownloadThrottleMs(requestThrottlingChoiceBox.getItems().get(3).getThrottleMs());
 
         multiThreadingToggleSwitch.setText(messageSource.getMessage("threading.label", null, Locale.getDefault()));
         multiThreadingToggleSwitch.selectedProperty().addListener(this::handleMultiThreadingChanged);
@@ -115,7 +115,7 @@ public class DownloadController implements Initializable, PropertyChangeListener
         multiThreadingChoiceBox.setItems(MultiThreadingChoice.getMultiThreadingChoices());
         multiThreadingChoiceBox.getSelectionModel().selectedItemProperty().addListener(this::handleMultiThreadingOptionChanged);
         multiThreadingChoiceBox.setValue(multiThreadingChoiceBox.getItems().get(0));
-        applicationFormState.setMultiThreadMax(multiThreadingChoiceBox.getItems().get(0).getMultiThreadMax());
+        applicationFormState.setDownloadMultiThreadMax(multiThreadingChoiceBox.getItems().get(0).getMultiThreadMax());
 
         outputDirSelectionButton.setDisable(true);
         outputDirSelectionButton.setOnAction(this::handleSelectOutputDir);
@@ -159,7 +159,7 @@ public class DownloadController implements Initializable, PropertyChangeListener
                                                final Choice oldChoice,
                                                final Choice newChoice) {
         final ThrottleChoice throttleChoice = (ThrottleChoice) newChoice;
-        applicationFormState.setThrottleMs(throttleChoice.getThrottleMs());
+        applicationFormState.setDownloadThrottleMs(throttleChoice.getThrottleMs());
     }
 
     private void handleMultiThreadingChanged(final Observable observable) {
@@ -206,9 +206,18 @@ public class DownloadController implements Initializable, PropertyChangeListener
             if (progressService.getCurrentProgressType().equals(ProgressType.COMPLETE)) {
                 progressLabel.setText("Idle");
                 downloadProgressBar.setProgress(0.0);
-                modal(false);
                 startButton.setDisable(false);
                 stopButton.setDisable(true);
+                urlListSelectionButton.setDisable(false);
+                if(applicationFormState.downloadThrottling()){
+                    requestThrottlingToggleSwitch.setDisable(false);
+                    requestThrottlingChoiceBox.setDisable(false);
+                }
+                if(applicationFormState.downloadMultithreading()){
+                    multiThreadingToggleSwitch.setDisable(false);
+                    multiThreadingChoiceBox.setDisable(false);
+                }
+                outputDirSelectionButton.setDisable(false);
             }
         }
     }
@@ -227,31 +236,20 @@ public class DownloadController implements Initializable, PropertyChangeListener
     private void handleStart(final ActionEvent actionEvent) {
         startButton.setDisable(true);
         stopButton.setDisable(false);
-        modal(true);
+
+        urlListSelectionButton.setDisable(true);
+        requestThrottlingToggleSwitch.setDisable(true);
+        requestThrottlingChoiceBox.setDisable(true);
+        multiThreadingToggleSwitch.setDisable(true);
+        multiThreadingChoiceBox.setDisable(true);
+        outputDirSelectionButton.setDisable(true);
+
         urlListDownloadSpiderService.execute(applicationFormState.getDownloadUrlListFile());
     }
 
     private void handleStop(final ActionEvent actionEvent) {
-        startButton.setDisable(false);
-        stopButton.setDisable(true);
-        modal(false);
-    }
-
-    private void modal(final boolean state) {
-        urlListSelectionButton.setDisable(state);
-        if (state && !applicationFormState.downloadThrottling()) {
-            requestThrottlingToggleSwitch.setDisable(true);
-            requestThrottlingChoiceBox.setDisable(true);
-        } else {
-            requestThrottlingChoiceBox.setDisable(false);
-        }
-        if (state && !applicationFormState.downloadMultithreading()) {
-            multiThreadingToggleSwitch.setDisable(true);
-            multiThreadingChoiceBox.setDisable(true);
-        } else {
-            requestThrottlingChoiceBox.setDisable(false);
-        }
-        outputDirSelectionButton.setDisable(state);
+        logger.debug("handling stop aborting");
+        progressService.updateProgress(ProgressType.ABORT);
     }
 
 }
