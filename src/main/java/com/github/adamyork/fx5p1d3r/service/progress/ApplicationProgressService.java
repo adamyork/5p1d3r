@@ -2,10 +2,7 @@ package com.github.adamyork.fx5p1d3r.service.progress;
 
 import javafx.application.Platform;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
@@ -14,25 +11,24 @@ import java.util.*;
  * Created by Adam York on 10/5/2017.
  * Copyright 2017
  */
-@Component
 public class ApplicationProgressService implements ProgressService {
 
-    private final PropertyChangeSupport support;
-    private final MessageSource messageSource;
+    protected final PropertyChangeSupport support;
+    protected final MessageSource messageSource;
 
-    private ProgressState progressState;
-    private ProgressState previousState;
-    private Map<ProgressType, String> messageMap;
-    private Map<ProgressType, StepCommand> stepCommandMap;
-    private ProgressType currentProgressType;
+    protected ProgressState progressState;
+    protected ProgressState previousState;
+    protected Map<ProgressType, String> messageMap;
+    protected Map<ProgressType, StepCommand> stepCommandMap;
+    protected ProgressType currentProgressType;
 
-    @Inject
     public ApplicationProgressService(final MessageSource messageSource) {
         this.messageSource = messageSource;
         support = new PropertyChangeSupport(this);
     }
 
-    @PostConstruct
+    @SuppressWarnings("DuplicatedCode")
+    @Override
     public void initialize() {
         messageMap = new HashMap<>();
         messageMap.put(ProgressType.START, messageSource.getMessage("starting.label", null, Locale.getDefault()));
@@ -57,6 +53,7 @@ public class ApplicationProgressService implements ProgressService {
         support.removePropertyChangeListener(pcl);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void updateSteps(final int size) {
         final double stepValue = 1.0 / (size * 2);

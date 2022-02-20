@@ -6,7 +6,7 @@ import com.github.adamyork.fx5p1d3r.service.output.JsonOutputTask;
 import com.github.adamyork.fx5p1d3r.service.output.data.OutputFileType;
 import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import com.github.adamyork.fx5p1d3r.service.transform.CsvTransformTask;
 import com.github.adamyork.fx5p1d3r.service.transform.JsonTransformTask;
@@ -49,7 +49,7 @@ public class BaseCrawler implements PropertyChangeListener {
     protected final UrlServiceFactory urlServiceFactory;
     protected final MessageSource messageSource;
     protected final AlertService alertService;
-    protected final ApplicationProgressService progressService;
+    protected final ProgressService progressService;
     private final DocumentParserService documentParser;
     protected LinksFollower linksFollower;
     protected ExecutorService executorService;
@@ -60,7 +60,7 @@ public class BaseCrawler implements PropertyChangeListener {
                        final UrlService urlService,
                        final MessageSource messageSource,
                        final AlertService alertService,
-                       final ApplicationProgressService progressService,
+                       final ProgressService progressService,
                        final LinksFollower linksFollower,
                        final DocumentParserService documentParser) {
         this.urlServiceFactory = urlServiceFactory;

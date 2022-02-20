@@ -3,7 +3,7 @@ package com.github.adamyork.fx5p1d3r.service.url;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import javafx.concurrent.WorkerStateEvent;
@@ -29,14 +29,12 @@ public class DefaultLinksFollower extends BaseCrawler implements LinksFollower {
 
     private static final Logger logger = LogManager.getLogger(DefaultLinksFollower.class);
 
-    private ExecutorService executorService;
-
     public DefaultLinksFollower(final UrlServiceFactory urlServiceFactory,
                                 final ApplicationFormState applicationFormState,
                                 final UrlService urlService,
                                 final MessageSource messageSource,
                                 final AlertService alertService,
-                                final ApplicationProgressService progressService,
+                                final ProgressService progressService,
                                 final LinksFollower linksFollower,
                                 final DocumentParserService documentParserService) {
         super(urlServiceFactory, applicationFormState,

@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.service.url;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import com.github.adamyork.fx5p1d3r.service.url.data.UrlValidationResult;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +22,7 @@ public class BaseSpiderService {
 
     protected final ApplicationFormState applicationFormState;
     protected final UrlService urlUrlService;
-    protected final ApplicationProgressService progressService;
+    protected final ProgressService progressService;
     protected final MessageSource messageSource;
     protected final AlertService alertService;
     protected final CrawlerService singleThreadedCrawler;
@@ -30,7 +30,7 @@ public class BaseSpiderService {
 
     public BaseSpiderService(final ApplicationFormState applicationFormState,
                              final UrlService urlUrlService,
-                             final ApplicationProgressService progressService,
+                             final ProgressService progressService,
                              final MessageSource messageSource,
                              final AlertService alertService,
                              final CrawlerService singleThreadedCrawler,

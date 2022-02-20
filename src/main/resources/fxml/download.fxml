@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+
+<AnchorPane minWidth="-Infinity" prefWidth="300.0" styleClass="panel-body" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.adamyork.fx5p1d3r.view.DownloadController">
+    <VBox>
+         <VBox spacing="5.0">
+             <Label fx:id="urlLabel" text="Url List" />
+             <HBox spacing="10.0">
+                 <Label fx:id="urlListLabel" prefHeight="25.0" prefWidth="250.0" text="some file.txt" HBox.hgrow="ALWAYS" />
+                 <Button fx:id="urlListSelectionButton" mnemonicParsing="false" prefWidth="30.0" text="+" />
+             </HBox>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         </VBox>
+        <VBox alignment="CENTER_RIGHT" spacing="5.0">
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+            <ToggleSwitch fx:id="requestThrottlingToggleSwitch" prefWidth="290.0" styleClass="colored-toggle-switch" text="Throttling" />
+            <ChoiceBox fx:id="requestThrottlingChoiceBox" prefWidth="100.0" />
+        </VBox>
+        <VBox alignment="CENTER_RIGHT" spacing="5.0">
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+            <ToggleSwitch fx:id="multiThreadingToggleSwitch" prefWidth="290.0" styleClass="colored-toggle-switch" text="Threading" />
+            <ChoiceBox fx:id="multiThreadingChoiceBox" prefWidth="100.0" />
+        </VBox>
+      <Separator prefWidth="200.0">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </Separator>
+         <VBox spacing="5.0">
+             <Label fx:id="outputDirLabel" text="Output Directory" />
+             <HBox spacing="10.0">
+                 <Label fx:id="outputSelectedDirLabel" prefHeight="25.0" prefWidth="250.0" text="C:\some output directory" />
+                 <Button fx:id="outputDirSelectionButton" mnemonicParsing="false" prefWidth="30.0" text="+" />
+             </HBox>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         </VBox>
+      <Separator prefWidth="200.0">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </Separator>
+        <VBox alignment="CENTER" spacing="5.0">
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+            <ProgressBar fx:id="downloadProgressBar" prefWidth="290.0" progress="0.0" />
+            <Label fx:id="progressLabel" text="Idle" />
+        </VBox>
+        <HBox alignment="CENTER" spacing="5.0">
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+            <Button fx:id="startButton" mnemonicParsing="false" text="Start" />
+            <Button fx:id="stopButton" mnemonicParsing="false" text="Abort" />
+        </HBox>
+    </VBox>
+</AnchorPane>

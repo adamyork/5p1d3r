@@ -3,7 +3,7 @@ package com.github.adamyork.fx5p1d3r.service.url;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.service.parse.DocumentParserService;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import javafx.concurrent.WorkerStateEvent;
 import org.apache.logging.log4j.LogManager;
@@ -31,13 +31,14 @@ public class MultiThreadedCrawler extends BaseCrawler implements CrawlerService 
                                 final UrlService urlService,
                                 final MessageSource messageSource,
                                 final AlertService alertService,
-                                final ApplicationProgressService progressService,
+                                final ProgressService progressService,
                                 final LinksFollower linksFollower,
                                 final DocumentParserService documentParserService) {
         super(urlServiceFactory, applicationFormState,
                 urlService, messageSource, alertService, progressService, linksFollower, documentParserService);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void execute(final List<URL> urls) {
         executorService = Executors.newFixedThreadPool(1);

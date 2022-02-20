@@ -2,7 +2,7 @@ package com.github.adamyork.fx5p1d3r.service.transform;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
@@ -33,12 +33,12 @@ public class BaseResultTransform extends Task<List<Tuple4<List<Object>, Document
     private static final Logger logger = LogManager.getLogger(BaseResultTransform.class);
 
     protected final ApplicationFormState applicationFormState;
-    protected final ApplicationProgressService progressService;
+    protected final ProgressService progressService;
     protected final MessageSource messageSource;
     protected final AlertService alertService;
 
     public BaseResultTransform(final ApplicationFormState applicationFormState,
-                               final ApplicationProgressService progressService,
+                               final ProgressService progressService,
                                final MessageSource messageSource,
                                final AlertService alertService) {
         this.applicationFormState = applicationFormState;

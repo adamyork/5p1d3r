@@ -1,17 +1,17 @@
 package com.github.adamyork.fx5p1d3r.view.method;
 
+import com.github.adamyork.fx5p1d3r.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.GlobalDefault;
+import com.github.adamyork.fx5p1d3r.GlobalDefaults;
 import com.github.adamyork.fx5p1d3r.GlobalStage;
+import com.github.adamyork.fx5p1d3r.service.output.data.OutputFileType;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
+import com.github.adamyork.fx5p1d3r.service.url.data.UrlMethod;
 import com.github.adamyork.fx5p1d3r.view.method.choice.FollowLinksChoice;
 import com.github.adamyork.fx5p1d3r.view.method.choice.MultiThreadingChoice;
 import com.github.adamyork.fx5p1d3r.view.method.choice.ThrottleChoice;
 import com.github.adamyork.fx5p1d3r.view.method.choice.UrlMethodChoice;
-import com.github.adamyork.fx5p1d3r.GlobalDefaults;
-import com.github.adamyork.fx5p1d3r.ApplicationFormState;
-import com.github.adamyork.fx5p1d3r.GlobalDefault;
-import com.github.adamyork.fx5p1d3r.service.output.data.OutputFileType;
-import com.github.adamyork.fx5p1d3r.service.url.data.UrlMethod;
-import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
-import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -25,8 +25,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.ToggleSwitch;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -47,8 +45,6 @@ import java.util.ResourceBundle;
  */
 @Component
 public class MethodController implements Initializable, PropertyChangeListener {
-
-    private static final Logger logger = LogManager.getLogger(MethodController.class);
 
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
@@ -96,6 +92,7 @@ public class MethodController implements Initializable, PropertyChangeListener {
         this.progressService = progressService;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
 
@@ -225,6 +222,7 @@ public class MethodController implements Initializable, PropertyChangeListener {
         applicationFormState.setFollowLinksDepth(followLinksChoice.getFollowLinksDepth());
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void handleAddUrlList(final ActionEvent actionEvent) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(messageSource.getMessage("select.url.list.label", null, Locale.getDefault()));

@@ -1,6 +1,6 @@
 package com.github.adamyork.fx5p1d3r.service.url;
 
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import com.github.adamyork.fx5p1d3r.service.url.data.UrlValidationResult;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -20,15 +20,16 @@ import java.util.stream.Collectors;
  * Created by Adam York on 3/23/2017.
  * Copyright 2017
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class DefaultUrlService implements UrlService {
 
     private static final Logger logger = LogManager.getLogger(DefaultUrlService.class);
 
     private final UrlValidator urlValidator;
-    private final ApplicationProgressService progressService;
+    private final ProgressService progressService;
 
     public DefaultUrlService(final UrlValidator urlValidator,
-                             final ApplicationProgressService progressService) {
+                             final ProgressService progressService) {
         this.urlValidator = urlValidator;
         this.progressService = progressService;
     }
@@ -42,7 +43,7 @@ public class DefaultUrlService implements UrlService {
                     final Boolean valid = validateUrlString(urlString);
                     map.put(urlString, valid);
                     return map;
-                }).collect(Collectors.toList());
+                }).toList();
         final boolean isValid = validityMap.stream()
                 .allMatch(stringBooleanMap -> stringBooleanMap.values()
                         .stream()
@@ -71,7 +72,7 @@ public class DefaultUrlService implements UrlService {
                             final boolean startsWithSlash = String.valueOf(href.charAt(0)).equals("/");
                             final String port = Optional.of(baseUrl.getPort())
                                     .filter(integer -> integer != -1)
-                                    .map(integer -> ":" + integer.toString())
+                                    .map(integer -> ":" + integer)
                                     .orElse("");
                             if (href.length() >= 2 &&
                                     startsWithSlash &&

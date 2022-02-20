@@ -6,25 +6,35 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.FormState;
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
+import com.github.adamyork.fx5p1d3r.Main;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by Adam York on 3/5/2017.
@@ -36,13 +46,16 @@ public class ApplicationMenuController {
 
     private final Stage stage;
     private final ApplicationFormState applicationFormState;
+    private final ApplicationContext applicationContext;
 
     public ApplicationMenuController(final Stage stage,
                                      final FlowPane flowPane,
                                      final ApplicationFormState applicationFormState,
-                                     final MessageSource messageSource) {
+                                     final MessageSource messageSource,
+                                     final ApplicationContext applicationContext) {
         this.stage = stage;
         this.applicationFormState = applicationFormState;
+        this.applicationContext = applicationContext;
 
         final MenuBar menuBar = new MenuBar();
         menuBar.useSystemMenuBarProperty().set(true);
@@ -59,28 +72,40 @@ public class ApplicationMenuController {
         final MenuItem exitItem = new MenuItem(messageSource.getMessage("menu.exit.label",
                 null, Locale.getDefault()));
 
+        final Menu toolsMenu = new Menu(messageSource.getMessage("menu.tools.label",
+                null, Locale.getDefault()));
+        final MenuItem downloaderItem = new MenuItem(messageSource.getMessage("menu.downloader.label",
+                null, Locale.getDefault()));
+
         final Menu helpMenu = new Menu(messageSource.getMessage("menu.help.label",
                 null, Locale.getDefault()));
         final MenuItem logsItem = new MenuItem(messageSource.getMessage("menu.logs.label",
                 null, Locale.getDefault()));
-        helpMenu.getItems().add(logsItem);
         final MenuItem openLogsItem = new MenuItem(messageSource.getMessage("menu.logs.open.label",
                 null, Locale.getDefault()));
-        helpMenu.getItems().add(openLogsItem);
         final MenuItem purgeLogsItems = new MenuItem(messageSource.getMessage("menu.logs.purge.label",
                 null, Locale.getDefault()));
-        helpMenu.getItems().add(purgeLogsItems);
+
 
         menu.getItems().add(loadItem);
         menu.getItems().add(saveItem);
         menu.getItems().add(separator);
         menu.getItems().add(exitItem);
+
+        toolsMenu.getItems().add(downloaderItem);
+
+        helpMenu.getItems().add(logsItem);
+        helpMenu.getItems().add(openLogsItem);
+        helpMenu.getItems().add(purgeLogsItems);
+
         menuBar.getMenus().add(menu);
+        menuBar.getMenus().add(toolsMenu);
         menuBar.getMenus().add(helpMenu);
 
         exitItem.setOnAction(this::handleExitSelected);
         saveItem.setOnAction(this::handleSave);
         loadItem.setOnAction(this::handleLoad);
+        downloaderItem.setOnAction(this::handleLaunchDownloader);
         logsItem.setOnAction(this::handleLogs);
         openLogsItem.setOnAction(this::handleOpenLogsDir);
         purgeLogsItems.setOnAction(this::purgeLogs);
@@ -156,5 +181,30 @@ public class ApplicationMenuController {
                 logger.error("Logs cannot be purged", exception);
             }
         }
+    }
+
+    private void handleLaunchDownloader(final ActionEvent actionEvent) {
+        final FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getClassLoader().getResource("fxml/download.fxml"));
+        fxmlLoader.setControllerFactory(applicationContext::getBean);
+        final Parent parent = (Parent) Unchecked.function(o -> fxmlLoader.load()).apply(null);
+        final Scene scene = new Scene(parent, 300, 400);
+        final Stage stage = new Stage();
+        final URL url = Main.class.getClassLoader().getResource("css/application.css");
+        final URL nullSafeUrl = Optional.ofNullable(url)
+                .orElse(Unchecked.function(o -> new URL("https://www.123456789010101.com"))
+                        .apply(null));
+        scene.getStylesheets().addAll(nullSafeUrl.toExternalForm());
+        stage.setResizable(false);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setTitle("Bulk Downloader");
+        stage.getIcons().addAll(
+                new Image(Objects.requireNonNull(getClass().getClassLoader()
+                        .getResourceAsStream("image/icon16.png"))),
+                new Image(Objects.requireNonNull(getClass()
+                        .getClassLoader().getResourceAsStream("image/icon32.png"))),
+                new Image(Objects.requireNonNull(getClass()
+                        .getClassLoader().getResourceAsStream("image/icon64.png"))));
+        stage.setScene(scene);
+        stage.show();
     }
 }

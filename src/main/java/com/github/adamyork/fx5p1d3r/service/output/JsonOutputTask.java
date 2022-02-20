@@ -4,18 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.service.output.data.OutputJsonObject;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.url.data.DocumentListWithMemo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 import org.jooq.lambda.tuple.Tuple4;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,7 @@ public class JsonOutputTask extends BaseOutputTask {
     private final List<Tuple4<List<Object>, Document, List<URL>, Optional<DocumentListWithMemo>>> transformed;
 
     public JsonOutputTask(final ApplicationFormState applicationFormState,
-                          final ApplicationProgressService progressService,
+                          final ProgressService progressService,
                           final List<Tuple4<List<Object>, Document, List<URL>, Optional<DocumentListWithMemo>>> transformed) {
         super(applicationFormState, progressService);
         this.transformed = transformed;
@@ -63,7 +61,7 @@ public class JsonOutputTask extends BaseOutputTask {
                             try {
                                 mapper.writeValue(fileAndBytes.v1, outputObject);
                             } catch (final Exception exception1) {
-                                logger.error("cant write json output",exception1);
+                                logger.error("cant write json output", exception1);
                             }
                             return false;
                         }

@@ -3,7 +3,7 @@ package com.github.adamyork.fx5p1d3r.service.url;
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
-import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
+import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +27,7 @@ public class UrlListSpiderService extends BaseSpiderService implements SpiderSer
 
     public UrlListSpiderService(final ApplicationFormState applicationFormState,
                                 final UrlService urlUrlService,
-                                final ApplicationProgressService progressService,
+                                final ProgressService progressService,
                                 final MessageSource messageSource,
                                 final AlertService alertService,
                                 final CrawlerService singleThreadedCrawler,
@@ -37,9 +37,8 @@ public class UrlListSpiderService extends BaseSpiderService implements SpiderSer
     }
 
     @Override
-    public void execute() {
+    public void execute(final File urlListFile) {
         logger.debug("Crawling URL list");
-        final File urlListFile = applicationFormState.getUrlListFile();
         final String header = messageSource.getMessage("error.no.url.list.header", null, Locale.getDefault());
         final String content = messageSource.getMessage("error.no.url.list.content", null, Locale.getDefault());
         if (urlListFile == null) {
