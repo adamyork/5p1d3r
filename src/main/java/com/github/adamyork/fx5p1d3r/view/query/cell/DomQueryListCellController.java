@@ -6,8 +6,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
+import org.springframework.context.MessageSource;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -18,15 +21,18 @@ public class DomQueryListCellController implements Initializable {
 
     @FXML
     private TextField domQueryListCellTextField;
-
     @FXML
     private ToggleButton domQueryListCellEditButton;
+    @FXML
+    private Tooltip domQueryListCellEditButtonToolTip;
 
     private DomQuery domQuery;
 
-    void setDomQuery(final DomQuery domQuery) {
+    void setDomQuery(final DomQuery domQuery,
+                     final MessageSource messageSource) {
         this.domQuery = domQuery;
         domQueryListCellTextField.setText(domQuery.getQuery());
+        domQueryListCellEditButtonToolTip.setText(messageSource.getMessage("tooltip.query.edit", null, Locale.getDefault()));
     }
 
     @Override

@@ -12,8 +12,11 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
         </padding>
         <Label fx:id="urlMethodLabel" alignment="CENTER_RIGHT" text="Url Method"/>
-        <ChoiceBox fx:id="urlMethodChoiceBox" nodeOrientation="LEFT_TO_RIGHT" prefWidth="100.0"
-                   styleClass="split-menu-btn-default"/>
+        <ChoiceBox fx:id="urlMethodChoiceBox" nodeOrientation="LEFT_TO_RIGHT" prefWidth="100.0">
+            <tooltip>
+                <Tooltip fx:id="urlMethodChoiceBoxToolTip" text="placeholder tooltip" />
+            </tooltip>
+        </ChoiceBox>
     </VBox>
     <HBox>
         <VBox.margin>
@@ -25,13 +28,19 @@
         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
             <Label fx:id="urlLabel" text="Url"/>
             <HBox spacing="10.0">
-                <children>
-                    <TextField fx:id="startingUrlTextfield" alignment="TOP_LEFT"
-                               nodeOrientation="LEFT_TO_RIGHT" promptText="Starting Url"
-                               HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="urlListSelectionButton" mnemonicParsing="false" prefWidth="30.0"
-                            text="+"/>
-                </children>
+                <TextField fx:id="startingUrlTextfield" alignment="TOP_LEFT"
+                           nodeOrientation="LEFT_TO_RIGHT" promptText="Starting Url"
+                           HBox.hgrow="ALWAYS">
+                    <tooltip>
+                        <Tooltip fx:id="startingUrlTextfieldToolTip" text="placeholder tooltip" />
+                    </tooltip>
+                </TextField>
+                <Button fx:id="urlListSelectionButton" mnemonicParsing="false" prefWidth="30.0"
+                        text="+">
+                    <tooltip>
+                        <Tooltip fx:id="urlListSelectionButtonToolTip" text="placeholder tooltip" />
+                    </tooltip>
+                </Button>
             </HBox>
         </VBox>
     </HBox>
@@ -41,18 +50,42 @@
         </padding>
         <VBox spacing="10.0">
             <ToggleSwitch fx:id="requestThrottlingToggleSwitch" prefWidth="150.0" text="Throttling"
-                          styleClass="colored-toggle-switch"/>
-            <ChoiceBox fx:id="requestThrottlingChoiceBox" prefWidth="150.0"/>
+                          styleClass="colored-toggle-switch">
+                <tooltip>
+                    <Tooltip fx:id="requestThrottlingToggleSwitchToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ToggleSwitch>
+            <ChoiceBox fx:id="requestThrottlingChoiceBox" prefWidth="150.0">
+                <tooltip>
+                    <Tooltip fx:id="requestThrottlingChoiceBoxToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ChoiceBox>
         </VBox>
         <VBox spacing="10.0">
             <ToggleSwitch fx:id="multiThreadingToggleSwitch" prefWidth="150.0" text="Threading"
-                          styleClass="colored-toggle-switch"/>
-            <ChoiceBox fx:id="multiThreadingChoiceBox" prefWidth="150.0"/>
+                          styleClass="colored-toggle-switch">
+                <tooltip>
+                    <Tooltip fx:id="multiThreadingToggleSwitchToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ToggleSwitch>
+            <ChoiceBox fx:id="multiThreadingChoiceBox" prefWidth="150.0">
+                <tooltip>
+                    <Tooltip fx:id="multiThreadingChoiceBoxToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ChoiceBox>
         </VBox>
         <VBox spacing="10.0">
             <ToggleSwitch fx:id="followLinksToggleSwitch" prefWidth="150.0" text="Follow Links"
-                          styleClass="colored-toggle-switch"/>
-            <ChoiceBox fx:id="followLinksChoiceBox" prefWidth="150.0"/>
+                          styleClass="colored-toggle-switch">
+                <tooltip>
+                    <Tooltip fx:id="followLinksToggleSwitchToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ToggleSwitch>
+            <ChoiceBox fx:id="followLinksChoiceBox" prefWidth="150.0">
+                <tooltip>
+                    <Tooltip fx:id="followLinksChoiceBoxToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ChoiceBox>
         </VBox>
     </HBox>
     <HBox>
@@ -62,7 +95,11 @@
         <VBox spacing="5.0">
             <Label fx:id="linkUrlPatternLabel" text="Link Pattern"/>
             <TextField fx:id="linkUrlPatternTextfield" alignment="TOP_LEFT" nodeOrientation="LEFT_TO_RIGHT"
-                       prefWidth="250.0" promptText="Link Url Pattern"/>
+                       prefWidth="250.0" promptText="Link Url Pattern">
+                <tooltip>
+                    <Tooltip fx:id="linkUrlPatternTextfieldToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </TextField>
         </VBox>
     </HBox>
 </VBox>

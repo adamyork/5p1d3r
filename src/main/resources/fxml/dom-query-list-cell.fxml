@@ -3,9 +3,14 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Tooltip?>
 <HBox maxHeight="-Infinity" minHeight="-Infinity" xmlns="http://javafx.com/javafx/8.0.121"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.github.adamyork.fx5p1d3r.view.query.cell.DomQueryListCellController">
     <TextField fx:id="domQueryListCellTextField" promptText="A Cell" HBox.hgrow="ALWAYS"/>
-    <ToggleButton fx:id="domQueryListCellEditButton" mnemonicParsing="false" prefWidth="30.0" text="~"/>
+    <ToggleButton fx:id="domQueryListCellEditButton" mnemonicParsing="false" prefWidth="30.0" text="~">
+        <tooltip>
+            <Tooltip fx:id="domQueryListCellEditButtonToolTip" text="placeholder tooltip" />
+        </tooltip>
+    </ToggleButton>
 </HBox>

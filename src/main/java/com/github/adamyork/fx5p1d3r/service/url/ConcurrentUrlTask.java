@@ -74,6 +74,7 @@ public class ConcurrentUrlTask extends Task<DocumentListWithMemo> {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+        executorService.shutdownNow();
         final DocumentListWithMemo memo = new DocumentListWithMemo();
         memo.setDocuments(documents);
         memo.setThreadPoolSize(threadPoolSize);

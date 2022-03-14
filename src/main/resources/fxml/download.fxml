@@ -10,8 +10,16 @@
          <VBox spacing="5.0">
              <Label fx:id="urlLabel" text="Url List" />
              <HBox spacing="10.0">
-                 <Label fx:id="urlListLabel" prefHeight="25.0" prefWidth="250.0" text="some file.txt" HBox.hgrow="ALWAYS" />
-                 <Button fx:id="urlListSelectionButton" mnemonicParsing="false" prefWidth="30.0" text="+" />
+                 <Label fx:id="urlListLabel" prefHeight="25.0" prefWidth="250.0" text="some file.txt" HBox.hgrow="ALWAYS" >
+                     <tooltip>
+                         <Tooltip fx:id="urlListLabelToolTip" text="placeholder tooltip" />
+                     </tooltip>
+                 </Label>
+                 <Button fx:id="urlListSelectionButton" mnemonicParsing="false" prefWidth="30.0" text="+">
+                     <tooltip>
+                         <Tooltip fx:id="urlListSelectionButtonToolTip" text="placeholder tooltip" />
+                     </tooltip>
+                 </Button>
              </HBox>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -21,15 +29,31 @@
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
-            <ToggleSwitch fx:id="requestThrottlingToggleSwitch" prefWidth="290.0" styleClass="colored-toggle-switch" text="Throttling" />
-            <ChoiceBox fx:id="requestThrottlingChoiceBox" prefWidth="100.0" />
+            <ToggleSwitch fx:id="requestThrottlingToggleSwitch" prefWidth="290.0" styleClass="colored-toggle-switch" text="Throttling" >
+                <tooltip>
+                    <Tooltip fx:id="requestThrottlingToggleSwitchToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ToggleSwitch>
+            <ChoiceBox fx:id="requestThrottlingChoiceBox" prefWidth="100.0" >
+                <tooltip>
+                    <Tooltip fx:id="requestThrottlingChoiceBoxToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ChoiceBox>
         </VBox>
         <VBox alignment="CENTER_RIGHT" spacing="5.0">
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
-            <ToggleSwitch fx:id="multiThreadingToggleSwitch" prefWidth="290.0" styleClass="colored-toggle-switch" text="Threading" />
-            <ChoiceBox fx:id="multiThreadingChoiceBox" prefWidth="100.0" />
+            <ToggleSwitch fx:id="multiThreadingToggleSwitch" prefWidth="290.0" styleClass="colored-toggle-switch" text="Threading" >
+                <tooltip>
+                    <Tooltip fx:id="multiThreadingToggleSwitchToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ToggleSwitch>
+            <ChoiceBox fx:id="multiThreadingChoiceBox" prefWidth="100.0" >
+                <tooltip>
+                    <Tooltip fx:id="multiThreadingChoiceBoxToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </ChoiceBox>
         </VBox>
       <Separator prefWidth="200.0">
          <padding>
@@ -43,7 +67,11 @@
              <Label fx:id="outputDirLabel" text="Output Directory" />
              <HBox spacing="10.0">
                  <Label fx:id="outputSelectedDirLabel" prefHeight="25.0" prefWidth="250.0" text="C:\some output directory" />
-                 <Button fx:id="outputDirSelectionButton" mnemonicParsing="false" prefWidth="30.0" text="+" />
+                 <Button fx:id="outputDirSelectionButton" mnemonicParsing="false" prefWidth="30.0" text="+" >
+                     <tooltip>
+                         <Tooltip fx:id="outputDirSelectionButtonToolTip" text="placeholder tooltip" />
+                     </tooltip>
+                 </Button>
              </HBox>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -65,8 +93,16 @@
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
-            <Button fx:id="startButton" mnemonicParsing="false" text="Start" />
-            <Button fx:id="stopButton" mnemonicParsing="false" text="Abort" />
+            <Button fx:id="startButton" mnemonicParsing="false" text="Start" >
+                <tooltip>
+                    <Tooltip fx:id="startButtonToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </Button>
+            <Button fx:id="stopButton" mnemonicParsing="false" text="Abort" >
+                <tooltip>
+                    <Tooltip fx:id="stopButtonToolTip" text="placeholder tooltip" />
+                </tooltip>
+            </Button>
         </HBox>
     </VBox>
 </AnchorPane>

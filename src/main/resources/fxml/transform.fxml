@@ -23,12 +23,26 @@
             <Insets bottom="10.0" left="10.0" top="10.0"/>
         </padding>
         <Button fx:id="addResultTransform" mnemonicParsing="false" prefWidth="30.0" text="+">
-            <tooltip><Tooltip text="my tooltip" /></tooltip>
+            <tooltip>
+                <Tooltip fx:id="addResultTransformToolTip" text="placeholder tooltip" />
+            </tooltip>
         </Button>
-        <Button fx:id="removeResultTransform" mnemonicParsing="false" prefWidth="30.0" text="-"/>
+        <Button fx:id="removeResultTransform" mnemonicParsing="false" prefWidth="30.0" text="-">
+            <tooltip>
+                <Tooltip fx:id="removeResultTransformToolTip" text="placeholder tooltip" />
+            </tooltip>
+        </Button>
         <Button fx:id="addDefaultJsonTransformer" layoutX="365.0" layoutY="20.0" mnemonicParsing="false"
-                prefWidth="30.0" text="j"/>
+                prefWidth="30.0" text="j">
+            <tooltip>
+                <Tooltip fx:id="addDefaultJsonTransformerToolTip" text="placeholder tooltip" />
+            </tooltip>
+        </Button>
         <Button fx:id="addDefaultCsvTransformer" layoutX="365.0" layoutY="20.0" mnemonicParsing="false"
-                prefWidth="30.0" text="c"/>
+                prefWidth="30.0" text="c">
+            <tooltip>
+                <Tooltip fx:id="addDefaultCsvTransformerToolTip" text="placeholder tooltip" />
+            </tooltip>
+        </Button>
     </HBox>
 </VBox>

@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,6 +58,10 @@ public class ControlController implements Initializable, PropertyChangeListener 
     private Label statusLabel;
     @FXML
     private ProgressBar progressBar;
+    @FXML
+    public Tooltip startButtonToolTip;
+    @FXML
+    public Tooltip stopButtonToolTip;
 
     @Inject
     public ControlController(final GlobalStage globalStage,
@@ -84,6 +89,8 @@ public class ControlController implements Initializable, PropertyChangeListener 
         staticStatusLabel.setText(messageSource.getMessage("status.label", null, Locale.getDefault()));
         progressService.addListener(this);
         modal(false);
+        startButtonToolTip.setText(messageSource.getMessage("tooltip.crawl.start", null, Locale.getDefault()));
+        stopButtonToolTip.setText(messageSource.getMessage("tooltip.crawl.stop", null, Locale.getDefault()));
     }
 
     private void handleStart(final ActionEvent actionEvent) {
