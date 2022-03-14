@@ -52,7 +52,7 @@ public class ConcurrentDownloadTask extends Task<List<Boolean>> {
         final List<UrlDownloadCallable> tasks = urls.stream()
                 .map(url -> new UrlDownloadCallable(url, progressService, applicationFormState)).toList();
         final ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
-        return tasks.parallelStream()
+        final List<Boolean> results = tasks.parallelStream()
                 .map(documentTask -> {
                     LogDirectoryHelper.manage();
                     try {
@@ -64,5 +64,7 @@ public class ConcurrentDownloadTask extends Task<List<Boolean>> {
                     }
                 })
                 .collect(Collectors.toList());
+       executorService.shutdownNow();
+       return results;
     }
 }
