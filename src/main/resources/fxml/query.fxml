@@ -23,8 +23,16 @@
         <padding>
             <Insets bottom="10.0" left="10.0" top="10.0"/>
         </padding>
-        <Button fx:id="addDomQuery" mnemonicParsing="false" prefWidth="30.0" text="+"/>
+        <Button fx:id="addDomQuery" mnemonicParsing="false" prefWidth="30.0" text="+">
+            <tooltip>
+                <Tooltip fx:id="addDomQueryToolTip" text="placeholder tooltip" />
+            </tooltip>
+        </Button>
         <Button fx:id="removeDomQuery" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                prefWidth="30.0" text="-"/>
+                prefWidth="30.0" text="-">
+            <tooltip>
+                <Tooltip fx:id="removeDomQueryToolTip" text="placeholder tooltip" />
+            </tooltip>
+        </Button>
     </HBox>
 </VBox>

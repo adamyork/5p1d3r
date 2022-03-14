@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -48,6 +49,14 @@ public class TransformController implements Initializable, PropertyChangeListene
     private Label transformCount;
     @FXML
     private Label transformsLabel;
+    @FXML
+    private Tooltip addResultTransformToolTip;
+    @FXML
+    private Tooltip removeResultTransformToolTip;
+    @FXML
+    private Tooltip addDefaultJsonTransformerToolTip;
+    @FXML
+    private Tooltip addDefaultCsvTransformerToolTip;
 
     @Inject
     public TransformController(final ApplicationFormState applicationFormState,
@@ -71,7 +80,10 @@ public class TransformController implements Initializable, PropertyChangeListene
         resultTransformListView.getItems().add(applicationFormState.getDefaultJsonTransform());
         applicationFormState.setResultTransformObservableList(resultTransformListView.getItems());
         transformsLabel.setText(messageSource.getMessage("transforms.label", null, Locale.getDefault()));
-
+        addResultTransformToolTip.setText(messageSource.getMessage("tooltip.transform.result.add", null, Locale.getDefault()));
+        removeResultTransformToolTip.setText(messageSource.getMessage("tooltip.transform.result.remove", null, Locale.getDefault()));
+        addDefaultJsonTransformerToolTip.setText(messageSource.getMessage("tooltip.transform.result.json", null, Locale.getDefault()));
+        addDefaultCsvTransformerToolTip.setText(messageSource.getMessage("tooltip.transform.result.csv", null, Locale.getDefault()));
         progressService.addListener(this);
     }
 

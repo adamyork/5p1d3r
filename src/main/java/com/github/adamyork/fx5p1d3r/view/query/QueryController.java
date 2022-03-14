@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +48,10 @@ public class QueryController implements Initializable, PropertyChangeListener {
     private Label queryCount;
     @FXML
     private Label domQueriesLabel;
+    @FXML
+    private Tooltip addDomQueryToolTip;
+    @FXML
+    private Tooltip removeDomQueryToolTip;
 
     @Inject
     public QueryController(final ApplicationFormState applicationFormState,
@@ -61,7 +66,7 @@ public class QueryController implements Initializable, PropertyChangeListener {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        domQueryListView.setCellFactory(listView -> new DomQueryListCell());
+        domQueryListView.setCellFactory(listView -> new DomQueryListCell(messageSource));
         addDomQuery.setOnAction(this::handleAddDomQuery);
         removeDomQuery.setOnAction(this::handleRemoveDomQuery);
         final DomQuery defaultQuery = new DomQuery.Builder(globalDefaults.getDefaultForKey(GlobalDefault.DOM_QUERY),
@@ -70,7 +75,8 @@ public class QueryController implements Initializable, PropertyChangeListener {
         FXCollections.observableArrayList(domQueryListView.getItems());
         applicationFormState.setDomQueryObservableList(domQueryListView.getItems());
         domQueriesLabel.setText(messageSource.getMessage("dom.queries.label", null, Locale.getDefault()));
-
+        addDomQueryToolTip.setText(messageSource.getMessage("tooltip.query.add", null, Locale.getDefault()));
+        removeDomQueryToolTip.setText(messageSource.getMessage("tooltip.query.remove", null, Locale.getDefault()));
         progressService.addListener(this);
     }
 

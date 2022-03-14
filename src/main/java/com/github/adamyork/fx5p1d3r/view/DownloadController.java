@@ -14,10 +14,9 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
@@ -52,33 +51,51 @@ public class DownloadController implements Initializable, PropertyChangeListener
     private final SpiderService urlListDownloadSpiderService;
 
     @FXML
-    public Label urlLabel;
+    private Label urlLabel;
     @FXML
-    public Label urlListLabel;
+    private Label urlListLabel;
     @FXML
-    public Button urlListSelectionButton;
+    private Button urlListSelectionButton;
     @FXML
-    public ToggleSwitch requestThrottlingToggleSwitch;
+    private ToggleSwitch requestThrottlingToggleSwitch;
     @FXML
-    public ChoiceBox<ThrottleChoice> requestThrottlingChoiceBox;
+    private ChoiceBox<ThrottleChoice> requestThrottlingChoiceBox;
     @FXML
-    public ToggleSwitch multiThreadingToggleSwitch;
+    private ToggleSwitch multiThreadingToggleSwitch;
     @FXML
-    public ChoiceBox<MultiThreadingChoice> multiThreadingChoiceBox;
+    private ChoiceBox<MultiThreadingChoice> multiThreadingChoiceBox;
     @FXML
-    public Button outputDirSelectionButton;
+    private Button outputDirSelectionButton;
     @FXML
-    public ProgressBar downloadProgressBar;
+    private ProgressBar downloadProgressBar;
     @FXML
-    public Button startButton;
+    private Button startButton;
     @FXML
-    public Button stopButton;
+    private Button stopButton;
     @FXML
-    public Label outputDirLabel;
+    private Label outputDirLabel;
     @FXML
-    public Label outputSelectedDirLabel;
+    private Label outputSelectedDirLabel;
     @FXML
-    public Label progressLabel;
+    private Label progressLabel;
+    @FXML
+    private Tooltip urlListLabelToolTip;
+    @FXML
+    private Tooltip urlListSelectionButtonToolTip;
+    @FXML
+    private Tooltip requestThrottlingToggleSwitchToolTip;
+    @FXML
+    private Tooltip requestThrottlingChoiceBoxToolTip;
+    @FXML
+    private Tooltip multiThreadingToggleSwitchToolTip;
+    @FXML
+    private Tooltip multiThreadingChoiceBoxToolTip;
+    @FXML
+    private Tooltip outputDirSelectionButtonToolTip;
+    @FXML
+    private Tooltip startButtonToolTip;
+    @FXML
+    private Tooltip stopButtonToolTip;
 
     @Inject
     public DownloadController(final ApplicationFormState applicationFormState,
@@ -127,6 +144,16 @@ public class DownloadController implements Initializable, PropertyChangeListener
 
         applicationFormState.addListener(this);
         progressService.addListener(this);
+
+        urlListLabelToolTip.setText(messageSource.getMessage("tooltip.url.list.label", null, Locale.getDefault()));
+        urlListSelectionButtonToolTip.setText(messageSource.getMessage("tooltip.url.list.select", null, Locale.getDefault()));
+        requestThrottlingToggleSwitchToolTip.setText(messageSource.getMessage("tooltip.url.throttle", null, Locale.getDefault()));
+        requestThrottlingChoiceBoxToolTip.setText(messageSource.getMessage("tooltip.url.throttle.choice", null, Locale.getDefault()));
+        multiThreadingToggleSwitchToolTip.setText(messageSource.getMessage("tooltip.url.threading", null, Locale.getDefault()));
+        multiThreadingChoiceBoxToolTip.setText(messageSource.getMessage("tooltip.url.threading.choice", null, Locale.getDefault()));
+        outputDirSelectionButtonToolTip.setText(messageSource.getMessage("tooltip.output.dir.select", null, Locale.getDefault()));
+        startButtonToolTip.setText(messageSource.getMessage("tooltip.download.start", null, Locale.getDefault()));
+        stopButtonToolTip.setText(messageSource.getMessage("tooltip.download.stop", null, Locale.getDefault()));
     }
 
     @SuppressWarnings("DuplicatedCode")

@@ -20,8 +20,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -78,6 +78,26 @@ public class MethodController implements Initializable, PropertyChangeListener {
     private Label urlMethodLabel;
     @FXML
     private Label linkUrlPatternLabel;
+    @FXML
+    private Tooltip urlMethodChoiceBoxToolTip;
+    @FXML
+    private Tooltip startingUrlTextfieldToolTip;
+    @FXML
+    private Tooltip urlListSelectionButtonToolTip;
+    @FXML
+    private Tooltip requestThrottlingToggleSwitchToolTip;
+    @FXML
+    private Tooltip requestThrottlingChoiceBoxToolTip;
+    @FXML
+    private Tooltip multiThreadingToggleSwitchToolTip;
+    @FXML
+    private Tooltip multiThreadingChoiceBoxToolTip;
+    @FXML
+    private Tooltip followLinksToggleSwitchToolTip;
+    @FXML
+    private Tooltip followLinksChoiceBoxToolTip;
+    @FXML
+    private Tooltip linkUrlPatternTextfieldToolTip;
 
     @Inject
     public MethodController(final ApplicationFormState applicationFormState,
@@ -146,6 +166,17 @@ public class MethodController implements Initializable, PropertyChangeListener {
         urlLabel.setText(messageSource.getMessage("url.label", null, Locale.getDefault()));
         urlMethodLabel.setText(messageSource.getMessage("url.method.label", null, Locale.getDefault()));
         linkUrlPatternLabel.setText(messageSource.getMessage("link.pattern.label", null, Locale.getDefault()));
+
+        urlMethodChoiceBoxToolTip.setText(messageSource.getMessage("tooltip.method.url.choice", null, Locale.getDefault()));
+        startingUrlTextfieldToolTip.setText(messageSource.getMessage("tooltip.method.url.starting", null, Locale.getDefault()));
+        urlListSelectionButtonToolTip.setText(messageSource.getMessage("tooltip.method.url.list", null, Locale.getDefault()));
+        requestThrottlingToggleSwitchToolTip.setText(messageSource.getMessage("tooltip.method.throttle", null, Locale.getDefault()));
+        requestThrottlingChoiceBoxToolTip.setText(messageSource.getMessage("tooltip.method.throttle.choice", null, Locale.getDefault()));
+        multiThreadingToggleSwitchToolTip.setText(messageSource.getMessage("tooltip.method.threading", null, Locale.getDefault()));
+        multiThreadingChoiceBoxToolTip.setText(messageSource.getMessage("tooltip.method.threading.choice", null, Locale.getDefault()));
+        followLinksToggleSwitchToolTip.setText(messageSource.getMessage("tooltip.method.link", null, Locale.getDefault()));
+        followLinksChoiceBoxToolTip.setText(messageSource.getMessage("tooltip.method.link.choice", null, Locale.getDefault()));
+        linkUrlPatternTextfieldToolTip.setText(messageSource.getMessage("tooltip.method.pattern.value", null, Locale.getDefault()));
 
         Platform.runLater(() -> startingUrlTextfield.requestFocus());
     }
