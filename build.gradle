@@ -8,7 +8,7 @@ plugins {
 }
 
 group "com.github.adamyork"
-version "2.1"
+version "2.2"
 project.ext["buildDate"] = getDate()
 
 static def getDate() {
@@ -53,5 +53,5 @@ javafx {
 
 task buildWindowsInstaller(type: Exec) {
     workingDir "${projectDir}"
-    commandLine "jpackage", "--type", "exe", "--dest", "${projectDir}\\build\\installer", "--input", "${projectDir}\\build\\libs", "--name", "5p1d3r", "--main-class", "org.springframework.boot.loader.JarLauncher", "--main-jar", "5p1d3r-2.1.jar", "--java-options", "-Xmx2048m", "--app-version", "${version}", "--win-dir-chooser", "--icon", "${projectDir}\\build\\resources\\main\\image\\icon32.ico"
+    commandLine "jpackage", "--type", "exe", "--dest", "${projectDir}\\build\\installer", "--input", "${projectDir}\\build\\libs", "--name", "5p1d3r", "--main-class", "org.springframework.boot.loader.JarLauncher", "--main-jar", "5p1d3r-2.2.jar", "--java-options", "-Xmx2048m", "--app-version", "${version}", "--win-dir-chooser", "--icon", "${projectDir}\\build\\resources\\main\\image\\icon32.ico"
 }

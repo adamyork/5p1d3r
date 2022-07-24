@@ -14,4 +14,6 @@ public interface SpiderService {
     default void execute(final File urlListFile) {
     }
 
+    void close();
+
 }

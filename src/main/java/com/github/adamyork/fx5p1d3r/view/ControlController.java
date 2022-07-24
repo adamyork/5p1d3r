@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
  * Copyright 2017
  */
 @Component
-public class ControlController implements Initializable, PropertyChangeListener {
+public class ControlController implements Initializable, PropertyChangeListener, Closeable {
 
     private static final Logger logger = LogManager.getLogger(ControlController.class);
 
@@ -47,7 +47,10 @@ public class ControlController implements Initializable, PropertyChangeListener 
     private final ApplicationFormState applicationFormState;
     private final SpiderService singleUrlSpiderService;
     private final SpiderService urlListSpiderService;
-
+    @FXML
+    public Tooltip startButtonToolTip;
+    @FXML
+    public Tooltip stopButtonToolTip;
     @FXML
     private Button startButton;
     @FXML
@@ -58,10 +61,6 @@ public class ControlController implements Initializable, PropertyChangeListener 
     private Label statusLabel;
     @FXML
     private ProgressBar progressBar;
-    @FXML
-    public Tooltip startButtonToolTip;
-    @FXML
-    public Tooltip stopButtonToolTip;
 
     @Inject
     public ControlController(final GlobalStage globalStage,
@@ -150,5 +149,14 @@ public class ControlController implements Initializable, PropertyChangeListener 
             progressBar.setProgress(0.0);
             modal(false);
         }
+    }
+
+    @Override
+    public void close() {
+        logger.info("closing control controller service references");
+        singleUrlSpiderService.close();
+        logger.info("singleUrlSpiderService closed");
+        urlListSpiderService.close();
+        logger.info("urlListSpiderService closed");
     }
 }

@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +30,9 @@ import java.util.ResourceBundle;
  * Copyright 2017
  */
 @Component
-public class TransformController implements Initializable, PropertyChangeListener {
+public class TransformController implements Initializable, PropertyChangeListener, Closeable {
+
+    private static final Logger logger = LogManager.getLogger(TransformController.class);
 
     private final ApplicationFormState applicationFormState;
     private final GlobalStage globalStage;
@@ -136,5 +140,13 @@ public class TransformController implements Initializable, PropertyChangeListene
             addDefaultJsonTransformer.setDisable(true);
             addDefaultCsvTransformer.setDisable(true);
         }
+    }
+
+    @Override
+    public void close() {
+        logger.info("closing transform controller file lists");
+        resultTransformListView.getItems().clear();
+        logger.info("resultTransformListView items cleared");
+
     }
 }

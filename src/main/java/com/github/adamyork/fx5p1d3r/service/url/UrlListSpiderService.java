@@ -63,6 +63,15 @@ public class UrlListSpiderService extends BaseSpiderService implements SpiderSer
         }
     }
 
+    @Override
+    public void close() {
+        logger.info("closing url list service references");
+        singleThreadedCrawler.close();
+        logger.info("single threaded crawler closed");
+        multiThreadedCrawler.close();
+        logger.info("multi threaded crawler closed");
+    }
+
 
 }
 

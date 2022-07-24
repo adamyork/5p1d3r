@@ -6,9 +6,12 @@ import com.github.adamyork.fx5p1d3r.service.url.data.FollowLinksDepth;
 import com.github.adamyork.fx5p1d3r.service.url.data.MultiThreadMax;
 import com.github.adamyork.fx5p1d3r.service.url.data.ThrottleMs;
 import com.github.adamyork.fx5p1d3r.service.url.data.UrlMethod;
+import com.github.adamyork.fx5p1d3r.view.menu.ApplicationMenuController;
 import com.github.adamyork.fx5p1d3r.view.query.cell.DomQuery;
 import javafx.collections.ObservableList;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jooq.lambda.Unchecked;
 
 import java.beans.PropertyChangeListener;
@@ -22,6 +25,8 @@ import java.nio.file.Path;
  * Copyright 2017
  */
 public class ApplicationFormState implements FormState {
+
+    private static final Logger logger = LogManager.getLogger(ApplicationFormState.class);
 
     private final PropertyChangeSupport support;
 
@@ -258,6 +263,14 @@ public class ApplicationFormState implements FormState {
 
     public void setTransformFailed(boolean transformFailed) {
         this.transformFailed = transformFailed;
+    }
+
+    public void deRef() {
+        domQueryObservableList.clear();
+        resultTransformObservableList.clear();
+        urlListFile = null;
+        urlDownloadListFile = null;
+        downloadOutputFile = null;
     }
 
 }

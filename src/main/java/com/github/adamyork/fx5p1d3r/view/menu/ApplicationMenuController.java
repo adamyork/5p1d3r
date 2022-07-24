@@ -7,6 +7,8 @@ import com.github.adamyork.fx5p1d3r.ApplicationFormState;
 import com.github.adamyork.fx5p1d3r.FormState;
 import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.Main;
+import com.github.adamyork.fx5p1d3r.view.Closeable;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -32,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,15 +50,18 @@ public class ApplicationMenuController {
     private final Stage stage;
     private final ApplicationFormState applicationFormState;
     private final ApplicationContext applicationContext;
+    private final List<Closeable> closeableList;
 
     public ApplicationMenuController(final Stage stage,
                                      final FlowPane flowPane,
                                      final ApplicationFormState applicationFormState,
                                      final MessageSource messageSource,
-                                     final ApplicationContext applicationContext) {
+                                     final ApplicationContext applicationContext,
+                                     final List<Closeable> closeableList) {
         this.stage = stage;
         this.applicationFormState = applicationFormState;
         this.applicationContext = applicationContext;
+        this.closeableList = closeableList;
 
         final MenuBar menuBar = new MenuBar();
         menuBar.useSystemMenuBarProperty().set(true);
@@ -112,7 +118,14 @@ public class ApplicationMenuController {
     }
 
     private void handleExitSelected(final ActionEvent actionEvent) {
-        stage.close();
+        logger.info("entering handleExitSelected");
+        applicationFormState.deRef();
+        logger.info("applicationFormState de-referenced");
+        closeableList.forEach(Closeable::close);
+        logger.info("closed all closeables");
+        Platform.exit();
+        logger.info("platform exited");
+        System.exit(0);
     }
 
     private void handleSave(final ActionEvent actionEvent) {
