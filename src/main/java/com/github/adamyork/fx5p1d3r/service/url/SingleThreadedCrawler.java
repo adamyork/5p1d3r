@@ -45,6 +45,17 @@ public class SingleThreadedCrawler extends BaseCrawler implements CrawlerService
         executorService.submit(sequentialUrlTask);
     }
 
+    @Override
+    public void close() {
+        logger.info("closing single-thread crawler");
+        if(executorService != null){
+            logger.info("executor service not shutdown, shutting down");
+            executorService.shutdownNow();
+            executorService = null;
+        }
+        logger.info("closing single-thread crawler complete");
+    }
+
     @SuppressWarnings("unchecked")
     void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         final List<Document> documents = (List<Document>) workerStateEvent.getSource().getValue();

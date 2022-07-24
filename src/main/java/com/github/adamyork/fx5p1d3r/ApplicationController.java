@@ -1,5 +1,6 @@
 package com.github.adamyork.fx5p1d3r;
 
+import com.github.adamyork.fx5p1d3r.view.Closeable;
 import com.github.adamyork.fx5p1d3r.view.menu.ApplicationMenuController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -24,6 +26,7 @@ public class ApplicationController implements Initializable, ApplicationContextA
     private final GlobalStage globalStage;
     private final ApplicationFormState applicationFormState;
     private final MessageSource messageSource;
+    private final List<Closeable> closeableList;
 
     private ApplicationContext applicationContext;
 
@@ -33,10 +36,12 @@ public class ApplicationController implements Initializable, ApplicationContextA
     @Inject
     public ApplicationController(final GlobalStage globalStage,
                                  final ApplicationFormState applicationFormState,
-                                 final MessageSource messageSource) {
+                                 final MessageSource messageSource,
+                                 final List<Closeable> closeableList) {
         this.globalStage = globalStage;
         this.applicationFormState = applicationFormState;
         this.messageSource = messageSource;
+        this.closeableList = closeableList;
     }
 
     @Override
@@ -47,7 +52,7 @@ public class ApplicationController implements Initializable, ApplicationContextA
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         new ApplicationMenuController(globalStage.getStage(), applicationFlowPane,
-                applicationFormState, messageSource, applicationContext);
+                applicationFormState, messageSource, applicationContext, closeableList);
         applicationFlowPane.setOnMouseClicked(event -> applicationFlowPane.requestFocus());
     }
 

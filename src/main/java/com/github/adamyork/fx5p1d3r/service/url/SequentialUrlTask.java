@@ -48,11 +48,17 @@ public class SequentialUrlTask extends Task<List<Document>> {
             urls.forEach(url -> {
                 logger.debug("Fetching url " + url);
                 progressService.updateProgress(ProgressType.FETCH);
-                final Document document = Unchecked.function(urlToCall -> Jsoup.connect(urlToCall.toString())
-                        .userAgent(USER_AGENT)
-                        .timeout(30000)
-                        .get()).apply(url);
-                documentList.add(document);
+                try {
+                    final Document document = Unchecked.function(urlToCall -> Jsoup.connect(urlToCall.toString())
+                            .userAgent(USER_AGENT)
+                            .timeout(30000)
+                            .get()).apply(url);
+                    documentList.add(document);
+                } catch (final Exception exception) {
+                    logger.debug("Error fetching url " + url);
+                    logger.debug(exception);
+                    logger.debug("Skipping url");
+                }
                 if (progressService.getCurrentProgressType().equals(ProgressType.ABORT)) {
                     throw new RuntimeException("Abort detected cancelling throttled request chain");
                 } else {

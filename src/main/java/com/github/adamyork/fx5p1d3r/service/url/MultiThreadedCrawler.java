@@ -51,6 +51,17 @@ public class MultiThreadedCrawler extends BaseCrawler implements CrawlerService 
         executorService.submit(concurrentUrlTask);
     }
 
+    @Override
+    public void close() {
+        logger.info("closing multi-thread crawler");
+        if(executorService != null){
+            logger.info("executor service not shutdown, shutting down");
+            executorService.shutdownNow();
+            executorService = null;
+        }
+        logger.info("closing multi-thread crawler complete");
+    }
+
     public void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         final DocumentListWithMemo memo = (DocumentListWithMemo) workerStateEvent.getSource().getValue();
         final List<Document> documents = memo.getDocuments().stream()

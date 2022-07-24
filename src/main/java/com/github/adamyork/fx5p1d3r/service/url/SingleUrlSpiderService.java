@@ -41,4 +41,13 @@ public class SingleUrlSpiderService extends BaseSpiderService implements SpiderS
         validateUrlsAndExecute(urlStrings);
     }
 
+    @Override
+    public void close() {
+        logger.info("closing single url service references");
+        singleThreadedCrawler.close();
+        logger.info("single threaded crawler closed");
+        multiThreadedCrawler.close();
+        logger.info("multi threaded crawler closed");
+    }
+
 }

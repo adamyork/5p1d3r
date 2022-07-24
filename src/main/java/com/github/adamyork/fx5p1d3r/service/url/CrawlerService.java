@@ -11,4 +11,6 @@ public interface CrawlerService {
 
     void execute(final List<URL> urls);
 
+    void close();
+
 }

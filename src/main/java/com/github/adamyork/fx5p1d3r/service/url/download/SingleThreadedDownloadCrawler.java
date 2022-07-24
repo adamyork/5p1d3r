@@ -40,6 +40,17 @@ public class SingleThreadedDownloadCrawler implements CrawlerService {
         executorService.submit(task);
     }
 
+    @Override
+    public void close() {
+        logger.info("closing single-thread download crawler");
+        if (executorService != null) {
+            logger.info("executor service not shutdown, shutting down");
+            executorService.shutdownNow();
+            executorService = null;
+        }
+        logger.info("closing single-thread download crawler complete");
+    }
+
     private void onDocumentsRetrieved(final WorkerStateEvent workerStateEvent) {
         progressService.updateProgress(ProgressType.COMPLETE);
         if (executorService != null) {

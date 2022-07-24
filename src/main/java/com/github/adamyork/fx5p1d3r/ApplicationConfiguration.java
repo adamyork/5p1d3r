@@ -6,11 +6,17 @@ import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ApplicationProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.url.*;
+import com.github.adamyork.fx5p1d3r.view.Closeable;
+import com.github.adamyork.fx5p1d3r.view.ControlController;
+import com.github.adamyork.fx5p1d3r.view.TransformController;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Adam York on 2/26/2017.
@@ -128,6 +134,15 @@ public class ApplicationConfiguration {
                                                      final MessageSource messageSource,
                                                      final AlertService alertService) {
         return new JSoupDocumentParser(progressService, messageSource, alertService);
+    }
+
+    @Bean
+    public List<Closeable> closeableList(final ControlController controlController,
+                                         final TransformController transformController){
+        final List<Closeable> list = new ArrayList<>();
+        list.add(controlController);
+        list.add(transformController);
+        return list;
     }
 
 }
