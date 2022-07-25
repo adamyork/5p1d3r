@@ -58,6 +58,8 @@ public class ApplicationFormState implements FormState {
     private File urlDownloadListFile;
     private File downloadOutputFile;
 
+    private String lastUsedDirectory;
+
     public ApplicationFormState() {
         support = new PropertyChangeSupport(this);
     }
@@ -263,6 +265,14 @@ public class ApplicationFormState implements FormState {
 
     public void setTransformFailed(boolean transformFailed) {
         this.transformFailed = transformFailed;
+    }
+
+    public String getLastUsedDirectory() {
+        return lastUsedDirectory;
+    }
+
+    public void setLastUsedDirectory(String lastUsedDirectory) {
+        this.lastUsedDirectory = lastUsedDirectory;
     }
 
     public void deRef() {
