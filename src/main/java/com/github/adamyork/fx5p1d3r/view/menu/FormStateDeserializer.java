@@ -14,7 +14,7 @@ import com.github.adamyork.fx5p1d3r.view.query.cell.DomQuery;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.stream.Collectors;
+
 import java.util.stream.IntStream;
 
 /**

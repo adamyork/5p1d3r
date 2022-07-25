@@ -3,12 +3,12 @@ import java.text.SimpleDateFormat
 plugins {
     id "application"
     id "org.openjfx.javafxplugin" version "0.0.12"
-    id "org.springframework.boot" version "2.6.3"
-    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id "org.springframework.boot" version "2.7.2"
+    id "io.spring.dependency-management" version "1.0.12.RELEASE"
 }
 
 group "com.github.adamyork"
-version "2.2"
+version "2.3"
 project.ext["buildDate"] = getDate()
 
 static def getDate() {
@@ -20,15 +20,15 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.2'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.2'
-    implementation 'org.springframework.boot:spring-boot-starter:2.6.4'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+    implementation 'org.springframework.boot:spring-boot-starter:2.7.0'
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'commons-io:commons-io:2.11.0'
-    implementation 'org.codehaus.groovy:groovy-all:3.0.10'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.2'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.11'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.3'
     implementation 'commons-configuration:commons-configuration:1.10'
     implementation 'org.controlsfx:controlsfx:11.1.1'
     implementation 'org.jooq:jool:0.9.14'

@@ -2,9 +2,11 @@ package com.github.adamyork.fx5p1d3r.service.url;
 
 
 import com.github.adamyork.fx5p1d3r.ApplicationFormState;
+import com.github.adamyork.fx5p1d3r.LogDirectoryHelper;
 import com.github.adamyork.fx5p1d3r.service.progress.AlertService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressService;
 import com.github.adamyork.fx5p1d3r.service.progress.ProgressType;
+import com.github.javaparser.utils.Log;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,6 +67,7 @@ public class UrlListSpiderService extends BaseSpiderService implements SpiderSer
 
     @Override
     public void close() {
+        LogDirectoryHelper.manage();
         logger.info("closing url list service references");
         singleThreadedCrawler.close();
         logger.info("single threaded crawler closed");

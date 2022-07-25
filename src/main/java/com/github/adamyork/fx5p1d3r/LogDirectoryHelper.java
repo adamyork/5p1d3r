@@ -26,7 +26,7 @@ public class LogDirectoryHelper {
                 throw new RuntimeException("Can create temporary directory.");
             }
         }
-        MDC.put("LOG_PATH", tempDirectoryPath.toString() + File.separator);
+        MDC.put("LOG_PATH", tempDirectoryPath + File.separator);
     }
 
 }

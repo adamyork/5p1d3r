@@ -118,6 +118,7 @@ public class ApplicationMenuController {
     }
 
     private void handleExitSelected(final ActionEvent actionEvent) {
+        LogDirectoryHelper.manage();
         logger.info("entering handleExitSelected");
         applicationFormState.deRef();
         logger.info("applicationFormState de-referenced");
