@@ -95,6 +95,9 @@ public class ControlController implements Initializable, PropertyChangeListener,
     private void handleStart(final ActionEvent actionEvent) {
         logger.debug("Starting crawl");
         final FileChooser fileChooser = new FileChooser();
+        if (applicationFormState.getLastUsedDirectory() != null && !applicationFormState.getLastUsedDirectory().isEmpty()) {
+            fileChooser.setInitialDirectory(new File(applicationFormState.getLastUsedDirectory()));
+        }
         fileChooser.setTitle(messageSource.getMessage("save.output.as.label", null, Locale.getDefault()));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("json", "*.json"),
@@ -120,6 +123,9 @@ public class ControlController implements Initializable, PropertyChangeListener,
                 urlListSpiderService.execute(applicationFormState.getUrlListFile());
             }
             modal(true);
+            if (file != null) {
+                applicationFormState.setLastUsedDirectory(file.getParent());
+            }
         }
     }
 

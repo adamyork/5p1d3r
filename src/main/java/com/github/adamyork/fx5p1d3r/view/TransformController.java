@@ -93,6 +93,9 @@ public class TransformController implements Initializable, PropertyChangeListene
 
     private void handleAddResultTransform(final ActionEvent actionEvent) {
         final FileChooser fileChooser = new FileChooser();
+        if (applicationFormState.getLastUsedDirectory() != null && !applicationFormState.getLastUsedDirectory().isEmpty()) {
+            fileChooser.setInitialDirectory(new File(applicationFormState.getLastUsedDirectory()));
+        }
         fileChooser.setTitle(messageSource.getMessage("select.groovy.result.transform.label", null, Locale.getDefault()));
         final String[] validExtensions = {"*.groovy", "*.gvy", "*.gy", "*.gsh"};
         final FileChooser.ExtensionFilter groovyFileFilter = new FileChooser.ExtensionFilter("groovy files", validExtensions);
@@ -100,6 +103,7 @@ public class TransformController implements Initializable, PropertyChangeListene
         final File file = fileChooser.showOpenDialog(globalStage.getStage());
         if (file != null) {
             resultTransformListView.getItems().add(file);
+            applicationFormState.setLastUsedDirectory(file.getParent());
         }
         applicationFormState.setResultTransformObservableList(resultTransformListView.getItems());
         transformCount.setText(Integer.toString(resultTransformListView.getItems().size()));

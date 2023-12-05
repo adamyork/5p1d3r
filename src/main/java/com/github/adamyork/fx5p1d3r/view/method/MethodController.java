@@ -20,10 +20,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import org.controlsfx.control.ToggleSwitch;
 import org.springframework.context.MessageSource;
@@ -256,6 +256,9 @@ public class MethodController implements Initializable, PropertyChangeListener {
     @SuppressWarnings("DuplicatedCode")
     private void handleAddUrlList(final ActionEvent actionEvent) {
         final FileChooser fileChooser = new FileChooser();
+        if (applicationFormState.getLastUsedDirectory() != null && !applicationFormState.getLastUsedDirectory().isEmpty()) {
+            fileChooser.setInitialDirectory(new File(applicationFormState.getLastUsedDirectory()));
+        }
         fileChooser.setTitle(messageSource.getMessage("select.url.list.label", null, Locale.getDefault()));
         final String[] validExtensions = {"*.txt"};
         final FileChooser.ExtensionFilter txtFileFilter = new FileChooser.ExtensionFilter("txt files", validExtensions);
@@ -267,6 +270,9 @@ public class MethodController implements Initializable, PropertyChangeListener {
             final String nullSafeFilePath = nullSafeFile.toString();
             startingUrlTextfield.setText(nullSafeFilePath);
             applicationFormState.setUrlListFile(nullSafeFile);
+            if (file != null) {
+                applicationFormState.setLastUsedDirectory(file.getParent());
+            }
         }
     }
 
